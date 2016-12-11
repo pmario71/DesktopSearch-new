@@ -1,0 +1,55 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopSearch.Core", "DesktopSearch.Core\DesktopSearch.Core.csproj", "{35A50B24-BCD2-48CB-8472-F27EBA1073C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopSearch.Core.Tests", "Test\DesktopSearch.Core.Tests\DesktopSearch.Core.Tests.csproj", "{96754954-4A78-47A7-BE8A-7F68C49CD784}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{E7ADD651-7D8B-4661-9767-9E37AA8AB610}"
+	ProjectSection(SolutionItems) = preProject
+		Documents\Drawings.vsdx = Documents\Drawings.vsdx
+		Documents\References.md = Documents\References.md
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{B71F3397-F878-456D-876F-B5EF4119E3BF}"
+	ProjectSection(SolutionItems) = preProject
+		Documents\Images\Assemblies.png = Documents\Images\Assemblies.png
+		Documents\Images\DataModel.png = Documents\Images\DataModel.png
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopSearch.PS", "DesktopSearch.PS\DesktopSearch.PS.csproj", "{17E0AF0F-EA0F-459C-8F91-A50622EC380A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopSearch.PS.Tests", "Test\DesktopSearch.PS.Tests\DesktopSearch.PS.Tests.csproj", "{01C76CE1-EAE2-4F96-A985-EB8CDE989E4E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{35A50B24-BCD2-48CB-8472-F27EBA1073C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{35A50B24-BCD2-48CB-8472-F27EBA1073C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{35A50B24-BCD2-48CB-8472-F27EBA1073C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{35A50B24-BCD2-48CB-8472-F27EBA1073C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96754954-4A78-47A7-BE8A-7F68C49CD784}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96754954-4A78-47A7-BE8A-7F68C49CD784}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96754954-4A78-47A7-BE8A-7F68C49CD784}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96754954-4A78-47A7-BE8A-7F68C49CD784}.Release|Any CPU.Build.0 = Release|Any CPU
+		{17E0AF0F-EA0F-459C-8F91-A50622EC380A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{17E0AF0F-EA0F-459C-8F91-A50622EC380A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{17E0AF0F-EA0F-459C-8F91-A50622EC380A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{17E0AF0F-EA0F-459C-8F91-A50622EC380A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{01C76CE1-EAE2-4F96-A985-EB8CDE989E4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{01C76CE1-EAE2-4F96-A985-EB8CDE989E4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{01C76CE1-EAE2-4F96-A985-EB8CDE989E4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{01C76CE1-EAE2-4F96-A985-EB8CDE989E4E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B71F3397-F878-456D-876F-B5EF4119E3BF} = {E7ADD651-7D8B-4661-9767-9E37AA8AB610}
+	EndGlobalSection
+EndGlobal
