@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading;
@@ -12,6 +13,7 @@ namespace DesktopSearch.PS.Utils
     {
         /// <summary>Runs the specified asynchronous function.</summary>
         /// <param name="func">The asynchronous function to execute.</param>
+        [DebuggerStepThrough]
         public static void Run(Func<Task> func)
         {
             if (func == null) throw new ArgumentNullException("func");

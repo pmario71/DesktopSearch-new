@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.25928.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopSearch.Core", "DesktopSearch.Core\DesktopSearch.Core.csproj", "{35A50B24-BCD2-48CB-8472-F27EBA1073C3}"
 EndProject
@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{
 	ProjectSection(SolutionItems) = preProject
 		Documents\Drawings.vsdx = Documents\Drawings.vsdx
 		Documents\References.md = Documents\References.md
+		Documents\RequirementsSpec.md = Documents\RequirementsSpec.md
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{B71F3397-F878-456D-876F-B5EF4119E3BF}"

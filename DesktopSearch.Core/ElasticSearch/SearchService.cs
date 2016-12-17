@@ -58,7 +58,7 @@ namespace DesktopSearch.Core.ElasticSearch
         #endregion
 
         #region API
-        public async Task IndexDocument(string documentPath)
+        public async Task IndexDocumentAsync(string documentPath)
         {
             await EnsureInitialized;
 
@@ -80,7 +80,7 @@ namespace DesktopSearch.Core.ElasticSearch
             }
         }
 
-        public async Task IndexCodeFile(string codefilePath)
+        public async Task IndexCodeFileAsync(string codefilePath)
         {
             await EnsureInitialized;
 
@@ -119,10 +119,12 @@ namespace DesktopSearch.Core.ElasticSearch
         {
             var indexSettings = new IndexSettings();
 
-            var customAnalyzer = new CustomAnalyzer();
-            customAnalyzer.Tokenizer = "keyword";
-            
-            customAnalyzer.Filter = new[] { "lowercase" };
+            var customAnalyzer = new CustomAnalyzer()
+            {
+                Tokenizer = "keyword",
+                Filter = new[] { "lowercase" }
+            };
+
             indexSettings.Analysis.Analyzers.Add("custom_lowercase_analyzer", customAnalyzer);
 
             //var analyzerRes = elastic.CreateIndex("", ci => ci

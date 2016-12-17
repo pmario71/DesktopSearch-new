@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 
@@ -57,7 +58,7 @@ namespace DesktopSearch.Core.Tests.Processors
             result.Setup(t => t.IsValid)
                 .Returns(true);
 
-            client.Setup(t => t.IndexAsync<DocDescriptor>(It.Is<DocDescriptor>(d => d.Path == filePath), null))
+            client.Setup(t => t.IndexAsync(It.Is<DocDescriptor>(d => d.Path == filePath), null, default(CancellationToken)))
                 .Returns(Task.FromResult(result.Object));
 
 

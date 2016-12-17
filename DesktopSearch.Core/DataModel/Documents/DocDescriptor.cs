@@ -9,7 +9,13 @@ namespace DesktopSearch.Core.DataModel.Documents
     [ElasticsearchType(Name = "docdescriptor")]
     public class DocDescriptor
     {
-        [String(Name = "path")]
+        [Text(Name = "title", Boost = 1.5)]
+        public string Title { get; set; }
+
+        [Text(Name = "author")]
+        public string Author { get; set; }
+
+        [Text(Name = "path")]
         public string Path { get; set; }
 
         [Date(Name = "lastmodified")]
@@ -17,8 +23,14 @@ namespace DesktopSearch.Core.DataModel.Documents
 
         //public string Content { get; set; }
 
-        [String(Name = "keywords")]
+        [Text(Name = "keywords", Boost = 1.3)]
         public string Keywords { get; set; }
+
+        [Text(Name = "contenttype", Boost = 1.3)]
+        public string ContentType { get; set; }
+        
+        [Number(Name = "rating", Boost = 1.1)]
+        public int Rating { get; set; }
 
         [Attachment(Name = "attachment", Store = false)]
         public Nest.Attachment Attachment { get; set; }

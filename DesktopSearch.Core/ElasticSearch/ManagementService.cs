@@ -101,7 +101,7 @@ namespace DesktopSearch.Core.ElasticSearch
                                         .Name(n => n.Attachment.Keywords)
                                         .Store()
                                     )
-                                    .LanguageField((Func<StringPropertyDescriptor<DocDescriptor>, IStringProperty>)(d => d
+                                    .LanguageField((Func<TextPropertyDescriptor<DocDescriptor>, ITextProperty>)(d => d
                                         .Name(n => n.Attachment.Language)
                                         .Store())
                                     )

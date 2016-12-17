@@ -87,7 +87,7 @@ namespace DesktopSearch.PS.Composition
         }
     }
 
-    //[Export(typeof(ILogger<>))]
+    [Export(typeof(ILogger<>))]
     [Export(typeof(ILogger))]
     public class PowerShellLogger<T> : ILogger<T>
     {

@@ -13,7 +13,7 @@ namespace DesktopSearch.Core.DataModel.Code
             FieldType = fieldType;
         }
 
-        [String(Index = FieldIndexOption.Analyzed)]
+        [Text()]
         public string Name { get; set; }
 
         public string FieldType { get; set; }
