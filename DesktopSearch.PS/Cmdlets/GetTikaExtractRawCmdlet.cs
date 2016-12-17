@@ -1,8 +1,9 @@
-﻿using DesktopSearch.Core.Configuration;
+﻿using DesktopSearch.Core;
+using DesktopSearch.Core.Configuration;
 using DesktopSearch.Core.Extractors.Tika;
 using DesktopSearch.PS.Utils;
-using System;
 using PowershellExtensions;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
@@ -10,16 +11,17 @@ using System.Management.Automation;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DesktopSearch.PS.Cmdlets
+namespace DesktopSearch.PS
 {
-    [Cmdlet(VerbsCommon.Get, "TikaExtract")]
-    public class GetTikaExtractCmdlet : PSCmdlet
+    [Cmdlet(VerbsCommon.Get, "TikaExtractRaw")]
+    public class GetTikaExtractRawCmdlet : PSCmdlet
     {
         private Settings _config;
         private TikaServerExtractor _extractor;
 
         [Parameter(Mandatory = false, HelpMessage = "Files to extract index for.")]
         public string[] File { get; set; }
+
 
         #region Dependencies
 
@@ -44,16 +46,15 @@ namespace DesktopSearch.PS.Cmdlets
             {
                 var progress = new ProgressRecord(1, "Extracting content ...", "Files");
 
-                double filesTotalIncrement = 100.0 / this.File.Length;
+                double filesTotalIncrement = 100.0/this.File.Length;
                 int filesProcessed = 0;
 
                 foreach (var file in this.File)
                 {
-                    var pc = new Core.Extractors.ParserContext();
-                    var result = await _extractor.ExtractAsync(pc, new System.IO.FileInfo(file));
+                    var result = await _extractor.SendToTikaAsync(new System.IO.FileInfo(file));
                     WriteObject(result);
 
-                    progress.PercentComplete = (int)Math.Round((++filesProcessed) * filesTotalIncrement);
+                    progress.PercentComplete = (int)Math.Round((++filesProcessed)*filesTotalIncrement);
                     WriteProgress(progress);
                 }
             });

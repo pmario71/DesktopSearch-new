@@ -47,8 +47,14 @@ namespace DesktopSearch.Core.Extractors.Tika
         /// <returns></returns>
         public async Task<DocDescriptor> ExtractAsync(ParserContext context, FileInfo filePath)
         {
+            var ts = Stopwatch.StartNew();
+
             var content = await SendToTikaAsync(filePath);
-            return await ConvertToDocumentAsync(filePath, content);
+            var doc = await ConvertToDocumentAsync(filePath, content);
+
+            doc.ExtractionDuration = ts.Elapsed;
+
+            return doc;
         }
 
         /// <summary>
@@ -90,16 +96,28 @@ namespace DesktopSearch.Core.Extractors.Tika
             {
                 Title = filePath.Name,
                 Path = filePath.FullName,
-
-                //TODO: add content to DocDescriptor
-                //if (array[ContentTag] != null)
-                //    doc.Content = array[ContentTag].ToString();
-
                 //doc.LastModified (filePath.CreationTime);
                 LastModified = filePath.LastWriteTime
             };
+
             if (array[ContentTypeTag] != null)
                 doc.ContentType = array[ContentTypeTag].ToString();
+
+            if (array["Author"] != null)
+                doc.Author = array["Author"].ToString();
+
+            if (array["Keywords"] != null)
+                doc.Keywords = array["Keywords"].ToString();
+
+            if (array["title"] != null)
+                doc.Title = array["title"].ToString();
+
+            if (array[ContentTag] != null)
+            {
+                //var a = new Nest.Attachment();
+                //a.Content = array[ContentTag].ToString();
+                doc.Content = array[ContentTag].ToString();
+            }
 
             return doc;
         }
@@ -168,5 +186,14 @@ namespace DesktopSearch.Core.Extractors.Tika
             }
         }
         #endregion
+    }
+
+    public static class JTokenEx
+    {
+        public static void GetSafe(this JToken token, string name, ref string value)
+        {
+            if (token[name] != null)
+                value = token[name].ToString();
+        }
     }
 }

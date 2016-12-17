@@ -35,6 +35,11 @@ namespace DesktopSearch.Core.DataModel.Documents
         [Attachment(Name = "attachment", Store = false)]
         public Nest.Attachment Attachment { get; set; }
 
+        [Text(Store = false)]
+        public string Content { get; set; }
+
+        public TimeSpan ExtractionDuration { get; set; }
+
         public override string ToString()
         {
             return $"{Path} -- {LastModified} --  {Keywords}";

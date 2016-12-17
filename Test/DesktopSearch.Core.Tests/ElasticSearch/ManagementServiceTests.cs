@@ -25,7 +25,7 @@ namespace DesktopSearch.Core.Tests.ElasticSearch
 
             await sut.EnsureIndicesCreated();
 
-            var result = await IndexingHelper.IndexDocument(esClient, testDataPath + "zen-of-results.pdf");
+            var result = await IndexingHelper.IndexDocumentAsync(esClient, testDataPath + "zen-of-results.pdf");
 
             if (!result.IsValid)
             {

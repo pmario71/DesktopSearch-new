@@ -235,6 +235,7 @@
   <ItemGroup>
     <Compile Include="Cmdlets\AddDSFolderToIndexCmdlet.cs" />
     <Compile Include="Cmdlets\GetTikaExtractCmdlet.cs" />
+    <Compile Include="Cmdlets\GetTikaExtractRawCmdlet.cs" />
     <Compile Include="Cmdlets\InitializeDSIndexCmdlet.cs" />
     <Compile Include="Cmdlets\SaveDSSettingCmdlet.cs" />
     <Compile Include="Cmdlets\SyncDSIndexCmdlet.cs" />

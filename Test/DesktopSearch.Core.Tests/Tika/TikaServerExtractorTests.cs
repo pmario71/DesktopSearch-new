@@ -46,6 +46,10 @@ namespace DesktopSearch.Core.Extractors.Tika
 
                 Assert.NotNull(document);
                 Assert.AreEqual(fullTestFilename, document.Path);
+
+                Assert.AreEqual("Zen of results", document.Title);
+                Assert.AreEqual("J. D. Meier", document.Author);
+                Assert.AreEqual("getting things done;", document.Keywords);
             }
         }
     }

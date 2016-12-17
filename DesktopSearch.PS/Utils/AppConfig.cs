@@ -32,12 +32,9 @@ namespace DesktopSearch.PS.Utils
                     {
                         string loc = typeof(AppConfig).Assembly.Location;
                         string appConfigPath = $"{loc}.config";
-
-                        AppDomain.CurrentDomain.SetCachePath(Path.GetDirectoryName(loc));
-
+                        
                         AppDomain currentDomain = AppDomain.CurrentDomain;
                         currentDomain.AssemblyResolve += new ResolveEventHandler(LoadFromSameFolder);
-
 
                         new ChangeAppConfig(appConfigPath);
                         _isInitialized = true;

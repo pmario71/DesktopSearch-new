@@ -46,7 +46,7 @@ namespace DesktopSearch.Core.Processors
             foreach (var filePath in filesToParse)
             {
                 var stopWatch = Stopwatch.StartNew();
-                IIndexResponse result = await IndexingHelper.IndexDocument(_client, filePath);
+                IIndexResponse result = await IndexingHelper.IndexDocumentAsync(_client, filePath);
 
                 if (!result.IsValid)
                 {
@@ -70,7 +70,7 @@ namespace DesktopSearch.Core.Processors
 
     internal class IndexingHelper
     {
-        public static async Task<IIndexResponse> IndexDocument(IElasticClient client, string filePath)
+        public static async Task<IIndexResponse> IndexDocumentAsync(IElasticClient client, string filePath)
         {
             var content = Convert.ToBase64String(File.ReadAllBytes(filePath));
             var doc = new DocDescriptor
