@@ -3,6 +3,7 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 
 
@@ -103,7 +104,7 @@ namespace DesktopSearch.Core.Tests.Utils.Async
             {
                 reportedValue = t;
 
-                if ((--timesToCall) <= 0)
+                if ((Interlocked.Decrement(ref timesToCall)) <= 0)
                     l.ReleaseLock();
             };
 
