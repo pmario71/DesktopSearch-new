@@ -13,6 +13,7 @@ namespace DesktopSearch.PS.Utils
     {
         private static object _isInitializedLock = new object();
         private static bool _isInitialized;
+        private static bool _isAssemblyLoaderHooked;
 
         public static AppConfig Change(string path)
         {
@@ -38,6 +39,26 @@ namespace DesktopSearch.PS.Utils
 
                         new ChangeAppConfig(appConfigPath);
                         _isInitialized = true;
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// Ensure that app.config is loaded
+        /// </summary>
+        public static void EnableLocalAssemblyResolution()
+        {
+            if (!_isAssemblyLoaderHooked)
+            {
+                lock (_isInitializedLock)
+                {
+                    if (!_isAssemblyLoaderHooked)
+                    {
+                        AppDomain currentDomain = AppDomain.CurrentDomain;
+                        currentDomain.AssemblyResolve += new ResolveEventHandler(LoadFromSameFolder);
+
+                        _isAssemblyLoaderHooked = true;
                     }
                 }
             }
