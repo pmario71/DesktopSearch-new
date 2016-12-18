@@ -3,6 +3,9 @@
 
 ## Help Generation
 
+This should normally do the trick in that it combines Update and adding new Cmdlets.\
+`Update-MarkdownHelpModule -Path .\docs`
+
 ### Updating Help
 Update help files (*.md) after code changes.
 ```
@@ -21,7 +24,7 @@ New-MarkdownHelp -Command <cmdlet name> -OutputFolder .\Docs
 ### Render Markdown to Helpfile
 
 ```
-New-ExternalHelp .\docs -OutputPath en-US\
+New-ExternalHelp .\docs -OutputPath en-US\ -Force
 ```
 
 ### References

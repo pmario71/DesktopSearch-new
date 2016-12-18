@@ -12,11 +12,12 @@ Runs Tika extraction for a given file and returns the raw results (json format) 
 ## SYNTAX
 
 ```
-Get-TikaExtractRaw [-File] <String[]> [<CommonParameters>]
+Get-TikaExtractRaw [-File] <String[]>
 ```
 
 ## DESCRIPTION
-Streams the content of the file to a running Tika server. The extracted meta data and file content is returned as string which contains native json output.
+Streams the content of the file to a running Tika server.
+The extracted meta data and file content is returned as string which contains native json output.
 
 ## EXAMPLES
 
@@ -43,9 +44,6 @@ Default value: None
 Accept pipeline input: False
 Accept wildcard characters: False
 ```
-
-### CommonParameters
-This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
 
 ## INPUTS
 

@@ -248,11 +248,14 @@
     <Compile Include="Utils\ValidatePath.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
+    <None Include="app.config">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="AppSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Docs\Add-DSFolderToIndex.md" />
+    <None Include="Docs\DesktopSearch.PS.md" />
     <None Include="Docs\Get-DSSetting.md" />
     <None Include="Docs\Get-DSSettingJSON.md" />
     <None Include="Docs\Get-TikaExtract.md" />
