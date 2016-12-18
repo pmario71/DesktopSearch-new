@@ -202,6 +202,7 @@
     <Compile Include="Extractors\Roslyn\RoslynExtractor.cs" />
     <Compile Include="Extractors\Roslyn\RoslynParser.cs" />
     <Compile Include="Extractors\Roslyn\StringExt.cs" />
+    <Compile Include="Extractors\Tika\KeywordParser.cs" />
     <Compile Include="Extractors\Tika\TikaRawResult.cs" />
     <Compile Include="Extractors\Tika\TikaServerExtractor.cs" />
     <Compile Include="Extractors\Xaml\FileReference.cs" />

@@ -189,6 +189,7 @@
   <ItemGroup>
     <Compile Include="Configuration\ConfigAccessTests.cs" />
     <Compile Include="ElasticSearch\ManagementServiceTests.cs" />
+    <Compile Include="ElasticSearch\Parser\KeywordParserTests.cs" />
     <Compile Include="FileSystem\ExcludeFileByExtensionFilterTests.cs" />
     <Compile Include="FileSystem\IncludeFileByExtensionFilterTests.cs" />
     <Compile Include="Helper\DockerControlClient.cs" />

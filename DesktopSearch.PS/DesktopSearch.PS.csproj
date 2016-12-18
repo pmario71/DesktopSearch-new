@@ -255,10 +255,13 @@
     <None Include="Docs\Add-DSFolderToIndex.md" />
     <None Include="Docs\Get-DSSetting.md" />
     <None Include="Docs\Get-DSSettingJSON.md" />
+    <None Include="Docs\Get-TikaExtract.md" />
+    <None Include="Docs\Get-TikaExtractRaw.md" />
     <None Include="Docs\Initialize-DSIndex.md" />
     <None Include="Docs\Save-DSSetting.md" />
     <None Include="Docs\Sync-DSIndex.md" />
     <None Include="packages.config" />
+    <None Include="Readme.md" />
   </ItemGroup>
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
@@ -272,6 +275,11 @@
       <Project>{35a50b24-bcd2-48cb-8472-f27eba1073c3}</Project>
       <Name>DesktopSearch.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="en-US\DesktopSearch.PS.dll-Help.xml">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

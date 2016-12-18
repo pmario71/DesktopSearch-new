@@ -9,7 +9,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopSearch.Core.Tests", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{E7ADD651-7D8B-4661-9767-9E37AA8AB610}"
 	ProjectSection(SolutionItems) = preProject
+		Documents\AddImage.ps1 = Documents\AddImage.ps1
 		Documents\Drawings.vsdx = Documents\Drawings.vsdx
+		Documents\Extractors.dgml = Documents\Extractors.dgml
 		Documents\References.md = Documents\References.md
 		Documents\RequirementsSpec.md = Documents\RequirementsSpec.md
 	EndProjectSection

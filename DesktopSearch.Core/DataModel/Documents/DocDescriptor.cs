@@ -23,8 +23,8 @@ namespace DesktopSearch.Core.DataModel.Documents
 
         //public string Content { get; set; }
 
-        [Text(Name = "keywords", Boost = 1.3)]
-        public string Keywords { get; set; }
+        [Keyword(Name = "keywords", Boost = 1.3)]
+        public string[] Keywords { get; set; }
 
         [Text(Name = "contenttype", Boost = 1.3)]
         public string ContentType { get; set; }

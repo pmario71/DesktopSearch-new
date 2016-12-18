@@ -4,48 +4,34 @@ online version:
 schema: 2.0.0
 ---
 
-# Add-DSFolderToIndex
+# Get-TikaExtract
 
 ## SYNOPSIS
-{{Fill in the Synopsis}}
+Runs Tika extraction for a given file and returns a `DocDescriptor` as output.
 
 ## SYNTAX
 
 ```
-Add-DSFolderToIndex [-Path] <String[]> [-IndexingType] <String> [<CommonParameters>]
+Get-TikaExtract [-File] <String[]> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+Streams the content of the file to a running Tika server. The extracted meta data and file content is mapped to
+`DocDescriptor` DTO, which can be passed to ElasticSearch for indexing.
 
 ## EXAMPLES
 
 ### Example 1
 ```
-PS C:\> {{ Add example code here }}
+PS C:\> Get-TikaExtractRaw -File 'd:\some path\filename.pdf'
 ```
 
-{{ Add example description here }}
+Runs extraction over the given pdf file.
 
 ## PARAMETERS
 
-### -IndexingType
-Defines which index extractor is used for the given folder(s).
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases: 
-
-Required: True
-Position: Benannt
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Path
-Paths of folders to add.
+### -File
+Files to extract index for.
 
 ```yaml
 Type: String[]

@@ -107,7 +107,7 @@ namespace DesktopSearch.Core.Extractors.Tika
                 doc.Author = array["Author"].ToString();
 
             if (array["Keywords"] != null)
-                doc.Keywords = array["Keywords"].ToString();
+                doc.Keywords = KeywordParser.Parse(array["Keywords"].ToString());
 
             if (array["title"] != null)
                 doc.Title = array["title"].ToString();

@@ -7,12 +7,13 @@ schema: 2.0.0
 # Sync-DSIndex
 
 ## SYNOPSIS
-{{Fill in the Synopsis}}
+Takes one or more folders as input and runs content extraction and indexing over it/them.
+If no folder is specified, already indexed folders are re-indexed.
 
 ## SYNTAX
 
 ```
-Sync-DSIndex [[-Folder] <String[]>]
+Sync-DSIndex [[-Folder] <String[]>] [<CommonParameters>]
 ```
 
 ## DESCRIPTION
@@ -44,10 +45,12 @@ Accept pipeline input: False
 Accept wildcard characters: False
 ```
 
+### CommonParameters
+This cmdlet supports the common parameters: -Debug, -ErrorAction, -ErrorVariable, -InformationAction, -InformationVariable, -OutVariable, -OutBuffer, -PipelineVariable, -Verbose, -WarningAction, and -WarningVariable. For more information, see about_CommonParameters (http://go.microsoft.com/fwlink/?LinkID=113216).
+
 ## INPUTS
 
 ### Keine
-
 
 ## OUTPUTS
 

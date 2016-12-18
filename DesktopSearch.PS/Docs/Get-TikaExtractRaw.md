@@ -4,48 +4,33 @@ online version:
 schema: 2.0.0
 ---
 
-# Add-DSFolderToIndex
+# Get-TikaExtractRaw
 
 ## SYNOPSIS
-{{Fill in the Synopsis}}
+Runs Tika extraction for a given file and returns the raw results (json format) as output.
 
 ## SYNTAX
 
 ```
-Add-DSFolderToIndex [-Path] <String[]> [-IndexingType] <String> [<CommonParameters>]
+Get-TikaExtractRaw [-File] <String[]> [<CommonParameters>]
 ```
 
 ## DESCRIPTION
-{{Fill in the Description}}
+Streams the content of the file to a running Tika server. The extracted meta data and file content is returned as string which contains native json output.
 
 ## EXAMPLES
 
 ### Example 1
 ```
-PS C:\> {{ Add example code here }}
+PS C:\> Get-TikaExtractRaw -File 'd:\some path\filename.pdf'
 ```
 
-{{ Add example description here }}
+Runs extraction over the given pdf file.
 
 ## PARAMETERS
 
-### -IndexingType
-Defines which index extractor is used for the given folder(s).
-
-```yaml
-Type: String
-Parameter Sets: (All)
-Aliases: 
-
-Required: True
-Position: Benannt
-Default value: None
-Accept pipeline input: False
-Accept wildcard characters: False
-```
-
-### -Path
-Paths of folders to add.
+### -File
+Files to extract index for.
 
 ```yaml
 Type: String[]

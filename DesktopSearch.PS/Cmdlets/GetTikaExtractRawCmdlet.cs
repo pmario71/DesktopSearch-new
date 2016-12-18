@@ -19,7 +19,7 @@ namespace DesktopSearch.PS
         private Settings _config;
         private TikaServerExtractor _extractor;
 
-        [Parameter(Mandatory = false, HelpMessage = "Files to extract index for.")]
+        [Parameter(Mandatory = true, HelpMessage = "Files to extract index for.")]
         public string[] File { get; set; }
 
 
