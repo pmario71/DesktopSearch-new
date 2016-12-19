@@ -211,6 +211,7 @@
     <None Include="TestData\IndexExtractors\Roslyn\APIClass.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Compile Include="Tagging\TagDescriptorTests.cs" />
     <Compile Include="Tika\TikaServerExtractorTests.cs" />
     <Compile Include="Utils\Async\AggregatingProgressReporter.cs" />
     <None Include="TestData\Tika\zen-of-results.docx">

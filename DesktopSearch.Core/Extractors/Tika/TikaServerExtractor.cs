@@ -8,6 +8,7 @@ using Newtonsoft.Json.Linq;
 using DesktopSearch.Core.Tika;
 using DesktopSearch.Core.DataModel.Documents;
 using System.Threading.Tasks;
+using DesktopSearch.Core.Contracts;
 
 namespace DesktopSearch.Core.Extractors.Tika
 {
@@ -103,14 +104,14 @@ namespace DesktopSearch.Core.Extractors.Tika
             if (array[ContentTypeTag] != null)
                 doc.ContentType = array[ContentTypeTag].ToString();
 
-            if (array["Author"] != null)
-                doc.Author = array["Author"].ToString();
+            if (array[MetaTypes.Author] != null)
+                doc.Author = array[MetaTypes.Author].ToString();
 
-            if (array["Keywords"] != null)
-                doc.Keywords = KeywordParser.Parse(array["Keywords"].ToString());
+            if (array[MetaTypes.Keywords] != null)
+                doc.Keywords = KeywordParser.Parse(array[MetaTypes.Keywords].ToString());
 
-            if (array["title"] != null)
-                doc.Title = array["title"].ToString();
+            if (array[MetaTypes.Title.ToLower()] != null)
+                doc.Title = array[MetaTypes.Title.ToLower()].ToString();
 
             if (array[ContentTag] != null)
             {
