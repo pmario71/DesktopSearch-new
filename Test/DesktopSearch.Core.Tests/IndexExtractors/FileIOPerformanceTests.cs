@@ -45,7 +45,7 @@ namespace CodeSearchTests.Indexing
             return file;
         }
 
-        [Test]//, Ignore("Not yet compatible with .net core!")]
+        [Test, Explicit("Requires a folder with write access on every drive that shall be measured")]//, Ignore("Not yet compatible with .net core!")]
         public void ReadFile_multiple_times_with_caching_enabled()
         {
             foreach (var drive in _drives)
@@ -67,7 +67,7 @@ namespace CodeSearchTests.Indexing
             }
         }
 
-        [Test]//, Ignore("Not yet compatible with .net core!")]
+        [Test, Explicit("Requires a folder with write access on every drive that shall be measured")]//, Ignore("Not yet compatible with .net core!")]
         public void ReadFile_multiple_times_without_caching_enabled()
         {
             foreach (var drive in _drives)

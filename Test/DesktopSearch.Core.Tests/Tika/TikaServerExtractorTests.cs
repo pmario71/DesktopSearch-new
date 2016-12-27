@@ -9,7 +9,7 @@ using DesktopSearch.Core.Tika;
 
 namespace DesktopSearch.Core.Extractors.Tika
 {
-    [TestFixture]
+    [TestFixture, Explicit("Integration - requires running Tika Service")]
     public class TikaServerExtractorTests
     {
         private TikaServer _server;
