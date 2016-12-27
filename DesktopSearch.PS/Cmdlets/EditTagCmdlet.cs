@@ -18,8 +18,6 @@ namespace DesktopSearch.PS.Cmdlets
     [Cmdlet(VerbsData.Edit, "Tag")]
     public class EditTagCmdlet : PSCmdlet
     {
-        private Settings _config;
-        
         [Parameter(Mandatory = true, HelpMessage = "Files to extract index for.")]
         public string File { get; set; }
 
@@ -27,9 +25,6 @@ namespace DesktopSearch.PS.Cmdlets
         public string OutputFile { get; set; }
 
         #region Dependencies
-
-        [Import]
-        internal ConfigAccess ConfigAccess { set; get; }
         #endregion
 
         protected override void BeginProcessing()
@@ -37,10 +32,6 @@ namespace DesktopSearch.PS.Cmdlets
             AppConfig.EnableLocalAssemblyResolution();
 
             this.Compose();
-
-            _config = ConfigAccess.Get();
-
-            
         }
 
         protected override void ProcessRecord()

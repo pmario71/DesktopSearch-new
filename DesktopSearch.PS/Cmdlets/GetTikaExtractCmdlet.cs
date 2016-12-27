@@ -15,16 +15,12 @@ namespace DesktopSearch.PS.Cmdlets
     [Cmdlet(VerbsCommon.Get, "TikaExtract")]
     public class GetTikaExtractCmdlet : PSCmdlet
     {
-        private Settings _config;
         private TikaServerExtractor _extractor;
 
         [Parameter(Mandatory = true, HelpMessage = "Files to extract index for.")]
         public string[] File { get; set; }
 
         #region Dependencies
-
-        [Import]
-        internal ConfigAccess ConfigAccess { set; get; }
         #endregion
 
         protected override void BeginProcessing()
@@ -32,8 +28,6 @@ namespace DesktopSearch.PS.Cmdlets
             AppConfig.EnableLocalAssemblyResolution();
 
             this.Compose();
-
-            _config = ConfigAccess.Get();
 
             _extractor = new TikaServerExtractor();
         }

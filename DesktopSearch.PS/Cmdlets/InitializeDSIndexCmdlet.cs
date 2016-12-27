@@ -20,9 +20,6 @@ namespace DesktopSearch.PS
     {
         #region Dependencies
         [Import]
-        internal ConfigAccess ConfigAccess { set; get; }
-
-        [Import]
         internal ManagementService ManagementService { get; set; }
         #endregion
 

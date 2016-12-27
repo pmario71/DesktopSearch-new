@@ -16,7 +16,6 @@ namespace DesktopSearch.PS
     [Cmdlet(VerbsCommon.Get, "TikaExtractRaw")]
     public class GetTikaExtractRawCmdlet : PSCmdlet
     {
-        private Settings _config;
         private TikaServerExtractor _extractor;
 
         [Parameter(Mandatory = true, HelpMessage = "Files to extract index for.")]
@@ -24,9 +23,6 @@ namespace DesktopSearch.PS
 
 
         #region Dependencies
-
-        [Import]
-        internal ConfigAccess ConfigAccess { set; get; }
         #endregion
 
         protected override void BeginProcessing()
@@ -34,8 +30,6 @@ namespace DesktopSearch.PS
             AppConfig.EnableLocalAssemblyResolution();
 
             this.Compose();
-
-            _config = ConfigAccess.Get();
 
             _extractor = new TikaServerExtractor();
         }

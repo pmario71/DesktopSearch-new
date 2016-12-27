@@ -1,6 +1,6 @@
 ﻿# Readme
 
-1) Running all necessary services
+1) [Running all necessary services](../Documents/Operations.md)
 2) [Requirements Specification](../Documents/RequirementsSpec.md)
 3) [Design Specification](../DesktopSearch.Core/Designspec.md)
 

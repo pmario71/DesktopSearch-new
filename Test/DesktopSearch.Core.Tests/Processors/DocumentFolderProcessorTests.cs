@@ -39,7 +39,7 @@ namespace DesktopSearch.Core.Tests.Processors
 
             var sut = new DocumentFolderProcessor(client.Object/*, logging.Object*/);
 
-            Configuration.Folder cfgFolder = new Configuration.Folder { IndexingType ="", Path=folder };
+            var cfgFolder = new DesktopSearch.Core.Configuration.Folder { IndexingType ="", Path=folder };
             sut.Process(cfgFolder);
         }
 
@@ -64,7 +64,7 @@ namespace DesktopSearch.Core.Tests.Processors
 
             var sut = new DocumentFolderProcessor(client.Object/*, logging.Object*/);
 
-            Configuration.Folder cfgFolder = new Configuration.Folder { IndexingType = "", Path = folder };
+            var cfgFolder = new DesktopSearch.Core.Configuration.Folder { IndexingType = "", Path = folder };
             await sut.Process(cfgFolder);
 
             client.VerifyAll();            

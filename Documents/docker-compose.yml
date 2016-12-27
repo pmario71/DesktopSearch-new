@@ -1,0 +1,15 @@
+elk:
+  image: sebp/elk
+  volumes: 
+   - c:/Index:/var/lib/elasticsearch
+  ports:
+   - "5601:5601"
+   - "9200:9200"
+   - "5044:5044" # logstash
+  environment: 
+   - LOGSTASH_START=0
+
+tika:
+  image: logicalspark/docker-tikaserver
+  ports:
+   - "9998:9998"

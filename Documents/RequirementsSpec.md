@@ -34,3 +34,7 @@
 * Keywords
 * Attachment
 * Path
+
+## Dependent Services
+
+Use docker-compose to start all services that are required.

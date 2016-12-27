@@ -2,9 +2,20 @@
 
 ## Starting all necessary services
 
+* use script which doing a `docker-compose up` internally
+
 ```bat
-cd /D D:\Tools\Allgemein\elasticsearch-5.1.1
-bin\elasticsearch.bat
+cd <Documents>
+.\StartServices.ps1
 ```
 
-Test if ElasticSearch is responding:   <http://127.0.0.1:9200/>
+## Test if services were started sucessfully
+
+* ElasticSearch:   <http://localhost:9200/>
+* Tika:   <http://http://localhost:9998/>
+* Kibana:   <http://localhost:9200/>
+
+## Index location
+
+Index information is written into mounted volume:\
+`c:\Index`

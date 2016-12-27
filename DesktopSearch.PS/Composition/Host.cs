@@ -10,13 +10,26 @@ using System.ComponentModel.Composition;
 using Microsoft.Extensions.Logging;
 using DesktopSearch.Core.ElasticSearch;
 using DesktopSearch.Core;
+using DesktopSearch.Core.Configuration;
+using System.IO;
+using Microsoft.Extensions.Configuration;
 
 namespace DesktopSearch.PS.Composition
 {
     internal class Host : HostBase
     {
+        private IConfigurationRoot _config;
+
+        public IConfigurationRoot Configuration { get => _config; }
+
         protected override CompositionContainer CreateAndInitializeContainer()
         {
+            var builder = ConfigBootstrapping.GetDefault();
+            builder.SetBasePath(Directory.GetCurrentDirectory())
+                   .AddJsonFile("appsettings.json");
+
+            _config = builder.Build();
+
             var conventions = new RegistrationBuilder();
 
             conventions.ForType<ClientFactory>()
@@ -41,6 +54,8 @@ namespace DesktopSearch.PS.Composition
 
             return container;
         }
+
+
     }
 
     internal class HostTest

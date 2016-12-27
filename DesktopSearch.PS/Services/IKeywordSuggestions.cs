@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.Composition;
 using System.Threading.Tasks;
 
 namespace DesktopSearch.PS.Services
@@ -9,6 +10,7 @@ namespace DesktopSearch.PS.Services
         Task<IEnumerable<string>> GetSuggestedKeywordsAsync();
     }
 
+    [Export(typeof(IKeywordSuggestions))]
     public class KeywordSuggestionService : IKeywordSuggestions
     {
         public Task<IEnumerable<string>> GetSuggestedKeywordsAsync()
