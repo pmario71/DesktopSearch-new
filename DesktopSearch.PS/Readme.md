@@ -30,3 +30,8 @@ New-ExternalHelp .\docs -OutputPath en-US\ -Force
 ### References
 
 **Docs**: https://github.com/PowerShell/platyPS
+
+## UI Activation
+
+* see DialogFactory for details
+* first control is not automatically in focus

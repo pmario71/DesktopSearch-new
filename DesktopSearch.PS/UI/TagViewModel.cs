@@ -54,6 +54,7 @@ namespace DesktopSearch.PS.UI
                 _descriptor.Title = value;
 
                 RaisePropertyChanged();
+                _CloseCommand.RaiseCanExecuteChanged();
             }
         }
 
@@ -70,10 +71,24 @@ namespace DesktopSearch.PS.UI
                 _descriptor.Author = value;
 
                 RaisePropertyChanged();
+                _CloseCommand.RaiseCanExecuteChanged();
             }
         }
 
         public TagDescriptor TagDescriptor { get; internal set; }
+
+        private string _closeTrigger;
+        /// <summary>
+        /// Observed by View. Set to "OK" or "Cancel" if view shall be closed.
+        /// </summary>
+        public string CloseTrigger
+        {
+            get { return _closeTrigger; }
+            set
+            {
+                base.Set(ref _closeTrigger, value);
+            }
+        }
 
         public KeywordViewModel KeywordViewModel
         {
@@ -82,7 +97,41 @@ namespace DesktopSearch.PS.UI
 
         #region Commands
 
+        #region CloseCommand Implementation
+        RelayCommand<string> _CloseCommand;
 
+        public ICommand CloseCommand
+        {
+            get
+            {
+                if (_CloseCommand == null)
+                {
+                    _CloseCommand = new RelayCommand<string>(OnClose, OnCanClose);
+                }
+                return _CloseCommand;
+            }
+        }
+
+        private void OnClose(string action)
+        {
+            action = action.ToUpper();
+            if ((action == "OK") && HasValidContent())
+            {
+                this.ApplyChangesToSourceDescriptor();
+            }
+            this.CloseTrigger = action;
+        }
+
+        private bool OnCanClose(string action)
+        {
+            if (action == "Cancel")
+            {
+                return true;
+            }
+            
+            return HasValidContent();
+        }
+        #endregion
         #endregion
 
         #region other
@@ -94,6 +143,11 @@ namespace DesktopSearch.PS.UI
             {
                 _descriptor.Keywords.Add(item.Text);
             }
+        }
+
+        private bool HasValidContent()
+        {
+            return !string.IsNullOrEmpty(this.Title) && !string.IsNullOrEmpty(Author);
         }
         #endregion
 

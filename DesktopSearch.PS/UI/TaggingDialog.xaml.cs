@@ -45,24 +45,24 @@ namespace DesktopSearch.PS.UI
             }
         }
 
-        private void OnClosing(object sender, CancelEventArgs e)
-        {
-            if (e.Cancel)
-                return;
+        //private void OnClosing(object sender, CancelEventArgs e)
+        //{
+        //    if (e.Cancel)
+        //        return;
 
-            _viewmodel.ApplyChangesToSourceDescriptor();
-            this.DialogResult = true;
-        }
+        //    _viewmodel.ApplyChangesToSourceDescriptor();
+        //    this.DialogResult = true;
+        //}
 
-        private void OnCloseEx(object sender, ExecutedRoutedEventArgs e)
-        {
-            _viewmodel.ApplyChangesToSourceDescriptor();
-            this.DialogResult = true;
-        }
+        //private void OnCloseEx(object sender, ExecutedRoutedEventArgs e)
+        //{
+        //    _viewmodel.ApplyChangesToSourceDescriptor();
+        //    this.DialogResult = true;
+        //}
 
-        private void OnActivated(object sender, EventArgs e)
-        {
-            TitleText.Focus();
-        }
+        //private void OnActivated(object sender, EventArgs e)
+        //{
+        //    TitleText.Focus();
+        //}
     }
 }

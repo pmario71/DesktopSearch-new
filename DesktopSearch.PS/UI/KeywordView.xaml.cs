@@ -24,5 +24,19 @@ namespace DesktopSearch.PS.UI
         {
             InitializeComponent();
         }
+
+        private void OnTextBoxKeyDown(object sender, KeyEventArgs e)
+        {
+            if ((e.Key == Key.Right) && Keyboard.IsKeyDown(Key.LeftCtrl))
+            {
+                if (KeywordsGrid.Items.Count > 0 && KeywordsGrid.SelectedItem == null)
+                {
+                    KeywordsGrid.SelectedItem = KeywordsGrid.Items[0];
+                }
+                else
+                    KeywordsGrid.Focus();
+                e.Handled = true;
+            }
+        }
     }
 }

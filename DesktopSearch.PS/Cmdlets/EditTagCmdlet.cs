@@ -61,6 +61,8 @@ namespace DesktopSearch.PS.Cmdlets
 
                 DialogFactory.ShowDialog(dlg);
 
+                this.WriteVerbose(tagDesc.ToString());
+
                 FileInfo outputFile;
                 if (this.OutputFile == null)
                 {

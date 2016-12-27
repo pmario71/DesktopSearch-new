@@ -33,6 +33,9 @@ namespace DesktopSearch.Core.Tagging
             //set { _tags[MetaTypes.Keywords] = string.Join(";", value); }
         }
 
+        /// <summary>
+        /// DataSet representation of all properties.
+        /// </summary>
         public IDictionary<string, string> Tags
         {
             get
@@ -51,6 +54,11 @@ namespace DesktopSearch.Core.Tagging
                 result = string.Empty;
             }
             return result;
+        }
+
+        public override string ToString()
+        {
+            return $"Title  : {Title}\r\nAuthor : {Author}\r\nKeywords: {Tags[MetaTypes.Keywords]}";
         }
     }
 }
