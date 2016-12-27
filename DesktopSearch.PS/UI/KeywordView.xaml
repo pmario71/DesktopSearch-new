@@ -28,9 +28,8 @@
             </ListView.InputBindings>
         </ListView>
         <Controls:AutoCompleteBox x:Name="keywordsCombo" VerticalAlignment="Top" IsTextCompletionEnabled="True"
-                                ItemsSource="{Binding KeywordsList}" Text="{Binding KeywordToAdd, Mode=TwoWay}"
-                                TabIndex="9" IsTabStop="True" PreviewKeyDown="OnTextBoxKeyDown"
-                                  ToolTip="Hit Ctrl+Right to move to list of tags!">
+                                ItemsSource="{Binding SuggestedKeywordsList}" Text="{Binding KeywordToAdd, Mode=TwoWay}"
+                                TabIndex="9" IsTabStop="True" PreviewKeyDown="OnTextBoxKeyDown" ToolTip="Hit Ctrl+Right to move to list of tags!">
             <Controls:AutoCompleteBox.InputBindings>
                 <KeyBinding Key="Return" Command="{Binding AddKeywordCommand}" />
             </Controls:AutoCompleteBox.InputBindings>

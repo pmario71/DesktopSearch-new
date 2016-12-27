@@ -1,12 +1,15 @@
 ﻿using DesktopSearch.Core.Tagging;
+using DesktopSearch.PS.Services;
 using GalaSoft.MvvmLight.Command;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Data;
 using System.Windows.Input;
 
 namespace DesktopSearch.PS.UI
@@ -14,12 +17,27 @@ namespace DesktopSearch.PS.UI
     public class KeywordViewModel : GalaSoft.MvvmLight.ViewModelBase
     {
         private string _keywordToAdd;
+        private Task _backgroundInitialization;
+        private List<string> _suggestedKeywords = new List<string>();
 
-        public KeywordViewModel(TagDescriptor descriptor)
+        public KeywordViewModel(TagDescriptor descriptor, IKeywordSuggestions keywordSuggestions)
         {
+            _keywordSuggestions = keywordSuggestions;
+
             this.Keywords = new ObservableCollection<Keyword>(descriptor.Keywords.Select(p => new Keyword(p)));
 
-            this.KeywordsList = new ObservableCollection<string>(new[] { "SQL", "Test" });
+            this.SuggestedKeywordsList = CollectionViewSource.GetDefaultView(_suggestedKeywords);
+            this.SuggestedKeywordsList.Filter = o =>
+            {
+                string entry = o as string;
+
+                if ((entry != null) && (this.Keywords.Any(e => e.Text == entry)))
+                    return false;
+
+                return true;
+            };
+
+            _backgroundInitialization = InitializeKeywords();
         }
         #region Properties
 
@@ -39,7 +57,7 @@ namespace DesktopSearch.PS.UI
 
         public ObservableCollection<Keyword> Keywords { get; private set; }
 
-        public ObservableCollection<string> KeywordsList { get; private set; }
+        public ICollectionView SuggestedKeywordsList { get; private set; }
         #endregion
 
         #region Commands
@@ -67,6 +85,7 @@ namespace DesktopSearch.PS.UI
             if (!this.Keywords.Contains(keyword))
             {
                 this.Keywords.Add(keyword);
+                this.SuggestedKeywordsList.Refresh();
             }
             
             KeywordToAdd = null;
@@ -81,6 +100,7 @@ namespace DesktopSearch.PS.UI
         //DeleteSelectedKeywordsCommand
         #region DeleteSelectedKeywordsCommand Implementation
         ICommand _DeleteSelectedKeywordsCommand;
+        private IKeywordSuggestions _keywordSuggestions;
 
         public ICommand DeleteSelectedKeywordsCommand
         {
@@ -104,6 +124,8 @@ namespace DesktopSearch.PS.UI
             foreach (Keyword keyword in keywords.Cast<Keyword>().ToArray())
             {
                 this.Keywords.Remove(keyword);
+                _suggestedKeywords.Remove(keyword.Text);
+                this.SuggestedKeywordsList.Refresh();
             }
         }
 
@@ -113,5 +135,14 @@ namespace DesktopSearch.PS.UI
         }
         #endregion
         #endregion
+
+        private async Task InitializeKeywords()
+        {
+            // ask for Elastic for all keywords
+            IEnumerable<string> kwds = await _keywordSuggestions.GetSuggestedKeywordsAsync();
+            _suggestedKeywords.AddRange(kwds);
+
+            this.SuggestedKeywordsList.Refresh();
+        }
     }
 }

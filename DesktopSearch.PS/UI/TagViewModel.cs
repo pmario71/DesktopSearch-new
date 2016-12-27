@@ -18,7 +18,7 @@ namespace DesktopSearch.PS.UI
         public TagViewModel(TagDescriptor descriptor)
         {
             _descriptor = descriptor;
-            _KeywordViewModel = new KeywordViewModel(_descriptor);
+            _KeywordViewModel = new KeywordViewModel(_descriptor, new Services.KeywordSuggestionService());
         }
 
         public TagViewModel()
@@ -37,7 +37,7 @@ namespace DesktopSearch.PS.UI
             var td = new TagDescriptor(tags);
             _descriptor = td;
 
-            _KeywordViewModel = new KeywordViewModel(_descriptor);
+            _KeywordViewModel = new KeywordViewModel(_descriptor, new Services.KeywordSuggestionService());
         }
         
 

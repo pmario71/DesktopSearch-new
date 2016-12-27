@@ -29,7 +29,6 @@ namespace DesktopSearch.PS.UI
             var wnd = ((Window)sender);
             Delegate dlg = (Action)(() =>
             {
-                Console.WriteLine("Activating ...");
                 wnd.Activate();
                 wnd.MoveFocus(new System.Windows.Input.TraversalRequest(System.Windows.Input.FocusNavigationDirection.Next));
             });

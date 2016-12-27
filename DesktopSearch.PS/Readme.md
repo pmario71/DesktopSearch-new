@@ -1,5 +1,8 @@
 ﻿# Readme
 
+1) Running all necessary services
+2) [Requirements Specification](../Documents/RequirementsSpec.md)
+3) [Design Specification](../DesktopSearch.Core/Designspec.md)
 
 ## Help Generation
 

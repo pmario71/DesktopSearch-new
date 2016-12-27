@@ -1,3 +1,6 @@
 # TODO
 
-http://stackoverflow.com/questions/13601295/tab-create-new-row-and-focus-new-row-in-datagrid/19847216#19847216
+1) filter suggestion list by already used items
+2) add used keywords to suggestion list
+3) Pull Keywords from existing ElasticSearch instance
+4) cache list in PS variable
