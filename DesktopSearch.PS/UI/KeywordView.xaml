@@ -1,0 +1,38 @@
+﻿<UserControl
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:DesktopSearch.PS.UI"
+             xmlns:Controls="clr-namespace:System.Windows.Controls;assembly=DotNetProjects.Input.Toolkit" x:Class="DesktopSearch.PS.UI.KeywordView"
+             mc:Ignorable="d" IsTabStop="False" KeyboardNavigation.TabNavigation="Local"
+             d:DesignHeight="300" d:DesignWidth="309.322">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="27"/>
+            <RowDefinition Height="53*"/>
+        </Grid.RowDefinitions>
+
+        <ListView x:Name="KeywordsGrid" Margin="0,5,0,0" ItemsSource="{Binding Keywords}" DisplayMemberPath="Text" 
+                  IsTabStop="True" TabIndex="10" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.CanContentScroll="False" 
+                  Grid.Row="1">
+            <ListView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" IsItemsHost="True" Focusable="True" />
+                </ItemsPanelTemplate>
+            </ListView.ItemsPanel>
+            <ListView.InputBindings>
+                <KeyBinding Command="{Binding DeleteSelectedKeywordsCommand}" CommandParameter="{Binding SelectedItems, ElementName=KeywordsGrid}" 
+                            Key="Delete" />
+            </ListView.InputBindings>
+        </ListView>
+        <Controls:AutoCompleteBox x:Name="keywordsCombo" VerticalAlignment="Top" IsTextCompletionEnabled="True"
+                                ItemsSource="{Binding KeywordsList}" Text="{Binding KeywordToAdd, Mode=TwoWay}"
+                                TabIndex="1" IsTabStop="True">
+                <Controls:AutoCompleteBox.InputBindings>
+                    <KeyBinding Key="Return" Command="{Binding AddKeywordCommand}" />
+                </Controls:AutoCompleteBox.InputBindings>   
+        </Controls:AutoCompleteBox>
+
+    </Grid>
+</UserControl>

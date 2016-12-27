@@ -30,5 +30,21 @@
                 RaisePropertyChanged();
             }
         }
+
+        public override int GetHashCode()
+        {
+            return _keyword.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            Keyword kwd = obj as Keyword;
+            if (kwd != null)
+	        {
+                return this.GetHashCode() == kwd.GetHashCode();
+	        }
+
+            return false;
+        }
     }
 }

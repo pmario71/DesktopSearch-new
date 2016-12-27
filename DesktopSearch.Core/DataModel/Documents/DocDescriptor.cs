@@ -21,11 +21,12 @@ namespace DesktopSearch.Core.DataModel.Documents
         [Date(Name = "lastmodified")]
         public DateTime LastModified { get; set; }
 
-        //public string Content { get; set; }
-
         [Keyword(Name = "keywords", Boost = 1.3)]
         public string[] Keywords { get; set; }
 
+        /// <summary>
+        /// Buch, Artikel, Rechnung, Unterlagen
+        /// </summary>
         [Text(Name = "contenttype", Boost = 1.3)]
         public string ContentType { get; set; }
         

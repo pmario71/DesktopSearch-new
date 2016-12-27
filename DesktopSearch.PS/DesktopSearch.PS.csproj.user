@@ -6,6 +6,6 @@
     <StartArguments>-NoExit -NoProfile -Command "&amp;{ Import-Module %27.\DesktopSearch.PS.dll%27 }"</StartArguments>
   </PropertyGroup>
   <PropertyGroup>
-    <ProjectView>ProjectFiles</ProjectView>
+    <ProjectView>ShowAllFiles</ProjectView>
   </PropertyGroup>
 </Project>
