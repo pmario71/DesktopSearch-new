@@ -38,6 +38,15 @@ namespace DesktopSearch.Core.Processors
             return ExtractFilesAsync(new[] { file }, indexingTypeName, null);
         }
 
+        public async Task Process(DocDescriptor document)
+        {
+            var result = await _client.IndexAsync(document, (indexSelector) => indexSelector.Index(_configuration.DocumentSearchIndexName));
+            if (!result.IsValid)
+            {
+                throw new Exception(result.DebugInformation);
+            }
+        }
+
         public Task Process(Folder folder, IProgress<int> progress)
         {
             var extensionFilter = new ExcludeFileByExtensionFilter(".bin", ".lnk");

@@ -37,8 +37,14 @@
 * Content : content for fulltext indexing
 * Path : file path (relative to folder root)
 * FolderID : root folder id
-* ContentType : [Buch, Artikel, Rechnung, Unterlagen, ...]
+* ContentType : mime type coming from Tika
+* DocumentType : [Buch, Artikel, Rechnung, Unterlagen, ...]
+
 * Rating : [1..10]
+
+#### Remarks
+1) When disabling `SourceField` (see ManagementService => .SourceField(sf => sf.Enabled(false))))\
+   Fields need to explicitly specified to be returned when querying.
 
 See:\
 <https://github.com/pmario71/DesktopSearch-new/blob/master/DesktopSearch.Core/DataModel/Documents/DocDescriptor.cs>

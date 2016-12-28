@@ -6,28 +6,28 @@ using System.Threading.Tasks;
 
 namespace DesktopSearch.Core.DataModel.Documents
 {
-    [ElasticsearchType(Name = "docdescriptor")]
+    [ElasticsearchType(Name = "docdescriptor", IdProperty ="path")]
     public class DocDescriptor
     {
-        [Text(Name = "title", Boost = 1.5)]
+        [Text(Name = "title", Store = true, Boost = 1.5)]
         public string Title { get; set; }
 
-        [Text(Name = "author")]
+        [Text(Name = "author", Store = true)]
         public string Author { get; set; }
 
-        [Text(Name = "path")]
+        [Keyword(Name = "path", Store = true)]
         public string Path { get; set; }
 
-        [Date(Name = "lastmodified")]
+        [Date(Name = "lastmodified", Store = true)]
         public DateTime LastModified { get; set; }
 
-        [Keyword(Name = "keywords", Boost = 1.3)]
+        [Keyword(Name = "keywords", Store = true, Boost = 1.3)]
         public string[] Keywords { get; set; }
 
         /// <summary>
         /// Buch, Artikel, Rechnung, Unterlagen
         /// </summary>
-        [Text(Name = "contenttype")]
+        [Keyword(Name = "contenttype")]
         public string ContentType { get; set; }
         
         [Number(Name = "rating", Boost = 1.1)]

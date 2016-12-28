@@ -82,6 +82,13 @@ namespace DesktopSearch.Core.Services
             //}
         }
 
+        public async Task IndexDocumentAsync(DocDescriptor document)
+        {
+            await EnsureInitialized;
+
+            await _docFolderProcessor.Process(document);
+        }
+
         public async Task IndexCodeFileAsync(string codefilePath)
         {
             await EnsureInitialized;
@@ -159,6 +166,11 @@ namespace DesktopSearch.Core.Services
         }
 
         public Task IndexCodeFileAsync(string codefilePath)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task IndexDocumentAsync(DocDescriptor document)
         {
             throw new NotImplementedException();
         }
