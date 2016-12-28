@@ -1,5 +1,7 @@
-﻿using DesktopSearch.Core.DataModel.Documents;
+﻿using DesktopSearch.Core.Configuration;
+using DesktopSearch.Core.DataModel.Documents;
 using DesktopSearch.Core.Processors;
+using DesktopSearch.Core.Services;
 using Nest;
 using NUnit.Framework;
 using System;
@@ -16,16 +18,21 @@ namespace DesktopSearch.Core.Tests.ElasticSearch
     {
         private const string testDataPath = @"D:\Projects\GitHub\DesktopSearch\test\DesktopSearch.Core.Tests\TestData\ElasticSearch\";
 
-        [Test, Ignore("Requires elasticsearch running")]
-        public async Task SetupIndex()
+        [Test, Explicit("Requires elasticsearch running")]
+        public async Task Setup_and_populate_Index()
         {
-            var esClient = ElasticClientFactory.Create();
+            var cfg = new ElasticSearchConfig();
+            cfg.DocumentSearchIndexName += "_test";
 
-            var sut = new Core.ElasticSearch.ManagementService(esClient, true);
+            var esClient = ElasticClientFactory.Create(cfg);
+
+            var sut = new Core.ElasticSearch.ManagementService(esClient, cfg);
 
             await sut.EnsureIndicesCreated();
 
-            //var result = await IndexingHelper.IndexDocumentAsync(esClient, testDataPath + "zen-of-results.pdf");
+            var docFolderProcessoer = new DocumentFolderProcessor(esClient, cfg);
+
+            await docFolderProcessoer.Process(testDataPath + "zen-of-results.pdf", Core.Configuration.DocumentSearch.ContentType.Artikel);
 
             //if (!result.IsValid)
             //{
@@ -34,17 +41,39 @@ namespace DesktopSearch.Core.Tests.ElasticSearch
             //}
         }
 
+        [Test, Explicit]
+        public async Task Search_for_documents()
+        {
+            var cfg = new ElasticSearchConfig();
+            cfg.DocumentSearchIndexName += "_test";
+
+            var esClient = ElasticClientFactory.Create(cfg);
+            var mgtmSvc = new Core.ElasticSearch.ManagementService(esClient, cfg);
+            var docProc = new DocumentFolderProcessor(esClient, cfg);
+
+            var searchSvs = new SearchService(esClient, cfg, mgtmSvc, docProc);
+
+            var results = await searchSvs.SearchDocumentAsync("another");
+
+            Console.WriteLine("Returned results:");
+            Console.WriteLine("=================");
+
+            foreach (var r in results)
+            {
+                Console.WriteLine($"{r.Score}  -  {r.Source.Title}");
+            }
+        }
     }
 
 
     class ElasticClientFactory
     {
-        public static IElasticClient Create()
+        public static IElasticClient Create(ElasticSearchConfig config)
         {
-            var settings = new ConnectionSettings(new Uri(Configuration.ElasticSearchUri));
+            var settings = new ConnectionSettings(new Uri(config.Uri));
             settings
                 .MapDefaultTypeIndices(m => m
-                    .Add(typeof(DocDescriptor), Core.Configuration.DocumentSearch.IndexName + "_test"))
+                    .Add(typeof(DocDescriptor), config.DocumentSearchIndexName))
                 .DisableDirectStreaming()
                     .OnRequestCompleted(details =>
                     {
@@ -57,10 +86,5 @@ namespace DesktopSearch.Core.Tests.ElasticSearch
 
             return new ElasticClient(settings);
         }
-    }
-
-    public class Configuration
-    {
-        public const string ElasticSearchUri = "http://localhost:9200";
     }
 }

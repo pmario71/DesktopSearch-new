@@ -195,7 +195,7 @@
     <Compile Include="Configuration\ConfigAccess.cs" />
     <Compile Include="Configuration\ConfigBootstrapping.cs" />
     <Compile Include="Configuration\DocumentSearch.cs" />
-    <Compile Include="Configuration\ElasticSearch.cs" />
+    <Compile Include="Configuration\ElasticSearchConfig.cs" />
     <Compile Include="Configuration\Providers\IStreamFactory.cs" />
     <Compile Include="Configuration\Settings.cs" />
     <Compile Include="Contracts\MetaTypes.cs" />

@@ -15,14 +15,16 @@ namespace DesktopSearch.Core.Processors
 {
     public class DocumentFolderProcessor : IFolderProcessor
     {
-        private IndexingHelper _helper;
         private readonly IElasticClient _client;
+        private readonly ElasticSearchConfig _configuration;
+        DesktopSearch.Core.Extractors.Tika.TikaServerExtractor _extractor;
         //private readonly ILogger<DocumentFolderProcessor> _logging;
 
-        public DocumentFolderProcessor(IElasticClient client/*, ILogger logging*/)
+        public DocumentFolderProcessor(IElasticClient client, ElasticSearchConfig config/*, ILogger logging*/)
         {
             _client = client;
-            _helper = new IndexingHelper(new TikaServerExtractor());
+            _configuration = config;
+            _extractor = new TikaServerExtractor();
             //_logging = logging;
         }
 
@@ -54,12 +56,18 @@ namespace DesktopSearch.Core.Processors
             foreach (var filePath in filesToParse)
             {
                 var stopWatch = Stopwatch.StartNew();
-                IIndexResponse result = await _helper.IndexDocumentAsync(_client, filePath, indexingTypeName);
+
+                Extractors.ParserContext context = new Extractors.ParserContext();
+                var docDesc = await _extractor.ExtractAsync(context, new FileInfo(filePath));
+
+                docDesc.ContentType = indexingTypeName;
+
+                var result = await _client.IndexAsync(docDesc, (indexSelector) => indexSelector.Index(_configuration.DocumentSearchIndexName));
 
                 if (!result.IsValid)
                 {
                     //_logging.LogWarning($"Failed to index document: {filePath}!", result.OriginalException);
-                    Console.WriteLine($"Failed to index document: {filePath}!", result.OriginalException);
+                    Console.WriteLine($"Failed to index document: {filePath}!\r\n{result.OriginalException}");
                 }
                 else
                 {
@@ -73,27 +81,6 @@ namespace DesktopSearch.Core.Processors
                     progress.Report((int)(current * 100 / (double)maxFiles));
                 }
             }
-        }
-    }
-
-    internal class IndexingHelper
-    {
-        DesktopSearch.Core.Extractors.Tika.TikaServerExtractor _extractor;
-
-        public IndexingHelper(TikaServerExtractor extractor)
-        {
-            _extractor = extractor;
-        }
-
-        public async Task<IIndexResponse> IndexDocumentAsync(IElasticClient client, string filePath, string indexingTypeName)
-        {
-            Extractors.ParserContext context = new Extractors.ParserContext();
-            var docDesc = await _extractor.ExtractAsync(context, new FileInfo(filePath));
-
-            docDesc.ContentType = indexingTypeName;
-
-            var result = await client.IndexAsync(docDesc);
-            return result;
         }
     }
 }

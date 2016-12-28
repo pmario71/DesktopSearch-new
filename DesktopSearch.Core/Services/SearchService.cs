@@ -18,6 +18,7 @@ namespace DesktopSearch.Core.Services
     public class SearchService : ISearchService
     {
         private readonly IElasticClient          _elastic;
+        private readonly ElasticSearchConfig     _config;
         private readonly RoslynParser            _roslynParser = new RoslynParser();
         private readonly DocumentFolderProcessor _docFolderProcessor;
 
@@ -25,6 +26,7 @@ namespace DesktopSearch.Core.Services
 
         #region CTOR
         public SearchService(IElasticClient elastic,
+                             ElasticSearchConfig config,
                              ManagementService mgtSvc,
                              DocumentFolderProcessor docFolderProcessor)
         {
@@ -35,6 +37,7 @@ namespace DesktopSearch.Core.Services
             EnsureInitialized = mgtSvc.EnsureIndicesCreated();
 
             _elastic = elastic;
+            _config = config;
             _docFolderProcessor = docFolderProcessor;
         }
         #endregion
@@ -71,7 +74,7 @@ namespace DesktopSearch.Core.Services
             //var docDesc = await _extractor.ExtractAsync(context, new FileInfo(documentPath));
 
             //var elastic = _elastic;
-            //var response = await elastic.IndexAsync(docDesc, s => s.Index(DocumentSearch.IndexName));
+            //var response = await elastic.IndexAsync(docDesc, s => s.Index(_config.DocumentSearchIndexName));
 
             //if (!response.IsValid)
             //{
@@ -115,7 +118,7 @@ namespace DesktopSearch.Core.Services
         {
             await EnsureInitialized;
 
-            var result = await _elastic.SearchAsync<DocDescriptor>(t => t.Index(DocumentSearch.IndexName).Query(q => q.Term(p => p.Path, id)));
+            var result = await _elastic.SearchAsync<DocDescriptor>(t => t.Index(_config.DocumentSearchIndexName).Query(q => q.Term(p => p.Path, id)));
             return result.Documents.First();
         }
 
@@ -123,7 +126,7 @@ namespace DesktopSearch.Core.Services
         {
             await EnsureInitialized;
 
-            var result = await _elastic.SearchAsync<DocDescriptor>(t => t.Index(DocumentSearch.IndexName).Query(q => q.QueryString(c => c.Query(querystring))));
+            var result = await _elastic.SearchAsync<DocDescriptor>(t => t.Index(_config.DocumentSearchIndexName).Query(q => q.QueryString(c => c.Query(querystring))));
             return result.Hits;
         }
         #endregion

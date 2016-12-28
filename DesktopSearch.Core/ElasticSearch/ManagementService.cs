@@ -1,4 +1,5 @@
-﻿using DesktopSearch.Core.DataModel.Code;
+﻿using DesktopSearch.Core.Configuration;
+using DesktopSearch.Core.DataModel.Code;
 using DesktopSearch.Core.DataModel.Documents;
 using Microsoft.Extensions.Logging;
 using Nest;
@@ -12,30 +13,32 @@ namespace DesktopSearch.Core.ElasticSearch
     public class ManagementService
     {
         private readonly IElasticClient _client;
-        private readonly string _codeSearchIndexName;
-        private readonly string _documentSearchIndexName;
+        //private readonly string _codeSearchIndexName;
+        //private readonly string _documentSearchIndexName;
+        private readonly ElasticSearchConfig _configuration;
 
         //private readonly ILogger _logger;
 
-        public ManagementService(IElasticClient client/*, ILogger logger*/)
-            : this(client, false)
+        public ManagementService(IElasticClient client, ElasticSearchConfig config/*, ILogger logger*/)
         {
             //_logger = logger;
-        }
-
-        internal ManagementService(IElasticClient client, bool useTestIndices)
-        {
             _client = client;
-
-            _documentSearchIndexName = Configuration.DocumentSearch.IndexName;
-            _codeSearchIndexName = Configuration.CodeSearch.IndexName;
-
-            if (useTestIndices)
-            {
-                _documentSearchIndexName += "_test";
-                _codeSearchIndexName += "_test";
-            }
+            _configuration = config;
         }
+
+        //internal ManagementService(IElasticClient client, bool useTestIndices)
+        //{
+            
+
+        //    _documentSearchIndexName = Configuration.DocumentSearch.IndexName;
+        //    _codeSearchIndexName = Configuration.CodeSearch.IndexName;
+
+        //    if (useTestIndices)
+        //    {
+        //        _documentSearchIndexName += "_test";
+        //        _codeSearchIndexName += "_test";
+        //    }
+        //}
 
         public async Task EnsureIndicesCreated()
         {
@@ -45,11 +48,11 @@ namespace DesktopSearch.Core.ElasticSearch
             Task codeIndexTask = Task.CompletedTask;
             Task docIndexTask = Task.CompletedTask;
 
-            if (!_client.IndexExists(_documentSearchIndexName).Exists)
+            if (!_client.IndexExists(_configuration.DocumentSearchIndexName).Exists)
             {
                 //_logger.LogInformation("Creating Index '{0}'", Configuration.DocumentSearch.IndexName);
 
-                var docIndex = new CreateIndexDescriptor(_documentSearchIndexName);
+                var docIndex = new CreateIndexDescriptor(_configuration.DocumentSearchIndexName);
 
                 docIndex.Mappings(mp => mp.Map<DocDescriptor>(m => m.AutoMap()));
                     //.SourceField(s => s.Excludes(new[] { "content" }))
@@ -117,7 +120,7 @@ namespace DesktopSearch.Core.ElasticSearch
                 //            )
                 //));
 
-                var task = _client.CreateIndexAsync(_documentSearchIndexName, i => docIndex);
+                var task = _client.CreateIndexAsync(_configuration.DocumentSearchIndexName, i => docIndex);
                 docIndexTask = task;
 
                 var result = await task;
@@ -127,17 +130,17 @@ namespace DesktopSearch.Core.ElasticSearch
                 }
             }
 
-            if (!_client.IndexExists(_codeSearchIndexName).Exists)
+            if (!_client.IndexExists(_configuration.CodeSearchIndexName).Exists)
             {
                 //_logger.LogInformation("Creating Index '{0}'", Configuration.CodeSearch.IndexName);
 
-                var indexDescriptor = new CreateIndexDescriptor(_codeSearchIndexName)
+                var indexDescriptor = new CreateIndexDescriptor(_configuration.CodeSearchIndexName)
                     .Mappings(ms => ms
                         .Map<TypeDescriptor>(m => m.AutoMap())
                         .Map<MethodDescriptor>(m => m.AutoMap())
                         .Map<FieldDescriptor>(m => m.AutoMap()));
 
-                var task = _client.CreateIndexAsync(_codeSearchIndexName, i => indexDescriptor);
+                var task = _client.CreateIndexAsync(_configuration.CodeSearchIndexName, i => indexDescriptor);
                 codeIndexTask = task;
 
                 var result = await task;
