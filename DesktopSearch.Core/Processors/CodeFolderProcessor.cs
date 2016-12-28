@@ -27,6 +27,11 @@ namespace DesktopSearch.Core.Processors
             return Process(folder, null);
         }
 
+        public Task Process(string file, string indexingTypeName)
+        {
+            throw new NotImplementedException();
+        }
+
         public Task Process(Folder folder, IProgress<int> progress)
         {
             var extensionFilter = new IncludeFileByExtensionFilter(".cs", ".xaml");

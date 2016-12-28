@@ -19,3 +19,10 @@ cd <Documents>
 
 Index information is written into mounted volume:\
 `c:\Index`
+
+## Used Docker Images
+
+| Name        | Image ID                       | Description                                             |
+|-------------|--------------------------------|---------------------------------------------------------|
+| ELK Stack   | sebp/elk                       | <https://hub.docker.com/r/sebp/elk><br><https://elk-docker.readthedocs.io>                |
+| Tika Server | logicalspark/docker-tikaserver | <https://hub.docker.com/r/logicalspark/docker-tikaserver> |

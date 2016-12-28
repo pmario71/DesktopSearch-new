@@ -9,23 +9,31 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
+using DesktopSearch.Core.Extractors.Tika;
 
 namespace DesktopSearch.Core.Processors
 {
     public class DocumentFolderProcessor : IFolderProcessor
     {
+        private IndexingHelper _helper;
         private readonly IElasticClient _client;
         //private readonly ILogger<DocumentFolderProcessor> _logging;
 
         public DocumentFolderProcessor(IElasticClient client/*, ILogger logging*/)
         {
             _client = client;
+            _helper = new IndexingHelper(new TikaServerExtractor());
             //_logging = logging;
         }
 
         public Task Process(Folder folder)
         {
             return Process(folder, null);
+        }
+
+        public Task Process(string file, string indexingTypeName)
+        {
+            return ExtractFilesAsync(new[] { file }, indexingTypeName, null);
         }
 
         public Task Process(Folder folder, IProgress<int> progress)
@@ -35,10 +43,10 @@ namespace DesktopSearch.Core.Processors
             var filesToProcess = Directory.GetFiles(folder.Path, "*", SearchOption.AllDirectories)
                                           .Where(f => extensionFilter.FilterByExtension(f));
 
-            return ExtractFilesAsync(filesToProcess, progress);
+            return ExtractFilesAsync(filesToProcess, folder.IndexingType, progress);
         }
 
-        private async Task ExtractFilesAsync(IEnumerable<string> filesToParse, IProgress<int> progress)
+        private async Task ExtractFilesAsync(IEnumerable<string> filesToParse, string indexingTypeName, IProgress<int> progress=null)
         {
             int current = 0;
             var maxFiles = filesToParse.Count();
@@ -46,7 +54,7 @@ namespace DesktopSearch.Core.Processors
             foreach (var filePath in filesToParse)
             {
                 var stopWatch = Stopwatch.StartNew();
-                IIndexResponse result = await IndexingHelper.IndexDocumentAsync(_client, filePath);
+                IIndexResponse result = await _helper.IndexDocumentAsync(_client, filePath, indexingTypeName);
 
                 if (!result.IsValid)
                 {
@@ -70,19 +78,21 @@ namespace DesktopSearch.Core.Processors
 
     internal class IndexingHelper
     {
-        public static async Task<IIndexResponse> IndexDocumentAsync(IElasticClient client, string filePath)
+        DesktopSearch.Core.Extractors.Tika.TikaServerExtractor _extractor;
+
+        public IndexingHelper(TikaServerExtractor extractor)
         {
-            var content = Convert.ToBase64String(File.ReadAllBytes(filePath));
-            var doc = new DocDescriptor
-            {
-                Path = filePath,
-                Attachment = new Attachment() { Content=content }
-            };
+            _extractor = extractor;
+        }
 
-            //var req = new IndexRequest<DocDescriptor>("docsearch_test", "");
-            //req.Document = doc;
+        public async Task<IIndexResponse> IndexDocumentAsync(IElasticClient client, string filePath, string indexingTypeName)
+        {
+            Extractors.ParserContext context = new Extractors.ParserContext();
+            var docDesc = await _extractor.ExtractAsync(context, new FileInfo(filePath));
 
-            var result = await client.IndexAsync(doc);
+            docDesc.ContentType = indexingTypeName;
+
+            var result = await client.IndexAsync(docDesc);
             return result;
         }
     }

@@ -25,6 +25,8 @@ namespace DesktopSearch.PS.Cmdlets
         public string OutputFile { get; set; }
 
         #region Dependencies
+        [Import]
+        public Services.IKeywordSuggestions KeywordSuggestionService { get; set; }
         #endregion
 
         protected override void BeginProcessing()
@@ -47,7 +49,7 @@ namespace DesktopSearch.PS.Cmdlets
                 var tagger = new Tagger();
                 var tagDesc = await tagger.ReadAsync(new FileInfo(this.File));
 
-                var dlg = new UI.TaggingDialog();
+                var dlg = new UI.TaggingDialog(this.KeywordSuggestionService);
                 dlg.TagDescriptor = tagDesc;
 
                 DialogFactory.ShowDialog(dlg);

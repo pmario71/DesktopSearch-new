@@ -27,14 +27,11 @@ namespace DesktopSearch.Core.DataModel.Documents
         /// <summary>
         /// Buch, Artikel, Rechnung, Unterlagen
         /// </summary>
-        [Text(Name = "contenttype", Boost = 1.3)]
+        [Text(Name = "contenttype")]
         public string ContentType { get; set; }
         
         [Number(Name = "rating", Boost = 1.1)]
         public int Rating { get; set; }
-
-        [Attachment(Name = "attachment", Store = false)]
-        public Nest.Attachment Attachment { get; set; }
 
         [Text(Store = false)]
         public string Content { get; set; }

@@ -12,13 +12,13 @@ namespace DesktopSearch.PS.UI
 
     public class TagViewModel : GalaSoft.MvvmLight.ViewModelBase
     {
-        private readonly TagDescriptor _descriptor;
-        private KeywordViewModel _KeywordViewModel;
+        private readonly TagDescriptor    _descriptor;
+        private readonly KeywordViewModel _KeywordViewModel;
 
-        public TagViewModel(TagDescriptor descriptor)
+        public TagViewModel(TagDescriptor descriptor, Services.IKeywordSuggestions keywordSuggestions)
         {
             _descriptor = descriptor;
-            _KeywordViewModel = new KeywordViewModel(_descriptor, new Services.KeywordSuggestionService());
+            _KeywordViewModel = new KeywordViewModel(_descriptor, keywordSuggestions);
         }
 
         public TagViewModel()
@@ -37,7 +37,7 @@ namespace DesktopSearch.PS.UI
             var td = new TagDescriptor(tags);
             _descriptor = td;
 
-            _KeywordViewModel = new KeywordViewModel(_descriptor, new Services.KeywordSuggestionService());
+            _KeywordViewModel = new KeywordViewModel(_descriptor, new Services.MockKeywordSuggestionService());
         }
         
 

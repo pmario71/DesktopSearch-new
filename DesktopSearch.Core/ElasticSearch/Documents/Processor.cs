@@ -8,34 +8,31 @@ using System.Threading.Tasks;
 
 namespace DesktopSearch.Core.ElasticSearch.Documents
 {
-    /// <summary>
-    /// 
-    /// </summary>
-    public class Processor
-    {
-        private ElasticClient _client;
+    //public class Processor
+    //{
+    //    private ElasticClient _client;
 
-        public Processor(ElasticClient client)
-        {
-            _client = client;
-        }
+    //    public Processor(ElasticClient client)
+    //    {
+    //        _client = client;
+    //    }
 
-        public async Task ProcessFile(string filePath)
-        {
-            var content = Convert.ToBase64String(File.ReadAllBytes(filePath));
-            var doc = new DocDescriptor
-            {
-                Path = filePath,
-                Attachment = new Attachment() { Content = content }
-            };
+    //    public async Task ProcessFile(string filePath)
+    //    {
+    //        var content = Convert.ToBase64String(File.ReadAllBytes(filePath));
+    //        var doc = new DocDescriptor
+    //        {
+    //            Path = filePath,
+    //            Attachment = new Attachment() { Content = content }
+    //        };
 
-            var result = await _client.IndexAsync<DocDescriptor>(doc);
+    //        var result = await _client.IndexAsync<DocDescriptor>(doc);
 
-            if (!result.IsValid)
-            {
-                throw new Exception($"Failed to process document: {filePath}!", result.OriginalException);
-            }
-        }
+    //        if (!result.IsValid)
+    //        {
+    //            throw new Exception($"Failed to process document: {filePath}!", result.OriginalException);
+    //        }
+    //    }
 
-    }
+    //}
 }

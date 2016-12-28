@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{
 		Documents\docker-compose.yml = Documents\docker-compose.yml
 		Documents\Drawings.vsdx = Documents\Drawings.vsdx
 		Documents\Extractors.dgml = Documents\Extractors.dgml
+		Documents\Operations.md = Documents\Operations.md
 		Documents\References.md = Documents\References.md
 		Documents\RequirementsSpec.md = Documents\RequirementsSpec.md
 		Documents\StartServices.ps1 = Documents\StartServices.ps1

@@ -2,7 +2,9 @@
 using DesktopSearch.Core.DataModel;
 using DesktopSearch.Core.DataModel.Code;
 using DesktopSearch.Core.DataModel.Documents;
+using DesktopSearch.Core.ElasticSearch;
 using DesktopSearch.Core.Extractors.Roslyn;
+using DesktopSearch.Core.Processors;
 using DesktopSearch.Core.Utils;
 using Nest;
 using System;
@@ -11,28 +13,29 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace DesktopSearch.Core.ElasticSearch
+namespace DesktopSearch.Core.Services
 {
-    public class SearchService
+    public class SearchService : ISearchService
     {
-        private readonly ElasticSearchConfig _eleasticSearchConfig;
-        private readonly ElasticClient       _elastic;
-        private readonly RoslynParser        _roslynParser = new RoslynParser();
+        private readonly IElasticClient          _elastic;
+        private readonly RoslynParser            _roslynParser = new RoslynParser();
+        private readonly DocumentFolderProcessor _docFolderProcessor;
 
         Task EnsureInitialized = null;
 
         #region CTOR
-        public SearchService(ElasticSearchConfig elasticSearchConfig, IContainer container)
+        public SearchService(IElasticClient elastic,
+                             ManagementService mgtSvc,
+                             DocumentFolderProcessor docFolderProcessor)
         {
-            _eleasticSearchConfig = elasticSearchConfig;
+            //TODO: replace ElasticSearchConfig with original ConnectionSettings
+            //var settings = new ConnectionSettings(new Uri(_eleasticSearchConfig.Uri));
+            //var elastic = new ElasticClient(settings);
 
-            var settings = new ConnectionSettings(new Uri(_eleasticSearchConfig.Uri));
-            var elastic = new ElasticClient(settings);
-
-            var mgtSvc = container.GetService<ManagementService>();
             EnsureInitialized = mgtSvc.EnsureIndicesCreated();
 
             _elastic = elastic;
+            _docFolderProcessor = docFolderProcessor;
         }
         #endregion
 
@@ -58,26 +61,22 @@ namespace DesktopSearch.Core.ElasticSearch
         #endregion
 
         #region API
-        public async Task IndexDocumentAsync(string documentPath)
+        public async Task IndexDocumentAsync(string documentPath, string indexingTypeName)
         {
             await EnsureInitialized;
 
-            var docDesc = new DocDescriptor
-            {
-                Path = documentPath,
-                Attachment = new Attachment()
-                {
-                    Content = Convert.ToBase64String(File.ReadAllBytes(documentPath))
-                }
-            };
+            await _docFolderProcessor.Process(documentPath, indexingTypeName);
 
-            var elastic = _elastic;
-            var response = await elastic.IndexAsync(docDesc, s => s.Index(DocumentSearch.IndexName));
+            //Extractors.ParserContext context = new Extractors.ParserContext();
+            //var docDesc = await _extractor.ExtractAsync(context, new FileInfo(documentPath));
 
-            if (!response.IsValid)
-            {
-                throw new Exception($"Failed to index document: '{documentPath}'", response.OriginalException);
-            }
+            //var elastic = _elastic;
+            //var response = await elastic.IndexAsync(docDesc, s => s.Index(DocumentSearch.IndexName));
+
+            //if (!response.IsValid)
+            //{
+            //    throw new Exception($"Failed to index document: '{documentPath}'", response.OriginalException);
+            //}
         }
 
         public async Task IndexCodeFileAsync(string codefilePath)
@@ -98,6 +97,20 @@ namespace DesktopSearch.Core.ElasticSearch
                 }
             }
         }
+
+        public async Task<IEnumerable<string>> GetKeywordSuggestionsAsync(string filter=null)
+        {
+            await EnsureInitialized;
+
+            var keywords = new[] { "SQL", "Test", "Balloon" };
+
+            if (filter != null)
+            {
+                return keywords.Where(e => e.StartsWith(filter));
+            }
+            return keywords;
+        }
+
         public async Task<DocDescriptor> GetDocumentAsync(string id)
         {
             await EnsureInitialized;
@@ -132,6 +145,24 @@ namespace DesktopSearch.Core.ElasticSearch
             //   //.InitializeUsing(indexSettings)
             //   .AddMapping<TypeDescriptor>(m => m.MapFromAttributes())
             //   .AddMapping<MethodDescriptor>(m => m.MapFromAttributes()));
+        }
+    }
+
+    public class MockSearchService : ISearchService
+    {
+        public Task<IEnumerable<string>> GetKeywordSuggestionsAsync(string filter = null)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task IndexCodeFileAsync(string codefilePath)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task IndexDocumentAsync(string documentPath, string indexingTypeName)
+        {
+            throw new NotImplementedException();
         }
     }
 }

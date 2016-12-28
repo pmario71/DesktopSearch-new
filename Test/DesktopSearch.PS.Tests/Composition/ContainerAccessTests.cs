@@ -68,6 +68,9 @@ namespace DesktopSearch.PS.Tests.Composition
 
                 var tester = new HostTest();
                 tester.TryCreate(sut.Container);
+
+                var searchService = sut.Container.GetExportedValue<Core.Services.ISearchService>();
+                var suggestion = sut.Container.GetExportedValue<Services.IKeywordSuggestions>();
             }
         }
 

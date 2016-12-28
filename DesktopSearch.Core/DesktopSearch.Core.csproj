@@ -209,7 +209,8 @@
     <Compile Include="ElasticSearch\CustomIDescriptorConverter.cs" />
     <Compile Include="ElasticSearch\Documents\Processor.cs" />
     <Compile Include="ElasticSearch\ManagementService.cs" />
-    <Compile Include="ElasticSearch\SearchService.cs" />
+    <Compile Include="Services\ISearchService.cs" />
+    <Compile Include="Services\SearchService.cs" />
     <Compile Include="Extractors\CodeExtractorSelector.cs" />
     <Compile Include="Extractors\IExtractor.cs" />
     <Compile Include="Extractors\ParserContext.cs" />

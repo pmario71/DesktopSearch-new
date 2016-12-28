@@ -124,8 +124,7 @@ namespace DesktopSearch.PS.UI
             foreach (Keyword keyword in keywords.Cast<Keyword>().ToArray())
             {
                 this.Keywords.Remove(keyword);
-                _suggestedKeywords.Remove(keyword.Text);
-                this.SuggestedKeywordsList.Refresh();
+                this.SuggestedKeywordsList.Refresh(); // refresh so that filter is reapplied
             }
         }
 

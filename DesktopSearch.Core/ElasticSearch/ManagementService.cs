@@ -51,7 +51,7 @@ namespace DesktopSearch.Core.ElasticSearch
 
                 var docIndex = new CreateIndexDescriptor(_documentSearchIndexName);
 
-                docIndex.Mappings(mp => mp.Map<DocDescriptor>(m => m
+                docIndex.Mappings(mp => mp.Map<DocDescriptor>(m => m.AutoMap()));
                     //.SourceField(s => s.Excludes(new[] { "content" }))
                     //.Properties(ps => ps
                     //        .String(s => s
@@ -74,48 +74,48 @@ namespace DesktopSearch.Core.ElasticSearch
                     //            .Store())
                     //  )
 //-------------------------------------------------------------------
-                        .Properties(p => p
-                                .Attachment(a => a
-                                    .Name(n => n.Attachment)
-                                    .AuthorField(d => d
-                                        .Name(n => n.Attachment.Author)
-                                        .Store()
-                                    )
-                                    .FileField(d => d
-                                        .Name(n => n.Attachment.Content)
-                                        .Store(false)
-                                    )
-                                    .ContentLengthField((Func<NumberPropertyDescriptor<DocDescriptor>, INumberProperty>)(d => d
-                                        .Name(n => n.Attachment.ContentLength)
-                                        .Store())
-                                    )
-                                    .ContentTypeField(d => d
-                                        .Name(n => n.Attachment.ContentType)
-                                        .Store()
-                                    )
-                                    .DateField(d => d
-                                        .Name(n => n.Attachment.Date)
-                                        .Store()
-                                    )
-                                    .KeywordsField(d => d
-                                        .Name(n => n.Attachment.Keywords)
-                                        .Store()
-                                    )
-                                    .LanguageField((Func<TextPropertyDescriptor<DocDescriptor>, ITextProperty>)(d => d
-                                        .Name(n => n.Attachment.Language)
-                                        .Store())
-                                    )
-                                    .NameField(d => d
-                                        .Name(n => n.Attachment.Name)
-                                        .Store()
-                                    )
-                                    .TitleField(d => d
-                                        .Name(n => n.Attachment.Title)
-                                        .Store()
-                                    )
-                                )
-                            )
-                ));
+                //        .Properties(p => p
+                //                .Attachment(a => a
+                //                    .Name(n => n.Attachment)
+                //                    .AuthorField(d => d
+                //                        .Name(n => n.Attachment.Author)
+                //                        .Store()
+                //                    )
+                //                    .FileField(d => d
+                //                        .Name(n => n.Attachment.Content)
+                //                        .Store(false)
+                //                    )
+                //                    .ContentLengthField((Func<NumberPropertyDescriptor<DocDescriptor>, INumberProperty>)(d => d
+                //                        .Name(n => n.Attachment.ContentLength)
+                //                        .Store())
+                //                    )
+                //                    .ContentTypeField(d => d
+                //                        .Name(n => n.Attachment.ContentType)
+                //                        .Store()
+                //                    )
+                //                    .DateField(d => d
+                //                        .Name(n => n.Attachment.Date)
+                //                        .Store()
+                //                    )
+                //                    .KeywordsField(d => d
+                //                        .Name(n => n.Attachment.Keywords)
+                //                        .Store()
+                //                    )
+                //                    .LanguageField((Func<TextPropertyDescriptor<DocDescriptor>, ITextProperty>)(d => d
+                //                        .Name(n => n.Attachment.Language)
+                //                        .Store())
+                //                    )
+                //                    .NameField(d => d
+                //                        .Name(n => n.Attachment.Name)
+                //                        .Store()
+                //                    )
+                //                    .TitleField(d => d
+                //                        .Name(n => n.Attachment.Title)
+                //                        .Store()
+                //                    )
+                //                )
+                //            )
+                //));
 
                 var task = _client.CreateIndexAsync(_documentSearchIndexName, i => docIndex);
                 docIndexTask = task;

@@ -13,6 +13,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using DesktopSearch.PS.Services;
 
 namespace DesktopSearch.PS.UI
 {
@@ -21,11 +22,17 @@ namespace DesktopSearch.PS.UI
     /// </summary>
     public partial class TaggingDialog
     {
+        private IKeywordSuggestions _keywordSuggestionService;
         private TagViewModel _viewmodel;
 
         public TaggingDialog()
         {
             InitializeComponent();
+        }
+
+        public TaggingDialog(Services.IKeywordSuggestions keywordSuggestionService) : this()
+        {
+            _keywordSuggestionService = keywordSuggestionService;
         }
 
         public TagDescriptor TagDescriptor
@@ -40,7 +47,7 @@ namespace DesktopSearch.PS.UI
             }
             set
             {
-                _viewmodel = new TagViewModel(value);
+                _viewmodel = new TagViewModel(value, _keywordSuggestionService);
                 this.DataContext = _viewmodel;
             }
         }

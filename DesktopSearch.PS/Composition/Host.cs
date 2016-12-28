@@ -24,11 +24,14 @@ namespace DesktopSearch.PS.Composition
 
         protected override CompositionContainer CreateAndInitializeContainer()
         {
+            // .net core configuration
             var builder = ConfigBootstrapping.GetDefault();
             builder.SetBasePath(Directory.GetCurrentDirectory())
                    .AddJsonFile("appsettings.json");
 
             _config = builder.Build();
+
+            
 
             var conventions = new RegistrationBuilder();
 
@@ -36,7 +39,10 @@ namespace DesktopSearch.PS.Composition
                 .SetCreationPolicy(CreationPolicy.Shared)
                 .ExportProperties(p => p.Name.Contains("SearchClient"));
 
+            conventions.ForType<Nest.ElasticClient>().Export<Nest.IElasticClient>();
             conventions.ForType<Core.ElasticSearch.ManagementService>().Export<Core.ElasticSearch.ManagementService>();
+            
+            conventions.ForType<Core.Services.SearchService>().Export<Core.Services.ISearchService>();
 
             conventions.ForType<Core.FolderProcessorFactory>().Export<Core.FolderProcessorFactory>();
             conventions.ForType<Core.Processors.CodeFolderProcessor>().Export<Core.Processors.CodeFolderProcessor>();
@@ -51,6 +57,11 @@ namespace DesktopSearch.PS.Composition
 
             var ca = new ContainerAccess(container);
             container.ComposeExportedValue<IContainer>(ca);
+
+            // add configuration
+            var elasticSearchConfig = new Core.Configuration.ElasticSearchConfig();
+            _config.Bind(elasticSearchConfig);
+            container.ComposeExportedValue(elasticSearchConfig);
 
             return container;
         }
