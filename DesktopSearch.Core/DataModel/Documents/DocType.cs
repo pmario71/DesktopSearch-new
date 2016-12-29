@@ -52,5 +52,21 @@ namespace DesktopSearch.Core.DataModel.Documents
         /// File extensions to be included when indexing
         /// </summary>
         public string[] IncludedExtensions { get; set; }
+
+        public override int GetHashCode()
+        {
+            return this.Name.GetHashCode();
+        }
+
+        public override bool Equals(object obj)
+        {
+            DocType f = obj as DocType;
+            if ((f != null ) && 
+                (StringComparer.CurrentCultureIgnoreCase.Compare(this.Name, f.Name) == 0))
+            {
+                return true;
+            }
+            return false;
+        }
     }
 }

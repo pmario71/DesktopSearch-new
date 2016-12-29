@@ -17,9 +17,9 @@ namespace DesktopSearch.Core.Services
         /// Tries to finds a registered <see cref="DocType"/> by matching the file location against against linked <see cref="Folder"/>s.
         /// </summary>
         /// <param name="file"></param>
-        /// <returns></returns>
-        /// <exception cref="DocTypeNotRegisteredException"/>
-        DocType GetDocTypeForPath(FileInfo file);
+        /// <param name="docType">found <see cref="DocType"/></param>
+        /// <returns>true, if found</returns>
+        bool TryGetDocTypeForPath(FileInfo file, out DocType docType);
 
         /// <summary>
         /// Adds a new <see cref="DocType"/> to the repository.

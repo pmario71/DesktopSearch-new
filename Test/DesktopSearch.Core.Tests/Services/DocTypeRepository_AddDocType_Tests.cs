@@ -17,7 +17,8 @@ namespace DesktopSearch.Core.Tests.Services
         [Test]
         public void Can_add_DocType_to_repo()
         {
-            var sut = new DocTypeRepository();
+
+            var sut = new DocTypeRepository(new NullMockStore());
 
             var docType = DocType.Create("uniquename", Path.GetTempPath());
             sut.AddDocType(docType);
@@ -26,7 +27,7 @@ namespace DesktopSearch.Core.Tests.Services
         [Test]
         public void Adding_same_folder_twice_throws()
         {
-            var sut = new DocTypeRepository();
+            var sut = new DocTypeRepository(new NullMockStore());
 
             var docType = DocType.Create("uniquename", Path.GetTempPath());
             var docType2 = DocType.Create("uniquename2", Path.GetTempPath());

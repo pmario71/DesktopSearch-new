@@ -211,7 +211,9 @@
     <Compile Include="ElasticSearch\CustomIDescriptorConverter.cs" />
     <Compile Include="ElasticSearch\Documents\Processor.cs" />
     <Compile Include="ElasticSearch\ManagementService.cs" />
+    <Compile Include="Services\DocTypeElasticStore.cs" />
     <Compile Include="Services\DocTypeRepository.cs" />
+    <Compile Include="Services\FolderRootPathException.cs" />
     <Compile Include="Services\IDocTypeRepository.cs" />
     <Compile Include="Services\ISearchService.cs" />
     <Compile Include="Services\SearchService.cs" />

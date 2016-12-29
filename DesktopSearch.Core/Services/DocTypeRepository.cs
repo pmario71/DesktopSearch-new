@@ -5,28 +5,62 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DesktopSearch.Core.DataModel.Documents;
+using DesktopSearch.Core.Utils.Async;
 
 namespace DesktopSearch.Core.Services
 {
-    public class DocTypeRepository : IDocTypeRepository
+    internal class DocTypeRepository : IDocTypeRepository
     {
-        private readonly PersistenceStore _store;
+        //private readonly List<DocType> _doctypes;
+        private readonly IDocTypePersistence _store;
 
-        public DocTypeRepository()
+        Task<List<DocType>> _docTypesCache;
+
+        public DocTypeRepository(IDocTypePersistence persistenceStore)
         {
-            _store = new PersistenceStore();
+            _store = persistenceStore;
+
+            _docTypesCache = Task.Run(() =>
+            {
+                 return new List<DocType>(_store.LoadAsync().Result);
+            });
         }
 
         public void AddDocType(DocType docType)
         {
             CheckIfAnyLinkedFolderIsInUse(docType);
 
-            _store.Add(docType);
+            _docTypesCache.Result.Add(docType);
+            _store.StoreOrUpdateAsync(docType).Wait();
         }
 
+        public DocType GetDocTypeByName(string name)
+        {
+            return _docTypesCache.Result.Single(p => StringComparer.OrdinalIgnoreCase.Compare(p.Name, name) == 0);
+        }
+        
+        public bool TryGetDocTypeForPath(FileInfo file, out DocType docType)
+        {
+            if (file == null || !Path.IsPathRooted(file.FullName))
+                throw new ArgumentException("file");
+
+            foreach (var dt in _docTypesCache.Result)
+            {
+                if (dt.Folders.SingleOrDefault(i => file.FullName.StartsWith(i.Path, StringComparison.OrdinalIgnoreCase)) != null)
+                {
+                    docType = dt;
+                    return true;
+                }
+            }
+
+            docType = null;
+            return false;
+        }
+
+        #region Internals
         private void CheckIfAnyLinkedFolderIsInUse(DocType docType)
         {
-            var paths = _store.DocTypes
+            var paths = _docTypesCache.Result
                 .SelectMany(dt => dt.Folders);
 
             if (docType.Folders.Intersect(paths).Count() > 0)
@@ -34,62 +68,13 @@ namespace DesktopSearch.Core.Services
                 throw new FolderRootPathException($"A path '' already assigned to DocType!");
             }
         }
-
-        public DocType GetDocTypeByName(string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        internal void AddDocType(object docType)
-        {
-            throw new NotImplementedException();
-        }
-
-        public DocType GetDocTypeForPath(FileInfo file)
-        {
-            throw new NotImplementedException();
-        }
+        #endregion
     }
 
-
-    [Serializable]
-    public class FolderRootPathException : Exception
+    internal interface IDocTypePersistence
     {
-        public FolderRootPathException() { }
-        public FolderRootPathException(string message) : base(message) { }
-        public FolderRootPathException(string message, Exception inner) : base(message, inner) { }
+        Task<IEnumerable<DocType>> LoadAsync();
 
-        protected FolderRootPathException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
-    }
-
-    internal class PersistenceStore
-    {
-        private readonly List<DocType> _doctypes;
-
-        public PersistenceStore()
-        {
-            _doctypes = new List<DocType>();
-        }
-
-        public IEnumerable<DocType> DocTypes { get { return _doctypes; } }
-
-        internal void Add(DocType docType)
-        {
-            _doctypes.Add(docType);
-        }
-    }
-
-    [Serializable]
-    public class DocTypeNotRegisteredException : Exception
-    {
-        public DocTypeNotRegisteredException() { }
-        public DocTypeNotRegisteredException(string message) : base(message) { }
-        public DocTypeNotRegisteredException(string message, Exception inner) : base(message, inner) { }
-
-        protected DocTypeNotRegisteredException(
-          System.Runtime.Serialization.SerializationInfo info,
-          System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
+        Task StoreOrUpdateAsync(DocType docType);
     }
 }
