@@ -69,17 +69,6 @@ namespace DesktopSearch.Core.Services
             await EnsureInitialized;
 
             await _docFolderProcessor.Process(documentPath, indexingTypeName);
-
-            //Extractors.ParserContext context = new Extractors.ParserContext();
-            //var docDesc = await _extractor.ExtractAsync(context, new FileInfo(documentPath));
-
-            //var elastic = _elastic;
-            //var response = await elastic.IndexAsync(docDesc, s => s.Index(_config.DocumentSearchIndexName));
-
-            //if (!response.IsValid)
-            //{
-            //    throw new Exception($"Failed to index document: '{documentPath}'", response.OriginalException);
-            //}
         }
 
         public async Task IndexDocumentAsync(DocDescriptor document)
@@ -133,7 +122,8 @@ namespace DesktopSearch.Core.Services
         {
             await EnsureInitialized;
 
-            var result = await _elastic.SearchAsync<DocDescriptor>(t => t.Index(_config.DocumentSearchIndexName).Query(q => q.QueryString(c => c.Query(querystring))));
+            var result = await _elastic.SearchAsync<DocDescriptor>(t => t.Index(_config.DocumentSearchIndexName)
+                                                                         .Query(q => q.QueryString(c => c.Query(querystring))));
             return result.Hits;
         }
         #endregion
@@ -155,29 +145,6 @@ namespace DesktopSearch.Core.Services
             //   //.InitializeUsing(indexSettings)
             //   .AddMapping<TypeDescriptor>(m => m.MapFromAttributes())
             //   .AddMapping<MethodDescriptor>(m => m.MapFromAttributes()));
-        }
-    }
-
-    public class MockSearchService : ISearchService
-    {
-        public Task<IEnumerable<string>> GetKeywordSuggestionsAsync(string filter = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task IndexCodeFileAsync(string codefilePath)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task IndexDocumentAsync(DocDescriptor document)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task IndexDocumentAsync(string documentPath, string indexingTypeName)
-        {
-            throw new NotImplementedException();
         }
     }
 }

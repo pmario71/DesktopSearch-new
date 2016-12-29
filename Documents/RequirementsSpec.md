@@ -42,9 +42,35 @@
 
 * Rating : [1..10]
 
-#### Remarks
-1) When disabling `SourceField` (see ManagementService => .SourceField(sf => sf.Enabled(false))))\
-   Fields need to explicitly specified to be returned when querying.
+#### Disabling SourceField
+
+When disabling `SourceField` (see ManagementService => .SourceField(sf => sf.Enabled(false)))) fields need to explicitly specified to be returned when querying.
+
+This makes building the query and accessing the returned information cumbersome:
+
+```c#
+var result = esClient.Search<DocDescriptor>(s => s
+                                    .Index(cfg.DocumentSearchIndexName)
+                                    .Query(q => q.QueryString(c => c.Query("SQL")))
+                                    .StoredFields(fs => fs
+                                        .Field(p => p.Title)
+                                        .Field(p => p.Author)
+                                        .Field(p => p.Path)
+                                        .Field(p => p.Keywords))
+);
+var hit = result.Hits.First();
+Assert.AreEqual("Clare Churcher", hit.Fields.ValueOf<DocDescriptor,string>(t => t.Author));
+Assert.AreEqual("Clare Churcher", hit.Fields.Value<string>("author"));
+```
+
+#### Excluding content from SourceField
+
+This was the preferred solution:
+
+```c#
+docIndex.Mappings(mp => mp.Map<DocDescriptor>(m => m.AutoMap()
+                                                .SourceField(s => s.Excludes(new[] { "content" }))));
+```
 
 See:\
 <https://github.com/pmario71/DesktopSearch-new/blob/master/DesktopSearch.Core/DataModel/Documents/DocDescriptor.cs>

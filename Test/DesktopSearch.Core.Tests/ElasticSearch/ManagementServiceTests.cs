@@ -80,7 +80,8 @@ namespace DesktopSearch.Core.Tests.ElasticSearch
             {
                 Title = "Beginning SQL Queries",
                 Author = "Clare Churcher",
-                ContentType = ContentType.Buch,
+                ContentType = "pdf",
+                DocType = ContentType.Buch,
                 Keywords = new[] { "SQL", "databases" },
                 Path = @"Z:\Buecher\Programming\Database\Beginning SQL Queries - From Novice To Professional.pdf",
                 Content = @"
@@ -106,6 +107,8 @@ and Member (the innermost set of parentheses). This involves comparing all the r
 
             await searchSvs.IndexDocumentAsync(dd1);
 
+            await Task.Delay(200);
+
             var results = await searchSvs.SearchDocumentAsync("SQL");
 
             var hit = results.SingleOrDefault(r => r.Source.Path == dd1.Path);
@@ -125,18 +128,20 @@ and Member (the innermost set of parentheses). This involves comparing all the r
 
             var searchSvs = new SearchService(esClient, cfg, mgtmSvc, docProc);
             
+            // because 
             var result = esClient.Search<DocDescriptor>(s => s
                                     .Index(cfg.DocumentSearchIndexName)
                                     .Query(q => q.QueryString(c => c.Query("SQL")))
-                                    .StoredFields(fs => fs
-                                        .Field(p => p.Title)
-                                        .Field(p => p.Author)
-                                        .Field(p => p.Path)
-                                        .Field(p => p.Keywords)
-            ));
+                                    //.StoredFields(fs => fs
+                                    //    .Field(p => p.Title)
+                                    //    .Field(p => p.Author)
+                                    //    .Field(p => p.Path)
+                                    //    .Field(p => p.Keywords))
+            );
 
             var hit = result.Hits.First();
-            Assert.AreEqual("Clare Churcher", hit.Fields.ValueOf<DocDescriptor,string>(t => t.Author));
+            Assert.AreEqual("Clare Churcher", hit.Source.Author);
+            //Assert.AreEqual("Clare Churcher", hit.Fields.ValueOf<DocDescriptor,string>(t => t.Author));
 
             // alternatively:
             // Assert.AreEqual("Clare Churcher", hit.Fields.Value<string>("author"));

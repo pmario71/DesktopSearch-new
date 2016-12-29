@@ -27,9 +27,15 @@ namespace DesktopSearch.Core.DataModel.Documents
         /// <summary>
         /// Buch, Artikel, Rechnung, Unterlagen
         /// </summary>
+        [Keyword(Name = "doctype")]
+        public string DocType { get; set; }
+
+        /// <summary>
+        /// mime-type returned from Tika
+        /// </summary>
         [Keyword(Name = "contenttype")]
         public string ContentType { get; set; }
-        
+
         [Number(Name = "rating", Boost = 1.1)]
         public int Rating { get; set; }
 
