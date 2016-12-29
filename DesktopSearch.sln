@@ -23,7 +23,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Images", "Images", "{B71F33
 	ProjectSection(SolutionItems) = preProject
 		Documents\Images\Assemblies.png = Documents\Images\Assemblies.png
 		Documents\Images\DataModel.png = Documents\Images\DataModel.png
+		Documents\Images\DocType.png = Documents\Images\DocType.png
 		Documents\Images\Flow_of_operations.png = Documents\Images\Flow_of_operations.png
+		Documents\Images\SearchServiceStatic.png = Documents\Images\SearchServiceStatic.png
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopSearch.PS", "DesktopSearch.PS\DesktopSearch.PS.csproj", "{17E0AF0F-EA0F-459C-8F91-A50622EC380A}"

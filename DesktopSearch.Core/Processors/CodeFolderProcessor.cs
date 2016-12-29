@@ -1,5 +1,6 @@
 ﻿using DesktopSearch.Core.Configuration;
 using DesktopSearch.Core.DataModel.Code;
+using DesktopSearch.Core.DataModel.Documents;
 using DesktopSearch.Core.Extractors.Roslyn;
 using DesktopSearch.Core.FileSystem;
 using Nest;

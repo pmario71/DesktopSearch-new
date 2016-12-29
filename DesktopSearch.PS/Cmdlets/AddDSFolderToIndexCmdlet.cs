@@ -11,6 +11,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Text;
 using System.Threading.Tasks;
+using DesktopSearch.Core.DataModel.Documents;
 
 namespace DesktopSearch.PS
 {
@@ -54,6 +55,8 @@ namespace DesktopSearch.PS
 
         protected override void ProcessRecord()
         {
+            //TODO: not possible without access to DocTypeRepo anymore!  Refactor
+
             foreach (var p in Path)
             {
                 var folder = new Folder

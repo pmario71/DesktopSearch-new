@@ -1,4 +1,5 @@
 ﻿using DesktopSearch.Core.Configuration;
+using DesktopSearch.Core.DataModel.Documents;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -23,7 +24,7 @@ namespace DesktopSearch.PS.Tests.Configuration
                 {
                     Folders = new[]
                     {
-                        new Folder{ Path = "d:\\temp", IndexingType="Code" }
+                        Folder.Create(Path.GetTempPath(), indexingType:"Code")
                     }.ToList()
                 }
             };
@@ -68,7 +69,7 @@ namespace DesktopSearch.PS.Tests.Configuration
                 {
                     Folders = new[]
                     {
-                        new Folder{ Path = "d:\\temp", IndexingType="Code" }
+                        Folder.Create(Path.GetTempPath(), indexingType:"Code")
                     }.ToList()
                 }
             };

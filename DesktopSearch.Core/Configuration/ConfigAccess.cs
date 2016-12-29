@@ -6,12 +6,19 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DesktopSearch.Core.DataModel.Documents;
+using System.Reflection;
+using Newtonsoft.Json.Serialization;
 
 namespace DesktopSearch.Core.Configuration
 {
     public class ConfigAccess
     {
-        private static JsonSerializerSettings _formatSettings = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore, Formatting = Formatting.Indented };
+        private static JsonSerializerSettings _formatSettings = new JsonSerializerSettings
+        {
+            NullValueHandling = NullValueHandling.Ignore, Formatting = Formatting.Indented,
+            ContractResolver = new PrivateFieldResolver()
+        };
 
         private IStreamFactory _factory;
 
@@ -30,7 +37,7 @@ namespace DesktopSearch.Core.Configuration
                 content = rd.ReadToEnd();
             }
 
-            var foldersToIndex = JsonConvert.DeserializeObject<Settings>(content);
+            var foldersToIndex = JsonConvert.DeserializeObject<Settings>(content, _formatSettings);
 
             return foldersToIndex;
         }
@@ -41,8 +48,8 @@ namespace DesktopSearch.Core.Configuration
             {
                 Folders = new[]
                 {
-                    new Folder { Path="c:\\temp", IndexingType = "Code" },
-                    new Folder { Path="c:\\temp", IndexingType = "Documents" }
+                    Folder.Create("c:\\temp", indexingType:"Code"),
+                    Folder.Create("c:\\temp", indexingType:"Documents"),
                 }.ToList()
             };
 
@@ -67,6 +74,20 @@ namespace DesktopSearch.Core.Configuration
             using (var sw = new StreamWriter(_factory.GetWritableStream()))
             {
                 sw.Write(serialized);
+            }
+        }
+
+        public class PrivateFieldResolver : Newtonsoft.Json.Serialization.DefaultContractResolver
+        {
+            protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
+            {
+                var props = type.GetProperties(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                                .Select(p => base.CreateProperty(p, memberSerialization))
+                            .Union(type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance)
+                                       .Select(f => base.CreateProperty(f, memberSerialization)))
+                            .ToList();
+                props.ForEach(p => { p.Writable = true; p.Readable = true; });
+                return props;
             }
         }
     }

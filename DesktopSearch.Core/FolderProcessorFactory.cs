@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using DesktopSearch.Core.Configuration;
 using DesktopSearch.Core.Processors;
+using DesktopSearch.Core.DataModel.Documents;
 
 namespace DesktopSearch.Core
 {

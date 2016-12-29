@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using DesktopSearch.Core.DataModel.Documents;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -40,24 +41,5 @@ namespace DesktopSearch.Core.Configuration
     public class FoldersToIndex
     {
         public List<Folder> Folders { get; set; }
-    }
-
-    public class Folder
-    {
-        public string Path { get; set; }
-
-        /// <summary>
-        /// Defines which type of indexing to apply to the folder.
-        /// </summary>
-        public string IndexingType { get; set; }
-    }
-
-    public class IndexingType
-    {
-        public string Name { get; set; }
-
-        public string[] ExcludedExtensions { get; set; }
-
-        public string[] IncludedExtensions { get; set; }
     }
 }

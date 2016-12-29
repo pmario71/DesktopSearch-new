@@ -1,5 +1,6 @@
 ﻿using DesktopSearch.Core;
 using DesktopSearch.Core.Configuration;
+using DesktopSearch.Core.DataModel.Documents;
 using DesktopSearch.PS.Utils;
 using PowershellExtensions;
 using System;
@@ -40,7 +41,7 @@ namespace DesktopSearch.PS
 
         protected override void ProcessRecord()
         {
-            List<Folder> foldersToSync = new List<Core.Configuration.Folder>();
+            List<Folder> foldersToSync = new List<Folder>();
 
             if (Folder != null)
             {

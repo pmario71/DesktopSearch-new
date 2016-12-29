@@ -210,6 +210,7 @@
   <ItemGroup>
     <Compile Include="Configuration\ConfigAccessTests.cs" />
     <Compile Include="Configuration\ConfigBootstrappingTests.cs" />
+    <Compile Include="DataModel\Documents\DocTypeTests.cs" />
     <Compile Include="ElasticSearch\ManagementServiceTests.cs" />
     <Compile Include="ElasticSearch\Parser\KeywordParserTests.cs" />
     <Compile Include="FileSystem\ExcludeFileByExtensionFilterTests.cs" />
@@ -233,6 +234,7 @@
     <None Include="TestData\IndexExtractors\Roslyn\APIClass.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Compile Include="Services\DocTypeRepository_AddDocType_Tests.cs" />
     <Compile Include="Tagging\TagDescriptorTests.cs" />
     <Compile Include="Tika\TikaServerExtractorTests.cs" />
     <Compile Include="Utils\Async\AggregatingProgressReporter.cs" />

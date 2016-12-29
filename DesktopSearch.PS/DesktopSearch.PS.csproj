@@ -285,6 +285,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cmdlets\AddDSFolderToIndexCmdlet.cs" />
+    <Compile Include="Cmdlets\Class1.cs" />
     <Compile Include="Cmdlets\EditTagCmdlet.cs" />
     <Compile Include="Cmdlets\GetTikaExtractCmdlet.cs" />
     <Compile Include="Cmdlets\GetTikaExtractRawCmdlet.cs" />

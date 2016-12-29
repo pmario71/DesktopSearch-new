@@ -33,9 +33,9 @@ namespace DesktopSearch.Core.Processors
             return Process(folder, null);
         }
 
-        public Task Process(string file, string indexingTypeName)
+        public Task Process(string file, string docTypeName)
         {
-            return ExtractFilesAsync(new[] { file }, indexingTypeName, null);
+            return ExtractFilesAsync(new[] { file }, docTypeName, null);
         }
 
         public async Task Process(DocDescriptor document)
@@ -57,7 +57,7 @@ namespace DesktopSearch.Core.Processors
             return ExtractFilesAsync(filesToProcess, folder.IndexingType, progress);
         }
 
-        private async Task ExtractFilesAsync(IEnumerable<string> filesToParse, string indexingTypeName, IProgress<int> progress=null)
+        private async Task ExtractFilesAsync(IEnumerable<string> filesToParse, string docTypeName, IProgress<int> progress=null)
         {
             int current = 0;
             var maxFiles = filesToParse.Count();
@@ -69,7 +69,7 @@ namespace DesktopSearch.Core.Processors
                 Extractors.ParserContext context = new Extractors.ParserContext();
                 var docDesc = await _extractor.ExtractAsync(context, new FileInfo(filePath));
 
-                docDesc.DocType = indexingTypeName;
+                docDesc.DocType = docTypeName;
 
                 var result = await _client.IndexAsync(docDesc, (indexSelector) => indexSelector.Index(_configuration.DocumentSearchIndexName));
 

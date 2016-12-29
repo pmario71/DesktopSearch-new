@@ -8,7 +8,18 @@ Locale: en-US
 
 # DesktopSearch.PS Module
 ## Description
-{{Manually Enter Description Here}}
+
+### Example: Decoupling Extraction and Indexing
+
+```powershell
+$files = [System.IO.Directory]::GetFiles('Z:\Buecher\Programming\Database', '*.pdf')
+$results = Get-TikaExtract -File $files
+
+# save extracted information to disk
+$results | Export-Clixml -Path C:\todo\Books.xml
+
+Index-DSDocument -Doc $results
+```
 
 ## DesktopSearch.PS Cmdlets
 ### [Add-DSFolderToIndex](Add-DSFolderToIndex.md)

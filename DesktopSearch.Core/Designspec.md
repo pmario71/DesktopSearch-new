@@ -9,6 +9,22 @@
 
 ![Extractors](../Documents/images/Extractors.png)
 
+### DocTypes & Folders
+
+`DocType` refers to a logical group of files that are stored under a single root directory (Buecher, Unterlagen, Rechnungen).\
+The assignment of a file to a given `DocType` is inferred from its location when it is indexed.
+
+* `DocType` --> `Folder`
+* "file path" starts with `Folder`'s path  =>  file belongs to according `DocType`
+* a `Folder`can have multiple storage locations on different machines
+* `DocDescriptor.Path` holds a uri with the following encoding: `DesktopSearch://Buecher/someDirectory/filename.pdf`
+  * `Uri.Scheme` : `DesktopSearch` to potentially be able to define a url handler for it.
+  * `Uri.Host`   : `Buecher` specifies the `DocType`
+  * `LocalPath`  : specifies the relative url underneath the root folder
+  * full path can only be resolved when `DocType` & `machinename` is known
+
+  ![DocDescriptor - DocType - Folder Relationship](../Documents/images/DocType.png)
+
 ### SearchService
 
 ![SearchService Dependencies](../Documents/images/SearchServiceStatic.png)
