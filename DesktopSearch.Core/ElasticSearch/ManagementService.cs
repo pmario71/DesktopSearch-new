@@ -1,6 +1,7 @@
 ﻿using DesktopSearch.Core.Configuration;
 using DesktopSearch.Core.DataModel.Code;
 using DesktopSearch.Core.DataModel.Documents;
+using DesktopSearch.Core.Services;
 using Microsoft.Extensions.Logging;
 using Nest;
 using System;
@@ -26,20 +27,6 @@ namespace DesktopSearch.Core.ElasticSearch
             _configuration = config;
         }
 
-        //internal ManagementService(IElasticClient client, bool useTestIndices)
-        //{
-            
-
-        //    _documentSearchIndexName = Configuration.DocumentSearch.IndexName;
-        //    _codeSearchIndexName = Configuration.CodeSearch.IndexName;
-
-        //    if (useTestIndices)
-        //    {
-        //        _documentSearchIndexName += "_test";
-        //        _codeSearchIndexName += "_test";
-        //    }
-        //}
-
         public async Task EnsureIndicesCreated()
         {
             // --------------------------------------------------------------------
@@ -54,7 +41,9 @@ namespace DesktopSearch.Core.ElasticSearch
 
                 var docIndex = new CreateIndexDescriptor(_configuration.DocumentSearchIndexName);
 
-                docIndex.Mappings(mp => mp.Map<DocDescriptor>(m => m.AutoMap()
+                docIndex.Mappings(mp => mp
+                                            .Map<DocTypeConfigurationElement>(m => m.AutoMap())
+                                            .Map<DocDescriptor>(m => m.AutoMap()
                                                 .SourceField(s => s.Excludes(new[] { "content" }))));
                     //.SourceField(s => s.Excludes(new[] { "content" }))
                     //.Properties(ps => ps

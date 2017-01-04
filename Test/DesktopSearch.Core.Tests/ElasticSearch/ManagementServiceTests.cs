@@ -1,5 +1,6 @@
 ﻿using DesktopSearch.Core.Configuration;
 using DesktopSearch.Core.DataModel.Documents;
+using DesktopSearch.Core.ElasticSearch;
 using DesktopSearch.Core.Processors;
 using DesktopSearch.Core.Services;
 using Nest;
@@ -21,16 +22,13 @@ namespace DesktopSearch.Core.Tests.ElasticSearch
         [Test, Explicit("Requires elasticsearch running")]
         public async Task Setup_and_populate_Index()
         {
-            var cfg = new ElasticSearchConfig();
-            cfg.DocumentSearchIndexName += "_test";
+            var esClient = ElasticTestClientFactory.Create();
 
-            var esClient = ElasticClientFactory.Create(cfg);
-
-            var sut = new Core.ElasticSearch.ManagementService(esClient, cfg);
+            var sut = new Core.ElasticSearch.ManagementService(esClient, ElasticTestClientFactory.Config);
 
             await sut.EnsureIndicesCreated();
 
-            var docFolderProcessoer = new DocumentFolderProcessor(esClient, cfg);
+            var docFolderProcessoer = new DocumentFolderProcessor(esClient, ElasticTestClientFactory.Config);
 
             await docFolderProcessoer.Process(testDataPath + "zen-of-results.pdf", Core.Configuration.DocumentSearch.ContentType.Artikel);
 
@@ -44,14 +42,7 @@ namespace DesktopSearch.Core.Tests.ElasticSearch
         [Test, Explicit]
         public async Task Search_for_documents()
         {
-            var cfg = new ElasticSearchConfig();
-            cfg.DocumentSearchIndexName += "_test";
-
-            var esClient = ElasticClientFactory.Create(cfg);
-            var mgtmSvc = new Core.ElasticSearch.ManagementService(esClient, cfg);
-            var docProc = new DocumentFolderProcessor(esClient, cfg);
-
-            var searchSvs = new SearchService(esClient, cfg, mgtmSvc, docProc);
+            SearchService searchSvs = CreateSearchService();
 
             var results = await searchSvs.SearchDocumentAsync("another");
 
@@ -67,14 +58,8 @@ namespace DesktopSearch.Core.Tests.ElasticSearch
         [Test, Explicit]
         public async Task Index_Documents()
         {
-            var cfg = new ElasticSearchConfig();
-            cfg.DocumentSearchIndexName += "_test";
-
-            var esClient = ElasticClientFactory.Create(cfg);
-            var mgtmSvc = new Core.ElasticSearch.ManagementService(esClient, cfg);
-            var docProc = new DocumentFolderProcessor(esClient, cfg);
-
-            var searchSvs = new SearchService(esClient, cfg, mgtmSvc, docProc);
+            IElasticClient client;
+            SearchService searchSvs = CreateSearchService(out client);
 
             var dd1 = new DocDescriptor()
             {
@@ -107,7 +92,7 @@ and Member (the innermost set of parentheses). This involves comparing all the r
 
             await searchSvs.IndexDocumentAsync(dd1);
 
-            await Task.Delay(200);
+            client.Refresh(ElasticTestClientFactory.Config.DocumentSearchIndexName);
 
             var results = await searchSvs.SearchDocumentAsync("SQL");
 
@@ -119,18 +104,12 @@ and Member (the innermost set of parentheses). This involves comparing all the r
         [Test, Explicit]
         public async Task Search_Documents()
         {
-            var cfg = new ElasticSearchConfig();
-            cfg.DocumentSearchIndexName += "_test";
+            IElasticClient esClient;
+            SearchService searchSvs = CreateSearchService(out esClient);
 
-            var esClient = ElasticClientFactory.Create(cfg);
-            var mgtmSvc = new Core.ElasticSearch.ManagementService(esClient, cfg);
-            var docProc = new DocumentFolderProcessor(esClient, cfg);
-
-            var searchSvs = new SearchService(esClient, cfg, mgtmSvc, docProc);
-            
             // because 
             var result = esClient.Search<DocDescriptor>(s => s
-                                    .Index(cfg.DocumentSearchIndexName)
+                                    //.Index(cfg.DocumentSearchIndexName)  // sollte eigentlich nicht notwendig sein
                                     .Query(q => q.QueryString(c => c.Query("SQL")))
                                     //.StoredFields(fs => fs
                                     //    .Field(p => p.Title)
@@ -146,27 +125,59 @@ and Member (the innermost set of parentheses). This involves comparing all the r
             // alternatively:
             // Assert.AreEqual("Clare Churcher", hit.Fields.Value<string>("author"));
         }
+
+        private SearchService CreateSearchService()
+        {
+            IElasticClient esClient;
+            return CreateSearchService(out esClient);
+        }
+
+        private static SearchService CreateSearchService(out IElasticClient esClient)
+        {
+            esClient = ElasticTestClientFactory.Create();
+            var mgtmSvc = new Core.ElasticSearch.ManagementService(esClient, ElasticTestClientFactory.Config);
+            var docProc = new DocumentFolderProcessor(esClient, ElasticTestClientFactory.Config);
+
+            var searchSvs = new SearchService(esClient, ElasticTestClientFactory.Config, mgtmSvc, docProc);
+            return searchSvs;
+        }
     }
 
-    class ElasticClientFactory
+    class ElasticTestClientFactory
     {
-        public static IElasticClient Create(ElasticSearchConfig config)
+        static Lazy<ElasticSearchConfig> _config = new Lazy<ElasticSearchConfig>(() => 
         {
-            var settings = new ConnectionSettings(new Uri(config.Uri));
-            settings
-                .MapDefaultTypeIndices(m => m
-                    .Add(typeof(DocDescriptor), config.DocumentSearchIndexName))
-                .DisableDirectStreaming()
-                    .OnRequestCompleted(details =>
-                    {
-                        Console.WriteLine("### ES REQEUST ###");
-                        if (details.RequestBodyInBytes != null) Console.WriteLine(Encoding.UTF8.GetString(details.RequestBodyInBytes));
-                        Console.WriteLine("### ES RESPONSE ###");
-                        if (details.ResponseBodyInBytes != null) Console.WriteLine(Encoding.UTF8.GetString(details.ResponseBodyInBytes));
-                    })
-                    .PrettyJson();
+            var c = new ElasticSearchConfig();
+            c.DocumentSearchIndexName += "_test";
+            return c;
+        });
 
-            return new ElasticClient(settings);
+        public static ElasticSearchConfig Config
+        {
+            get { return _config.Value; }
+        }
+
+        public static IElasticClient Create(ElasticSearchConfig config=null)
+        {
+            if (config == null)
+            {
+                config = _config.Value;
+            }
+
+            var cfg = ConnectionSettingsFactory.Create(config);
+            cfg.DisableDirectStreaming()
+               .OnRequestCompleted(details =>
+               {
+                   Console.WriteLine("### ES REQEUST ###");
+                   if (details.RequestBodyInBytes != null)
+                       Console.WriteLine(Encoding.UTF8.GetString(details.RequestBodyInBytes));
+                   Console.WriteLine("### ES RESPONSE ###");
+                   if (details.ResponseBodyInBytes != null)
+                       Console.WriteLine(Encoding.UTF8.GetString(details.ResponseBodyInBytes));
+               })
+               .PrettyJson();
+
+            return new ElasticClient(cfg);
         }
     }
 }

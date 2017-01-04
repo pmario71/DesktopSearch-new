@@ -11,21 +11,21 @@ namespace DesktopSearch.Core.Services
         /// <param name="name"></param>
         /// <returns></returns>
         /// <exception cref="DocTypeNotRegisteredException"/>
-        DocType GetDocTypeByName(string name);
+        IDocType GetDocTypeByName(string name);
 
         /// <summary>
-        /// Tries to finds a registered <see cref="DocType"/> by matching the file location against against linked <see cref="Folder"/>s.
+        /// Tries to finds a registered <see cref="IDocType"/> by matching the file location against against linked <see cref="IFolder"/>s.
         /// </summary>
         /// <param name="file"></param>
-        /// <param name="docType">found <see cref="DocType"/></param>
+        /// <param name="docType">found <see cref="IDocType"/></param>
         /// <returns>true, if found</returns>
-        bool TryGetDocTypeForPath(FileInfo file, out DocType docType);
+        bool TryGetDocTypeForPath(FileInfo file, out IDocType docType);
 
         /// <summary>
         /// Adds a new <see cref="DocType"/> to the repository.
         /// </summary>
-        /// <remarks>There must be at least one <see cref="Folder"/> linked</remarks>
-        /// <param name="docType">unique name for the new <see cref="DocType"/> to be registered.</param>
-        void AddDocType(DocType docType);
+        /// <remarks>There must be at least one <see cref="IFolder"/> linked</remarks>
+        /// <param name="docType">unique name for the new <see cref="IDocType"/> to be registered.</param>
+        void AddDocType(IDocType docType);
     }
 }

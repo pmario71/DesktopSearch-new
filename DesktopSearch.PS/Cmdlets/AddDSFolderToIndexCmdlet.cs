@@ -19,7 +19,7 @@ namespace DesktopSearch.PS
     public class AddDSFolderToIndexCmdlet : PSCmdlet
     {
         private Settings _settings;
-        private List<Folder> _folders;
+        private List<IFolder> _folders;
 
         [Parameter(Mandatory = true, HelpMessage = "Paths of folders to add.")]
         [ValidatePath()]
@@ -37,36 +37,37 @@ namespace DesktopSearch.PS
         {
             this.Compose();
 
-            try
-            {
-                _settings = ConfigAccess.Get();
-                _folders = new List<Folder>(_settings.FoldersToIndex.Folders ?? new List<Folder>());
-            }
-            catch(Exception ex)
-            {
-                WriteWarning($"Recovering from error loading configuration: {ex.Message}");
-                _settings = new Settings()
-                {
-                    FoldersToIndex = new FoldersToIndex()
-                };
-                _folders = new List<Folder>();
-            }
+            throw new NotImplementedException();
+            //try
+            //{
+            //    _settings = ConfigAccess.Get();
+            //    _folders = new List<IFolder>(_settings.FoldersToIndex.Folders ?? new List<IFolder>());
+            //}
+            //catch(Exception ex)
+            //{
+            //    WriteWarning($"Recovering from error loading configuration: {ex.Message}");
+            //    _settings = new Settings()
+            //    {
+            //        FoldersToIndex = new FoldersToIndex()
+            //    };
+            //    _folders = new List<Folder>();
+            //}
         }
 
         protected override void ProcessRecord()
         {
             //TODO: not possible without access to DocTypeRepo anymore!  Refactor
-
-            foreach (var p in Path)
-            {
-                var folder = new Folder
-                {
-                    Path = p,
-                    IndexingType = this.IndexingType
-                };
-                _folders.Add(folder);
-                WriteVerbose($"Added folder: {folder.Path}\r\n   Type [{folder.IndexingType}]");
-            }
+            throw new NotImplementedException("Needs to be refactored");
+            //foreach (var p in Path)
+            //{
+            //    var folder = new Folder
+            //    {
+            //        Path = p,
+            //        IndexingType = this.IndexingType
+            //    };
+            //    _folders.Add(folder);
+            //    WriteVerbose($"Added folder: {folder.Path}\r\n   Type [{folder.IndexingType}]");
+            //}
         }
 
         protected override void EndProcessing()

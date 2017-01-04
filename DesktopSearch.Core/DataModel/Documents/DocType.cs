@@ -1,20 +1,23 @@
-﻿using System;
+﻿using Nest;
+using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
 namespace DesktopSearch.Core.DataModel.Documents
 {
-
-    public sealed class DocType
+    [ElasticsearchType(Name = "doctype", IdProperty = "Name")]
+    public sealed class DocType : IDocType
     {
+
         private readonly List<Folder> _folders;
 
-        private DocType()
+        public DocType()
         {
              _folders = new List<Folder>();
         }
 
-        public static DocType Create(string name, string rootFolder)
+        public static IDocType Create(string name, string rootFolder)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("name");
@@ -31,6 +34,7 @@ namespace DesktopSearch.Core.DataModel.Documents
             return dt;
         }
 
+        [Keyword]
         public string Name { get; private set; }
 
         /// <summary>
@@ -41,16 +45,22 @@ namespace DesktopSearch.Core.DataModel.Documents
         /// <summary>
         /// machine specific storage locations
         /// </summary>
-        public IReadOnlyCollection<Folder> Folders { get { return _folders; } }
+        [JsonIgnore]
+        IReadOnlyCollection<IFolder> IDocType.Folders { get { return _folders; } }
+
+        [JsonProperty]
+        List<Folder> Folders { get { return _folders; } }
 
         /// <summary>
         /// File extensions to be ignored when indexing
         /// </summary>
+        [Keyword(Ignore =true)]
         public string[] ExcludedExtensions { get; set; }
 
         /// <summary>
         /// File extensions to be included when indexing
         /// </summary>
+        [Keyword(Ignore = true)]
         public string[] IncludedExtensions { get; set; }
 
         public override int GetHashCode()
@@ -68,5 +78,35 @@ namespace DesktopSearch.Core.DataModel.Documents
             }
             return false;
         }
+    }
+
+    public interface IFolder
+    {
+        string IndexingType { get; set; }
+
+        string Path { get; }
+    }
+
+    public interface IDocType
+    {
+        /// <summary>
+        /// Unique name for the DocType
+        /// </summary>
+        string Name { get; }
+
+        /// <summary>
+        /// Folders contributing to the <see cref="IDocType"/>
+        /// </summary>
+        IReadOnlyCollection<IFolder> Folders { get; }
+
+        /// <summary>
+        /// File extensions to be excluded when indexing
+        /// </summary>
+        string[] ExcludedExtensions { get; set; }
+
+        /// <summary>
+        /// File extensions to be included when indexing
+        /// </summary>
+        string[] IncludedExtensions { get; set; }
     }
 }

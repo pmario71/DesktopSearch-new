@@ -14,7 +14,7 @@ namespace DesktopSearch.Core.Services
         //private readonly List<DocType> _doctypes;
         private readonly IDocTypePersistence _store;
 
-        Task<List<DocType>> _docTypesCache;
+        Task<List<IDocType>> _docTypesCache;
 
         public DocTypeRepository(IDocTypePersistence persistenceStore)
         {
@@ -22,11 +22,11 @@ namespace DesktopSearch.Core.Services
 
             _docTypesCache = Task.Run(() =>
             {
-                 return new List<DocType>(_store.LoadAsync().Result);
+                 return new List<IDocType>(_store.LoadAsync().Result);
             });
         }
 
-        public void AddDocType(DocType docType)
+        public void AddDocType(IDocType docType)
         {
             CheckIfAnyLinkedFolderIsInUse(docType);
 
@@ -34,12 +34,12 @@ namespace DesktopSearch.Core.Services
             _store.StoreOrUpdateAsync(docType).Wait();
         }
 
-        public DocType GetDocTypeByName(string name)
+        public IDocType GetDocTypeByName(string name)
         {
             return _docTypesCache.Result.Single(p => StringComparer.OrdinalIgnoreCase.Compare(p.Name, name) == 0);
         }
         
-        public bool TryGetDocTypeForPath(FileInfo file, out DocType docType)
+        public bool TryGetDocTypeForPath(FileInfo file, out IDocType docType)
         {
             if (file == null || !Path.IsPathRooted(file.FullName))
                 throw new ArgumentException("file");
@@ -58,7 +58,7 @@ namespace DesktopSearch.Core.Services
         }
 
         #region Internals
-        private void CheckIfAnyLinkedFolderIsInUse(DocType docType)
+        private void CheckIfAnyLinkedFolderIsInUse(IDocType docType)
         {
             var paths = _docTypesCache.Result
                 .SelectMany(dt => dt.Folders);
@@ -73,8 +73,8 @@ namespace DesktopSearch.Core.Services
 
     internal interface IDocTypePersistence
     {
-        Task<IEnumerable<DocType>> LoadAsync();
+        Task<IEnumerable<IDocType>> LoadAsync();
 
-        Task StoreOrUpdateAsync(DocType docType);
+        Task StoreOrUpdateAsync(IDocType docType);
     }
 }

@@ -35,11 +35,11 @@ namespace DesktopSearch.Core.Configuration
             }
         }
 
-        public FoldersToIndex FoldersToIndex { get; set; }
+        //public FoldersToIndex FoldersToIndex { get; set; }
     }
 
-    public class FoldersToIndex
-    {
-        public List<Folder> Folders { get; set; }
-    }
+    //public class FoldersToIndex
+    //{
+    //    public List<Folder> Folders { get; set; }
+    //}
 }

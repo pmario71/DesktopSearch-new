@@ -208,6 +208,7 @@
     <Compile Include="DataModel\Code\Types.cs" />
     <Compile Include="DataModel\Documents\DocDescriptor.cs" />
     <Compile Include="ElasticSearch\ClientFactory.cs" />
+    <Compile Include="ElasticSearch\ConnectionSettingsFactory.cs" />
     <Compile Include="ElasticSearch\CustomIDescriptorConverter.cs" />
     <Compile Include="ElasticSearch\Documents\Processor.cs" />
     <Compile Include="ElasticSearch\ManagementService.cs" />

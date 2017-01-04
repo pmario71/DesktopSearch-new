@@ -9,7 +9,6 @@ namespace DesktopSearch.Core.Tests.Services
     [TestFixture]
     public class DocTypeRepository_Tests
     {
-
         [Test]
         public void Can_get_back_added_DocType_by_name_case_insensitive()
         {
@@ -38,7 +37,7 @@ namespace DesktopSearch.Core.Tests.Services
 
             string path = $"{Path.GetTempPath()}\\Folder\\filename.pdf".ToUpper();
 
-            DocType dc;
+            IDocType dc;
             Assert.True( sut.TryGetDocTypeForPath(new FileInfo(path), out dc));
                         
             Assert.AreEqual(docType, dc);
@@ -56,7 +55,7 @@ namespace DesktopSearch.Core.Tests.Services
 
             string path = $"c:\\unknown_path\\unknown_file.pdf".ToUpper();
 
-            DocType dc;
+            IDocType dc;
             Assert.False(sut.TryGetDocTypeForPath(new FileInfo(path), out dc));
             Assert.Null(dc);
         }

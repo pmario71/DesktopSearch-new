@@ -44,21 +44,22 @@ namespace DesktopSearch.Core.Configuration
 
         public static string GetJSONExample()
         {
-            var fs = new FoldersToIndex()
-            {
-                Folders = new[]
-                {
-                    Folder.Create("c:\\temp", indexingType:"Code"),
-                    Folder.Create("c:\\temp", indexingType:"Documents"),
-                }.ToList()
-            };
+            throw new NotImplementedException("Not necessary anymore!");
+            //var fs = new FoldersToIndex()
+            //{
+            //    Folders = new[]
+            //    {
+            //        Folder.Create("c:\\temp", indexingType:"Code"),
+            //        Folder.Create("c:\\temp", indexingType:"Documents"),
+            //    }.ToList()
+            //};
 
-            var serialized =
-            JsonConvert.SerializeObject(
-                fs,
-                _formatSettings);
+            //var serialized =
+            //JsonConvert.SerializeObject(
+            //    fs,
+            //    _formatSettings);
 
-            return serialized;
+            //return serialized;
         }
 
         public void SaveChanges(Settings settings)

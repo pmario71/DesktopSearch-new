@@ -23,7 +23,7 @@ namespace DesktopSearch.Core
             _container = container;
         }
 
-        public IFolderProcessor GetProcessorByFolder(Folder folder)
+        public IFolderProcessor GetProcessorByFolder(IFolder folder)
         {
             if (folder == null)
                 throw new ArgumentNullException("folder");
@@ -43,9 +43,9 @@ namespace DesktopSearch.Core
     {
         Task Process(string file, string indexingTypeName);
 
-        Task Process(Folder folder);
+        Task Process(IFolder folder);
 
-        Task Process(Folder folder, IProgress<int> progress);
+        Task Process(IFolder folder, IProgress<int> progress);
     }
 
     public interface IContainer

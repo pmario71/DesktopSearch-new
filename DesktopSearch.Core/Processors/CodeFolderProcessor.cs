@@ -23,7 +23,7 @@ namespace DesktopSearch.Core.Processors
             _elasticClient = elasticClient;
         }
 
-        public Task Process(Folder folder)
+        public Task Process(IFolder folder)
         {
             return Process(folder, null);
         }
@@ -33,7 +33,7 @@ namespace DesktopSearch.Core.Processors
             throw new NotImplementedException();
         }
 
-        public Task Process(Folder folder, IProgress<int> progress)
+        public Task Process(IFolder folder, IProgress<int> progress)
         {
             var extensionFilter = new IncludeFileByExtensionFilter(".cs", ".xaml");
 

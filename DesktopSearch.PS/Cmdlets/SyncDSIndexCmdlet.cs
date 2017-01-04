@@ -74,7 +74,7 @@ namespace DesktopSearch.PS
             });
         }
 
-        private void MapPathsToConfiguredFolders(List<Folder> foldersToSync, IEnumerable<string> paths)
+        private void MapPathsToConfiguredFolders(List<IFolder> foldersToSync, IEnumerable<string> paths)
         {
             foreach (var path in paths)
             {
