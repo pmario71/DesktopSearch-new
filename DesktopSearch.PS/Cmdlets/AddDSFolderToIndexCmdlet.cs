@@ -12,68 +12,54 @@ using System.Management.Automation;
 using System.Text;
 using System.Threading.Tasks;
 using DesktopSearch.Core.DataModel.Documents;
+using DesktopSearch.Core.Services;
 
 namespace DesktopSearch.PS
 {
-    [Cmdlet(VerbsCommon.Add, "DSFolderToIndex", DefaultParameterSetName = "All")]
+    [Cmdlet(VerbsCommon.Add, "DSFolderToIndex")]
     public class AddDSFolderToIndexCmdlet : PSCmdlet
     {
-        private Settings _settings;
-        private List<IFolder> _folders;
+        private const string AddFolder = "AddFolder";
+        private IDocType _docType;
 
-        [Parameter(Mandatory = true, HelpMessage = "Paths of folders to add.")]
+        [Parameter(Mandatory = true, HelpMessage = "Name of the DocumentCollection for which an additional folder shall be added.")]
+        public string DocumentCollectionName { get; set; }
+
+        [Parameter(Mandatory = false, HelpMessage = "Name of the Document Repository for which an additional folder shall be added.")]
+        public IndexingStrategy? IndexingStrategy { get; set; }
+
+        [Parameter(Mandatory = true, HelpMessage = "Folder path to add.")]
         [ValidatePath()]
-        public string[] Path { get; set; }
-
-        [Parameter(Mandatory = true, HelpMessage = "Defines which index extractor is used for the given folder(s).")]
-        public string IndexingType { get; set; }
+        public string Path { get; set; }
 
         #region Dependencies
-        [Import]
-        internal ConfigAccess ConfigAccess { set; get; }
+        public IDocTypeRepository Repository { get; set; }
         #endregion
 
         protected override void BeginProcessing()
         {
             this.Compose();
 
-            throw new NotImplementedException();
-            //try
-            //{
-            //    _settings = ConfigAccess.Get();
-            //    _folders = new List<IFolder>(_settings.FoldersToIndex.Folders ?? new List<IFolder>());
-            //}
-            //catch(Exception ex)
-            //{
-            //    WriteWarning($"Recovering from error loading configuration: {ex.Message}");
-            //    _settings = new Settings()
-            //    {
-            //        FoldersToIndex = new FoldersToIndex()
-            //    };
-            //    _folders = new List<Folder>();
-            //}
+            if (this.Repository.TryGetDocTypeByName(this.DocumentCollectionName, out _docType))
+            {
+                if (!IndexingStrategy.HasValue)
+                {
+                    throw new Exception($"Specified {nameof(DocumentCollectionName)} '{DocumentCollectionName}' is unknown! In order to create a new, {nameof(IndexingStrategy)} needs to be specified as well.");
+                }
+
+                IDocType dt = DocType.Create(this.DocumentCollectionName, this.IndexingStrategy.Value, this.Path);
+                this.Repository.AddDocType(dt);
+                _docType = dt;
+            }
         }
 
         protected override void ProcessRecord()
         {
-            //TODO: not possible without access to DocTypeRepo anymore!  Refactor
-            throw new NotImplementedException("Needs to be refactored");
-            //foreach (var p in Path)
-            //{
-            //    var folder = new Folder
-            //    {
-            //        Path = p,
-            //        IndexingType = this.IndexingType
-            //    };
-            //    _folders.Add(folder);
-            //    WriteVerbose($"Added folder: {folder.Path}\r\n   Type [{folder.IndexingType}]");
-            //}
+            this.Repository.AddFolderToDocType(_docType, this.Path);
         }
 
         protected override void EndProcessing()
         {
-            _settings.FoldersToIndex.Folders = _folders.ToList();
-            ConfigAccess.SaveChanges(_settings);
         }
     }
 }

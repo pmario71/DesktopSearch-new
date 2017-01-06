@@ -28,12 +28,12 @@ namespace DesktopSearch.Core.Processors
             //_logging = logging;
         }
 
-        public Task Process(IFolder folder)
+        public Task ProcessAsync(IFolder folder)
         {
-            return Process(folder, null);
+            return ProcessAsync(folder, null);
         }
 
-        public Task Process(string file, string docTypeName)
+        public Task ProcessAsync(string file, string docTypeName)
         {
             return ExtractFilesAsync(new[] { file }, docTypeName, null);
         }
@@ -47,14 +47,14 @@ namespace DesktopSearch.Core.Processors
             }
         }
 
-        public Task Process(IFolder folder, IProgress<int> progress)
+        public Task ProcessAsync(IFolder folder, IProgress<int> progress)
         {
             var extensionFilter = new ExcludeFileByExtensionFilter(".bin", ".lnk");
 
             var filesToProcess = Directory.GetFiles(folder.Path, "*", SearchOption.AllDirectories)
                                           .Where(f => extensionFilter.FilterByExtension(f));
 
-            return ExtractFilesAsync(filesToProcess, folder.IndexingType, progress);
+            return ExtractFilesAsync(filesToProcess, folder.DocType.Name, progress);
         }
 
         private async Task ExtractFilesAsync(IEnumerable<string> filesToParse, string docTypeName, IProgress<int> progress=null)

@@ -41,14 +41,11 @@ namespace DesktopSearch.Core.DataModel.Documents
         [Keyword(Ignore = true)]
         public string Path { get; internal set; }
 
-        /// <summary>To be removed!!!!!!
-        /// Defines which type of indexing to apply to the folder.
-        /// </summary>
-        [Keyword(Ignore = true)]
-        public string IndexingType { get; set; }
-
         [Keyword(Ignore =true)]
         public string Machinename { get; internal set; }
+
+        public IDocType DocType { get; set; }
+        
 
         public override int GetHashCode()
         {

@@ -21,6 +21,7 @@ namespace DesktopSearch.Core.Services
         {
             NullValueHandling = NullValueHandling.Ignore,
             Formatting = Formatting.Indented,
+            PreserveReferencesHandling = PreserveReferencesHandling.Objects,
             ContractResolver = new PrivateFieldResolver()
         };
 

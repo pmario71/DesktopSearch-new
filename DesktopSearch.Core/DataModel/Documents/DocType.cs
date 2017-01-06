@@ -9,7 +9,6 @@ namespace DesktopSearch.Core.DataModel.Documents
     [ElasticsearchType(Name = "doctype", IdProperty = "Name")]
     public sealed class DocType : IDocType
     {
-
         private readonly List<Folder> _folders;
 
         public DocType()
@@ -19,6 +18,10 @@ namespace DesktopSearch.Core.DataModel.Documents
 
         public static IDocType Create(string name, string rootFolder)
         {
+            return Create(name, IndexingStrategy.Documents, rootFolder);
+        }
+        public static IDocType Create(string name, IndexingStrategy indexingStrategy, string rootFolder)
+        {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("name");
 
@@ -27,8 +30,10 @@ namespace DesktopSearch.Core.DataModel.Documents
 
             var dt = new DocType();
             dt.Name = name;
+            dt.IndexingStrategy = indexingStrategy;
 
             var folder = Folder.Create(rootFolder);
+            folder.DocType = dt;
             dt._folders.Add(folder);
 
             return dt;
@@ -49,7 +54,7 @@ namespace DesktopSearch.Core.DataModel.Documents
         IReadOnlyCollection<IFolder> IDocType.Folders { get { return _folders; } }
 
         [JsonProperty]
-        List<Folder> Folders { get { return _folders; } }
+        internal List<Folder> Folders { get { return _folders; } }
 
         /// <summary>
         /// File extensions to be ignored when indexing
@@ -62,6 +67,11 @@ namespace DesktopSearch.Core.DataModel.Documents
         /// </summary>
         [Keyword(Ignore = true)]
         public string[] IncludedExtensions { get; set; }
+
+        public IndexingStrategy IndexingStrategy
+        {
+            get; set;
+        }
 
         public override int GetHashCode()
         {
@@ -82,9 +92,9 @@ namespace DesktopSearch.Core.DataModel.Documents
 
     public interface IFolder
     {
-        string IndexingType { get; set; }
-
         string Path { get; }
+
+        IDocType DocType { get; }
     }
 
     public interface IDocType
@@ -99,6 +109,8 @@ namespace DesktopSearch.Core.DataModel.Documents
         /// </summary>
         IReadOnlyCollection<IFolder> Folders { get; }
 
+        IndexingStrategy IndexingStrategy { get; }
+
         /// <summary>
         /// File extensions to be excluded when indexing
         /// </summary>
@@ -108,5 +120,11 @@ namespace DesktopSearch.Core.DataModel.Documents
         /// File extensions to be included when indexing
         /// </summary>
         string[] IncludedExtensions { get; set; }
+    }
+
+    public enum IndexingStrategy
+    {
+        Documents = 0,
+        Code = 1
     }
 }

@@ -42,7 +42,7 @@ namespace DesktopSearch.Core.Tests.Processors
             var sut = new DocumentFolderProcessor(client.Object, cfg /*, logging.Object*/);
 
             var cfgFolder = Folder.Create(folder, indexingType: "");
-            sut.Process(cfgFolder);
+            sut.ProcessAsync(cfgFolder);
         }
 
         [Test, Ignore("mock TikaExtractor to fix test case")]
@@ -69,7 +69,7 @@ namespace DesktopSearch.Core.Tests.Processors
             var sut = new DocumentFolderProcessor(client.Object, cfg /*, logging.Object*/);
 
             var cfgFolder = Folder.Create(folder, indexingType: "");
-            await sut.Process(cfgFolder);
+            await sut.ProcessAsync(cfgFolder);
 
             client.VerifyAll();            
         }

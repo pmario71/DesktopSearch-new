@@ -32,7 +32,8 @@ namespace DesktopSearch.Core.Tests.Services
             var docType = DocType.Create(name, Path.GetTempPath());
             sut.AddDocType(docType);
 
-            var returnedType = sut.GetDocTypeByName(name);
+            IDocType returnedType;
+            sut.TryGetDocTypeByName(name, out returnedType);
 
             mockStore.Verify(m => m.StoreOrUpdateAsync(docType), Times.Once);
         }

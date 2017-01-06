@@ -1,6 +1,7 @@
 ﻿using DesktopSearch.Core;
 using DesktopSearch.Core.Configuration;
 using DesktopSearch.Core.DataModel.Documents;
+using DesktopSearch.Core.Services;
 using DesktopSearch.PS.Utils;
 using PowershellExtensions;
 using System;
@@ -18,44 +19,33 @@ namespace DesktopSearch.PS
     {
         private Settings _config;
 
-        [Parameter(Mandatory = false, HelpMessage = "Folder(s) to sync.")]
-        public string[] Folder { get; set; }
+        [Parameter(Mandatory = false, HelpMessage = "Name of the DocumentCollection(s) for which the index shall be synced, otherwise all configured repositories are used.")]
+        public string DocumentCollectionName { get; set; }
 
 
         #region Dependencies
 
         [Import]
-        internal ConfigAccess ConfigAccess { set; get; }
+        internal IDocTypeRepository Repository { get; set; }
 
         [Import]
-        public FolderProcessorFactory FolderProcessorFactory { get; set; }
+        internal IIndexingService IndexingService { get; set; }
 
         #endregion
 
         protected override void BeginProcessing()
         {
             this.Compose();
-
-            _config = ConfigAccess.Get();
         }
 
         protected override void ProcessRecord()
         {
-            List<Folder> foldersToSync = new List<Folder>();
-
-            if (Folder != null)
-            {
-                MapPathsToConfiguredFolders(foldersToSync, this.Folder);
-            }
-            else
-            {
-                foldersToSync.AddRange(_config.FoldersToIndex.Folders);
-            }
+            List<IFolder> folders = FindCollectionsToUpdateIndexFor();
 
             AsyncPump.Run(async () =>
             {
                 var progress = new ProgressRecord(1, "Synching Index", "Folder");
-                Action<int> progressCallback = p => 
+                Action<int> progressCallback = p =>
                 {
                     progress.PercentComplete = p;
                     WriteProgress(progress);
@@ -63,30 +53,45 @@ namespace DesktopSearch.PS
 
                 var aggregator = new DesktopSearch.Core.Utils.Async.AggregatingProgressReporter(progressCallback);
 
-                foreach (var folder in foldersToSync)
+                foreach (var folder in folders)
                 {
-                    var processor = FolderProcessorFactory.GetProcessorByFolder(folder);
-
                     IProgress<int> pc = aggregator.CreateClient();
 
-                    await processor.Process(folder, pc);
+                    await this.IndexingService.IndexRepositoryAsync(folder, pc);
                 }
             });
         }
 
-        private void MapPathsToConfiguredFolders(List<IFolder> foldersToSync, IEnumerable<string> paths)
+        private List<IFolder> FindCollectionsToUpdateIndexFor()
         {
-            foreach (var path in paths)
-            {
-                var foundFoder = _config.FoldersToIndex.Folders.FirstOrDefault(f => StringComparer.OrdinalIgnoreCase.Compare(f.Path, path) == 0);
+            var folders = new List<IFolder>();
+            IEnumerable<IDocType> indexedCollection = null;
 
-                if (foundFoder == null)
-                {
-                    WriteWarning($"Ignored following folder, because it is not part of configuration: {path}");
-                }
-                else
-                    foldersToSync.Add(foundFoder);
+            if (DocumentCollectionName == null)
+            {
+                indexedCollection = Repository.GetIndexedCollections();
             }
+            else
+            {
+                IDocType dtc;
+                if (!Repository.TryGetDocTypeByName(this.DocumentCollectionName, out dtc))
+                {
+                    throw new ArgumentException($"Name of the IndexedCollection '{this.DocumentCollectionName}' is unknown!");
+                }
+                indexedCollection = new[] { dtc };
+            }
+
+            // filter for locally available collections
+            foreach (var dtc in indexedCollection)
+            {
+                IFolder folder;
+                if (this.Repository.TryGetConfiguredLocalFolder(dtc, out folder))
+                {
+                    folders.Add(folder);
+                }
+            }
+
+            return folders;
         }
     }
 }

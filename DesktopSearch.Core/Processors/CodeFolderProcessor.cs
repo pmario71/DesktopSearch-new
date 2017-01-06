@@ -23,17 +23,17 @@ namespace DesktopSearch.Core.Processors
             _elasticClient = elasticClient;
         }
 
-        public Task Process(IFolder folder)
+        public Task ProcessAsync(IFolder folder)
         {
-            return Process(folder, null);
+            return ProcessAsync(folder, null);
         }
 
-        public Task Process(string file, string indexingTypeName)
+        public Task ProcessAsync(string file, string indexingTypeName)
         {
             throw new NotImplementedException();
         }
 
-        public Task Process(IFolder folder, IProgress<int> progress)
+        public Task ProcessAsync(IFolder folder, IProgress<int> progress)
         {
             var extensionFilter = new IncludeFileByExtensionFilter(".cs", ".xaml");
 

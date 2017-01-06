@@ -16,7 +16,9 @@ namespace DesktopSearch.Core.Configuration
     {
         private static JsonSerializerSettings _formatSettings = new JsonSerializerSettings
         {
-            NullValueHandling = NullValueHandling.Ignore, Formatting = Formatting.Indented,
+            NullValueHandling = NullValueHandling.Ignore,
+            Formatting = Formatting.Indented,
+            PreserveReferencesHandling = PreserveReferencesHandling.Objects,
             ContractResolver = new PrivateFieldResolver()
         };
 

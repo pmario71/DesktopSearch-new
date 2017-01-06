@@ -240,6 +240,7 @@
     <Compile Include="Services\DocTypeRepository_Tests.cs" />
     <Compile Include="Services\MockStore.cs" />
     <Compile Include="Tagging\TagDescriptorTests.cs" />
+    <Compile Include="TestDefinitions.cs" />
     <Compile Include="Tika\TikaServerExtractorTests.cs" />
     <Compile Include="Utils\Async\AggregatingProgressReporter.cs" />
     <None Include="TestData\Tika\zen-of-results.docx">

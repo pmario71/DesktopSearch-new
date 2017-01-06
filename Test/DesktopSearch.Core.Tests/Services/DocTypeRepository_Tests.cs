@@ -19,7 +19,8 @@ namespace DesktopSearch.Core.Tests.Services
             var docType = DocType.Create(name, Path.GetTempPath());
             sut.AddDocType(docType);
 
-            var returnedType = sut.GetDocTypeByName(name.ToUpper());
+            IDocType returnedType;
+            sut.TryGetDocTypeByName(name.ToUpper(), out returnedType);
 
             Assert.IsNotNull(returnedType);
             Assert.AreEqual(docType, returnedType);

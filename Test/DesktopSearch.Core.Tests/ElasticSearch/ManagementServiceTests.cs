@@ -19,7 +19,7 @@ namespace DesktopSearch.Core.Tests.ElasticSearch
     {
         private const string testDataPath = @"D:\Projects\GitHub\DesktopSearch\test\DesktopSearch.Core.Tests\TestData\ElasticSearch\";
 
-        [Test, Explicit("Requires elasticsearch running")]
+        [Test, Explicit(TestDefinitions.Requires_running_ES_service_instance)]
         public async Task Setup_and_populate_Index()
         {
             var esClient = ElasticTestClientFactory.Create();
@@ -30,7 +30,7 @@ namespace DesktopSearch.Core.Tests.ElasticSearch
 
             var docFolderProcessoer = new DocumentFolderProcessor(esClient, ElasticTestClientFactory.Config);
 
-            await docFolderProcessoer.Process(testDataPath + "zen-of-results.pdf", Core.Configuration.DocumentSearch.ContentType.Artikel);
+            await docFolderProcessoer.ProcessAsync(testDataPath + "zen-of-results.pdf", Core.Configuration.DocumentSearch.ContentType.Artikel);
 
             //if (!result.IsValid)
             //{

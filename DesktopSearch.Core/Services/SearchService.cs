@@ -68,7 +68,7 @@ namespace DesktopSearch.Core.Services
         {
             await EnsureInitialized;
 
-            await _docFolderProcessor.Process(documentPath, indexingTypeName);
+            await _docFolderProcessor.ProcessAsync(documentPath, indexingTypeName);
         }
 
         public async Task IndexDocumentAsync(DocDescriptor document)

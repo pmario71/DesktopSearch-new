@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using DesktopSearch.Core.Tika;
 using System.Diagnostics;
+using DesktopSearch.Core.Tests;
 
 namespace DesktopSearch.Core.Extractors.Tika
 {
-    [TestFixture, Explicit("Integration - requires running Tika Service")]
+    [TestFixture, Explicit(TestDefinitions.Requires_running_Tika_service_instance)]
     public class TikaServerExtractorTests
     {
         private TikaServer _server;
@@ -59,7 +60,7 @@ namespace DesktopSearch.Core.Extractors.Tika
             }
         }
 
-        [Test, Explicit("Requires a running Tika instance")]
+        [Test, Explicit(TestDefinitions.Requires_running_Tika_service_instance)]
         public async Task Parse_Performance_Test()
         {
             const int testcycles = 1;

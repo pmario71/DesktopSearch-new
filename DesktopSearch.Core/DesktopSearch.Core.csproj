@@ -216,6 +216,7 @@
     <Compile Include="Services\DocTypeRepository.cs" />
     <Compile Include="Services\FolderRootPathException.cs" />
     <Compile Include="Services\IDocTypeRepository.cs" />
+    <Compile Include="Services\IndexingService.cs" />
     <Compile Include="Services\ISearchService.cs" />
     <Compile Include="Services\SearchService.cs" />
     <Compile Include="Extractors\CodeExtractorSelector.cs" />

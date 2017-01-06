@@ -17,7 +17,7 @@ namespace DesktopSearch.Core.Tests.Services
     [TestFixture]
     public class DocTypeElasticStoreTests
     {
-        [Test, Explicit]
+        [Test, Explicit(TestDefinitions.Requires_running_ES_service_instance)]
         public async Task Persist_DocTypes_and_read_them_back_in()
         {
             var client = ElasticTestClientFactory.Create();
@@ -27,7 +27,7 @@ namespace DesktopSearch.Core.Tests.Services
 
             var sut = new DocTypeElasticStore(client, ElasticTestClientFactory.Config);
 
-            var docType = DocType.Create("Buecher", Path.GetTempPath());
+            var docType = DocType.Create("Buecher", IndexingStrategy.Code, Path.GetTempPath());
             await sut.StoreOrUpdateAsync(docType);
 
             client.Refresh(ElasticTestClientFactory.Config.DocumentSearchIndexName);
@@ -35,11 +35,12 @@ namespace DesktopSearch.Core.Tests.Services
             var result = await sut.LoadAsync();
 
             Assert.AreEqual(docType.Name, result.First().Name);
+            Assert.AreEqual(docType.IndexingStrategy, result.First().IndexingStrategy);
             Assert.AreEqual(docType.Folders.First().Path, result.First().Folders.First().Path);
         }
 
 
-        [Test, Explicit]
+        [Test, Explicit(TestDefinitions.Requires_running_ES_service_instance)]
         public async Task Persist_DocTypes_and_read_them_back_in_lowlevel()
         {
             var client = ElasticTestClientFactory.Create();

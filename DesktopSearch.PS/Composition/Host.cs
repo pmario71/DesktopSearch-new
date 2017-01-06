@@ -43,8 +43,9 @@ namespace DesktopSearch.PS.Composition
             conventions.ForType<Core.ElasticSearch.ManagementService>().Export<Core.ElasticSearch.ManagementService>();
             
             conventions.ForType<Core.Services.SearchService>().Export<Core.Services.ISearchService>();
+            conventions.ForType<Core.Services.IndexingService>().Export<Core.Services.IIndexingService>();
 
-            conventions.ForType<Core.FolderProcessorFactory>().Export<Core.FolderProcessorFactory>();
+            //conventions.ForType<Core.FolderProcessorFactory>().Export<Core.FolderProcessorFactory>();
             conventions.ForType<Core.Processors.CodeFolderProcessor>().Export<Core.Processors.CodeFolderProcessor>();
             conventions.ForType<Core.Processors.DocumentFolderProcessor>().Export<Core.Processors.DocumentFolderProcessor>();
 
@@ -73,8 +74,8 @@ namespace DesktopSearch.PS.Composition
     {
         public void TryCreate(CompositionContainer container)
         {
-            object obj = container.GetExportedValue<Core.FolderProcessorFactory>();
-            obj = container.GetExportedValue<Core.Processors.CodeFolderProcessor>();
+            //object obj = container.GetExportedValue<Core.FolderProcessorFactory>();
+            object  obj = container.GetExportedValue<Core.Processors.CodeFolderProcessor>();
             obj = container.GetExportedValue<Core.Processors.DocumentFolderProcessor>();
 
             obj = container.GetExportedValue<Core.ElasticSearch.ManagementService>();

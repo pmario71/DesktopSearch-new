@@ -8,44 +8,45 @@ using DesktopSearch.Core.DataModel.Documents;
 
 namespace DesktopSearch.Core
 {
-    public class FolderProcessorFactory
-    {
-        private readonly IContainer _container;
+    //public class FolderProcessorFactory
+    //{
+    //    private readonly IContainer _container;
 
-        private Dictionary<string, Type> _map = new Dictionary<string, Type>()
-        {
-            { "Code"      , typeof(CodeFolderProcessor) },
-            { "Documents" , typeof(DocumentFolderProcessor) },
-        };
+    //    private Dictionary<string, Type> _map = new Dictionary<string, Type>()
+    //    {
+    //        { "Code"      , typeof(CodeFolderProcessor) },
+    //        { "Documents" , typeof(DocumentFolderProcessor) },
+    //        { "Buecher" , typeof(DocumentFolderProcessor) },
+    //    };
 
-        public FolderProcessorFactory(IContainer container)
-        {
-            _container = container;
-        }
+    //    public FolderProcessorFactory(IContainer container)
+    //    {
+    //        _container = container;
+    //    }
 
-        public IFolderProcessor GetProcessorByFolder(IFolder folder)
-        {
-            if (folder == null)
-                throw new ArgumentNullException("folder");
+    //    public IFolderProcessor GetProcessorByFolder(IFolder folder)
+    //    {
+    //        if (folder == null)
+    //            throw new ArgumentNullException("folder");
 
-            Type folderProcessorType;
-            if (!_map.TryGetValue(folder.IndexingType, out folderProcessorType))
-            {
-                throw new ArgumentOutOfRangeException("indexingTypeName", $"'{folder.IndexingType}' is unknown!");
-            }
+    //        Type folderProcessorType;
+    //        if (!_map.TryGetValue(folder.DocType.Name, out folderProcessorType))
+    //        {
+    //            throw new ArgumentOutOfRangeException("indexingTypeName", $"'{folder.DocType.Name}' is unknown!");
+    //        }
 
-            return (IFolderProcessor)_container.GetService(folderProcessorType);
-        }
+    //        return (IFolderProcessor)_container.GetService(folderProcessorType);
+    //    }
 
-    }
+    //}
 
     public interface IFolderProcessor
     {
-        Task Process(string file, string indexingTypeName);
+        Task ProcessAsync(string file, string indexingTypeName);
 
-        Task Process(IFolder folder);
+        Task ProcessAsync(IFolder folder);
 
-        Task Process(IFolder folder, IProgress<int> progress);
+        Task ProcessAsync(IFolder folder, IProgress<int> progress);
     }
 
     public interface IContainer

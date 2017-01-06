@@ -9,9 +9,25 @@ namespace DesktopSearch.Core.Tests.Services
 
     class NullMockStore : IDocTypePersistence
     {
+        IDocType[] _docTypes;
+
+        public IDocType[] DocTypes
+        {
+            get
+            {
+                if (_docTypes == null)
+                {
+                    _docTypes = new IDocType[] { };
+                }
+                return _docTypes;
+            }
+            set => _docTypes = value;
+        }
+
+
         public Task<IEnumerable<IDocType>> LoadAsync()
         {
-            return Task.FromResult<IEnumerable<IDocType>>(new IDocType[] { });
+            return Task.FromResult<IEnumerable<IDocType>>(this.DocTypes);
         }
 
         public Task StoreOrUpdateAsync(IDocType docType)
