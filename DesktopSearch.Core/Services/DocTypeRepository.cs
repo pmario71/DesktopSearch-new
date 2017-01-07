@@ -11,86 +11,85 @@ using System.Collections.Specialized;
 
 namespace DesktopSearch.Core.Services
 {
-    internal class DocTypeRepository : IDocTypeRepository
+    internal class DocumentCollectionRepository : IDocumentCollectionRepository
     {
-        //private readonly List<DocType> _doctypes;
-        private readonly IDocTypePersistence _store;
+        private readonly IDocumentCollectionPersistence _store;
 
-        Task<ValidatingCollection<IDocType>> _docTypesCache;
+        Task<ValidatingCollection<IDocumentCollection>> _docCollectionCache;
 
-        public DocTypeRepository(IDocTypePersistence persistenceStore)
+        public DocumentCollectionRepository(IDocumentCollectionPersistence persistenceStore)
         {
             _store = persistenceStore;
 
-            _docTypesCache = Task.Run(() =>
+            _docCollectionCache = Task.Run(() =>
             {
-                var list = new ValidatingCollection<IDocType>(_store.LoadAsync().Result, this.Validate);
+                var list = new ValidatingCollection<IDocumentCollection>(_store.LoadAsync().Result, this.Validate);
                 return list;
             });
         }
 
-        public void AddDocType(IDocType docType)
+        public void AddDocumentCollection(IDocumentCollection documentCollection)
         {
-            CheckIfAnyLinkedFolderIsInUse(docType);
+            CheckIfAnyLinkedFolderIsInUse(documentCollection);
 
-            _docTypesCache.Result.Add(docType);
-            _store.StoreOrUpdateAsync(docType).Wait();
+            _docCollectionCache.Result.Add(documentCollection);
+            _store.StoreOrUpdateAsync(documentCollection).Wait();
         }
 
-        public bool TryGetDocTypeByName(string name, out IDocType docType)
+        public bool TryGetDocumentCollectionByName(string name, out IDocumentCollection documentCollection)
         {
-            docType = _docTypesCache.Result.SingleOrDefault(p => StringComparer.OrdinalIgnoreCase.Compare(p.Name, name) == 0);
-            return docType != null;
+            documentCollection = _docCollectionCache.Result.SingleOrDefault(p => StringComparer.OrdinalIgnoreCase.Compare(p.Name, name) == 0);
+            return documentCollection != null;
         }
         
-        public bool TryGetDocTypeForPath(FileInfo file, out IDocType docType)
+        public bool TryGetDocumentCollectionForPath(FileInfo file, out IDocumentCollection documentCollection)
         {
             if (file == null || !Path.IsPathRooted(file.FullName))
                 throw new ArgumentException(nameof(file));
 
-            foreach (var dt in _docTypesCache.Result)
+            foreach (var dt in _docCollectionCache.Result)
             {
                 if (dt.Folders.SingleOrDefault(i => file.FullName.StartsWith(i.Path, StringComparison.OrdinalIgnoreCase)) != null)
                 {
-                    docType = dt;
+                    documentCollection = dt;
                     return true;
                 }
             }
 
-            docType = null;
+            documentCollection = null;
             return false;
         }
 
-        public bool TryGetConfiguredLocalFolder(IDocType docType, out IFolder localFolder)
+        public bool TryGetConfiguredLocalFolder(IDocumentCollection documentCollection, out IFolder localFolder)
         {
             string machinename = Environment.MachineName;
-            localFolder = ((DocType)docType).Folders.SingleOrDefault(f => f.Machinename == machinename);
+            localFolder = ((DocumentCollection)documentCollection).Folders.SingleOrDefault(f => f.Machinename == machinename);
             return localFolder != null;
         }
 
-        public void AddFolderToDocType(IDocType docType, string path)
+        public void AddFolderToDocumentCollection(IDocumentCollection documentCollection, string path)
         {
-            if (docType == null)
-                throw new ArgumentNullException(nameof(docType));
+            if (documentCollection == null)
+                throw new ArgumentNullException(nameof(documentCollection));
 
             var folder = Folder.Create(path);
             ValidateBeforeAdding(folder);
-            ((DocType)docType).Folders.Add(folder);
+            ((DocumentCollection)documentCollection).Folders.Add(folder);
         }
 
-        public IEnumerable<IDocType> GetIndexedCollections()
+        public IEnumerable<IDocumentCollection> GetIndexedCollections()
         {
-            return this._docTypesCache.Result;
+            return this._docCollectionCache.Result;
         }
 
-        private void Validate(IDocType docType)
+        private void Validate(IDocumentCollection documentCollection)
         {
-            CheckIfAnyLinkedFolderIsInUse(docType);
+            CheckIfAnyLinkedFolderIsInUse(documentCollection);
         }
 
         private void ValidateBeforeAdding(IFolder folder)
         {
-            var paths = _docTypesCache.Result
+            var paths = _docCollectionCache.Result
                 .SelectMany(dt => dt.Folders);
 
             // none of the already existing folders must be a parent or a child folder of the folder to be added
@@ -101,32 +100,32 @@ namespace DesktopSearch.Core.Services
             ));
             if (childOrParent != null)
             {
-                string msg = $@"Folder {folder.Path} cannot be added!\r\nIt would conflict with a folder belonging to DocType 
-'{childOrParent.DocType.Name}'. New folders neither can be a child or a parent of an already existing folder!
+                string msg = $@"Folder {folder.Path} cannot be added!\r\nIt would conflict with a folder belonging to DocumentCollection 
+'{childOrParent.DocumentCollection.Name}'. New folders neither can be a child or a parent of an already existing folder!
 ";
                 throw new FolderRootPathException(msg);
             }
         }
 
         #region Internals
-        private void CheckIfAnyLinkedFolderIsInUse(IDocType docType)
+        private void CheckIfAnyLinkedFolderIsInUse(IDocumentCollection documentCollection)
         {
-            var paths = _docTypesCache.Result
+            var paths = _docCollectionCache.Result
                 .SelectMany(dt => dt.Folders);
 
-            if (docType.Folders.Intersect(paths).Count() > 0)
+            if (documentCollection.Folders.Intersect(paths).Count() > 0)
             {
-                throw new FolderRootPathException($"A path '' already assigned to DocType!");
+                throw new FolderRootPathException($"A path '' already assigned to DocumentCollection!");
             }
         }
         #endregion
     }
 
-    internal interface IDocTypePersistence
+    internal interface IDocumentCollectionPersistence
     {
-        Task<IEnumerable<IDocType>> LoadAsync();
+        Task<IEnumerable<IDocumentCollection>> LoadAsync();
 
-        Task StoreOrUpdateAsync(IDocType docType);
+        Task StoreOrUpdateAsync(IDocumentCollection documentCollection);
     }
 
     class ValidatingCollection<T> : ObservableCollection<T>

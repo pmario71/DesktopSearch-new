@@ -56,7 +56,7 @@ namespace DesktopSearch.Core.Extractors.Tika
 
                 Assert.AreEqual("Zen of results", document.Title);
                 Assert.AreEqual("J. D. Meier", document.Author);
-                Assert.AreEqual("getting things done;", document.Keywords);
+                Assert.AreEqual("getting things done", document.Keywords[0]);
             }
         }
 

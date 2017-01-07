@@ -66,7 +66,7 @@ namespace DesktopSearch.Core.Tests.ElasticSearch
                 Title = "Beginning SQL Queries",
                 Author = "Clare Churcher",
                 ContentType = "pdf",
-                DocType = ContentType.Buch,
+                DocumentCollection = ContentType.Buch,
                 Keywords = new[] { "SQL", "databases" },
                 Path = @"Z:\Buecher\Programming\Database\Beginning SQL Queries - From Novice To Professional.pdf",
                 Content = @"

@@ -26,7 +26,7 @@ namespace DesktopSearch.PS
         #region Dependencies
 
         [Import]
-        internal IDocTypeRepository Repository { get; set; }
+        internal IDocumentCollectionRepository Repository { get; set; }
 
         [Import]
         internal IIndexingService IndexingService { get; set; }
@@ -65,7 +65,7 @@ namespace DesktopSearch.PS
         private List<IFolder> FindCollectionsToUpdateIndexFor()
         {
             var folders = new List<IFolder>();
-            IEnumerable<IDocType> indexedCollection = null;
+            IEnumerable<IDocumentCollection> indexedCollection = null;
 
             if (DocumentCollectionName == null)
             {
@@ -73,8 +73,8 @@ namespace DesktopSearch.PS
             }
             else
             {
-                IDocType dtc;
-                if (!Repository.TryGetDocTypeByName(this.DocumentCollectionName, out dtc))
+                IDocumentCollection dtc;
+                if (!Repository.TryGetDocumentCollectionByName(this.DocumentCollectionName, out dtc))
                 {
                     throw new ArgumentException($"Name of the IndexedCollection '{this.DocumentCollectionName}' is unknown!");
                 }

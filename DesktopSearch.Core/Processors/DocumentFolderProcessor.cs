@@ -33,9 +33,9 @@ namespace DesktopSearch.Core.Processors
             return ProcessAsync(folder, null);
         }
 
-        public Task ProcessAsync(string file, string docTypeName)
+        public Task ProcessAsync(string file, string documentCollectionName)
         {
-            return ExtractFilesAsync(new[] { file }, docTypeName, null);
+            return ExtractFilesAsync(new[] { file }, documentCollectionName, null);
         }
 
         public async Task Process(DocDescriptor document)
@@ -54,10 +54,10 @@ namespace DesktopSearch.Core.Processors
             var filesToProcess = Directory.GetFiles(folder.Path, "*", SearchOption.AllDirectories)
                                           .Where(f => extensionFilter.FilterByExtension(f));
 
-            return ExtractFilesAsync(filesToProcess, folder.DocType.Name, progress);
+            return ExtractFilesAsync(filesToProcess, folder.DocumentCollection.Name, progress);
         }
 
-        private async Task ExtractFilesAsync(IEnumerable<string> filesToParse, string docTypeName, IProgress<int> progress=null)
+        private async Task ExtractFilesAsync(IEnumerable<string> filesToParse, string documentCollectionName, IProgress<int> progress=null)
         {
             int current = 0;
             var maxFiles = filesToParse.Count();
@@ -69,7 +69,7 @@ namespace DesktopSearch.Core.Processors
                 Extractors.ParserContext context = new Extractors.ParserContext();
                 var docDesc = await _extractor.ExtractAsync(context, new FileInfo(filePath));
 
-                docDesc.DocType = docTypeName;
+                docDesc.DocumentCollection = documentCollectionName;
 
                 var result = await _client.IndexAsync(docDesc, (indexSelector) => indexSelector.Index(_configuration.DocumentSearchIndexName));
 

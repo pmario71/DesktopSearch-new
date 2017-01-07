@@ -15,33 +15,33 @@ using System.Threading.Tasks;
 namespace DesktopSearch.Core.Tests.Services
 {
     [TestFixture]
-    public class DocTypeElasticStoreTests
+    public class DocumentCollectionElasticStoreTests
     {
         [Test, Explicit(TestDefinitions.Requires_running_ES_service_instance)]
-        public async Task Persist_DocTypes_and_read_them_back_in()
+        public async Task Persist_DocumentCollection_and_read_them_back_in()
         {
             var client = ElasticTestClientFactory.Create();
 
             var mgmSvc = new ManagementService(client, ElasticTestClientFactory.Config);
             await mgmSvc.EnsureIndicesCreated();
 
-            var sut = new DocTypeElasticStore(client, ElasticTestClientFactory.Config);
+            var sut = new DocumentCollectionElasticStore(client, ElasticTestClientFactory.Config);
 
-            var docType = DocType.Create("Buecher", IndexingStrategy.Code, Path.GetTempPath());
-            await sut.StoreOrUpdateAsync(docType);
+            var documentCollection = DocumentCollection.Create("Buecher", IndexingStrategy.Code, Path.GetTempPath());
+            await sut.StoreOrUpdateAsync(documentCollection);
 
             client.Refresh(ElasticTestClientFactory.Config.DocumentSearchIndexName);
 
             var result = await sut.LoadAsync();
 
-            Assert.AreEqual(docType.Name, result.First().Name);
-            Assert.AreEqual(docType.IndexingStrategy, result.First().IndexingStrategy);
-            Assert.AreEqual(docType.Folders.First().Path, result.First().Folders.First().Path);
+            Assert.AreEqual(documentCollection.Name, result.First().Name);
+            Assert.AreEqual(documentCollection.IndexingStrategy, result.First().IndexingStrategy);
+            Assert.AreEqual(documentCollection.Folders.First().Path, result.First().Folders.First().Path);
         }
 
 
         [Test, Explicit(TestDefinitions.Requires_running_ES_service_instance)]
-        public async Task Persist_DocTypes_and_read_them_back_in_lowlevel()
+        public async Task Persist_DocumentCollection_and_read_them_back_in_lowlevel()
         {
             var client = ElasticTestClientFactory.Create();
 
@@ -72,8 +72,8 @@ namespace DesktopSearch.Core.Tests.Services
 
             client.Refresh(idxName);
 
-            var docTypes = await client.SearchAsync<DocType2>(t => t.Index(idxName).Query(q => q.MatchAll()));
-            var result = docTypes.Hits.Select(s => s.Source);
+            var documentCollections = await client.SearchAsync<DocType2>(t => t.Index(idxName).Query(q => q.MatchAll()));
+            var result = documentCollections.Hits.Select(s => s.Source);
 
             Assert.AreEqual(docType.Name, result.First().Name);
             Assert.AreEqual(docType.Folders.First().Path, result.First().Folders.First().Path);

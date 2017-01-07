@@ -27,8 +27,8 @@ namespace DesktopSearch.Core.DataModel.Documents
         /// <summary>
         /// Buch, Artikel, Rechnung, Unterlagen
         /// </summary>
-        [Keyword(Name = "doctype")]
-        public string DocType { get; set; }
+        [Keyword(Name = "documentcollection")]
+        public string DocumentCollection { get; set; }
 
         /// <summary>
         /// mime-type returned from Tika

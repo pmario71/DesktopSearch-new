@@ -4,49 +4,49 @@ using System.IO;
 
 namespace DesktopSearch.Core.Services
 {
-    public interface IDocTypeRepository
+    public interface IDocumentCollectionRepository
     {
         /// <summary>
-        /// Finds a registered <see cref="IDocType"/>.
+        /// Finds a registered <see cref="IDocumentCollection"/>.
         /// </summary>
         /// <param name="name"></param>
-        /// <returns>true, if a matching <see cref="IDocType"/> was found!</returns>
-        bool TryGetDocTypeByName(string name, out IDocType docType);
+        /// <returns>true, if a matching <see cref="IDocumentCollection"/> was found!</returns>
+        bool TryGetDocumentCollectionByName(string name, out IDocumentCollection documentCollection);
 
         /// <summary>
-        /// Tries to finds a registered <see cref="IDocType"/> by matching the file location against against linked <see cref="IFolder"/>s.
+        /// Tries to finds a registered <see cref="IDocumentCollection"/> by matching the file location against against linked <see cref="IFolder"/>s.
         /// </summary>
         /// <param name="file"></param>
-        /// <param name="docType">found <see cref="IDocType"/></param>
+        /// <param name="documentCollection">found <see cref="IDocumentCollection"/></param>
         /// <returns>true, if found</returns>
-        bool TryGetDocTypeForPath(FileInfo file, out IDocType docType);
+        bool TryGetDocumentCollectionForPath(FileInfo file, out IDocumentCollection documentCollection);
 
         /// <summary>
-        /// Tries to find if a local <see cref="IFolder"/> is defined for the provided <see cref="IDocType"/> instance.
+        /// Tries to find if a local <see cref="IFolder"/> is defined for the provided <see cref="IDocumentCollection"/> instance.
         /// </summary>
-        /// <param name="docType"></param>
+        /// <param name="documentCollection"></param>
         /// <param name="localFolder">reference to local folder</param>
         /// <returns>true, if a local folder was found</returns>
-        bool TryGetConfiguredLocalFolder(IDocType docType, out IFolder localFolder);
+        bool TryGetConfiguredLocalFolder(IDocumentCollection documentCollection, out IFolder localFolder);
 
         /// <summary>
         /// Returns all configured IndexedCollections.
         /// </summary>
         /// <returns></returns>
-        IEnumerable<IDocType> GetIndexedCollections();
+        IEnumerable<IDocumentCollection> GetIndexedCollections();
 
         /// <summary>
-        /// Adds a new <see cref="DocType"/> to the repository.
+        /// Adds a new <see cref="DocumentCollection"/> to the repository.
         /// </summary>
         /// <remarks>There must be at least one <see cref="IFolder"/> linked</remarks>
-        /// <param name="docType">unique name for the new <see cref="IDocType"/> to be registered.</param>
-        void AddDocType(IDocType docType);
+        /// <param name="documentCollection">unique name for the new <see cref="IDocumentCollection"/> to be registered.</param>
+        void AddDocumentCollection(IDocumentCollection documentCollection);
 
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="docType"></param>
+        /// <param name="documentCollection"></param>
         /// <param name="path"></param>
-        void AddFolderToDocType(IDocType docType, string path);
+        void AddFolderToDocumentCollection(IDocumentCollection documentCollection, string path);
     }
 }

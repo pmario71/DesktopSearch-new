@@ -210,7 +210,7 @@
   <ItemGroup>
     <Compile Include="Configuration\ConfigAccessTests.cs" />
     <Compile Include="Configuration\ConfigBootstrappingTests.cs" />
-    <Compile Include="DataModel\Documents\DocTypeTests.cs" />
+    <Compile Include="DataModel\Documents\DocumentCollectionTests.cs" />
     <Compile Include="ElasticSearch\ManagementServiceTests.cs" />
     <Compile Include="ElasticSearch\Parser\KeywordParserTests.cs" />
     <Compile Include="FileSystem\ExcludeFileByExtensionFilterTests.cs" />

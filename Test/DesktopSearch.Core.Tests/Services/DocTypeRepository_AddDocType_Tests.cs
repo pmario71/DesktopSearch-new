@@ -11,35 +11,35 @@ using System.Threading.Tasks;
 namespace DesktopSearch.Core.Tests.Services
 {
     [TestFixture]
-    public class DocTypeRepository_AddDocType_Tests
+    public class DocumentCollectionRepository_AddDocumentCollection_Tests
     {
 
         [Test]
-        public void Can_add_DocType_to_repo()
+        public void Can_add_DocumentCollection_to_repo()
         {
 
-            var sut = new DocTypeRepository(new NullMockStore());
+            var sut = new DocumentCollectionRepository(new NullMockStore());
 
-            var docType = DocType.Create("uniquename", Path.GetTempPath());
-            sut.AddDocType(docType);
+            var collection = DocumentCollection.Create("uniquename", Path.GetTempPath());
+            sut.AddDocumentCollection(collection);
         }
 
         [Test]
         public void Adding_same_folder_twice_throws()
         {
-            var sut = new DocTypeRepository(new NullMockStore());
+            var sut = new DocumentCollectionRepository(new NullMockStore());
 
-            var docType = DocType.Create("uniquename", Path.GetTempPath());
-            var docType2 = DocType.Create("uniquename2", Path.GetTempPath());
+            var col1 = DocumentCollection.Create("uniquename", Path.GetTempPath());
+            var col2 = DocumentCollection.Create("uniquename2", Path.GetTempPath());
 
-            sut.AddDocType(docType);
+            sut.AddDocumentCollection(col1);
 
-            Assert.Throws<FolderRootPathException>(() => sut.AddDocType(docType2));
+            Assert.Throws<FolderRootPathException>(() => sut.AddDocumentCollection(col2));
         }
     }
 
     [TestFixture]
-    public class DocTypeRepository_AddFolderToDocType_Tests
+    public class DocumentCollectionRepository_AddFolderToDocumentCollection_Tests
     {
         Cleaner _cleaner;
 
@@ -56,17 +56,17 @@ namespace DesktopSearch.Core.Tests.Services
         }
 
         [Test]
-        public void Can_add_folder_to_DocType()
+        public void Can_add_folder_to_DocumentCollection()
         {
             var mock = new NullMockStore();
-            var docType = DocType.Create("uniquename", BuildTempPathAndCreateFolder("F1\\"));
-            mock.DocTypes = new IDocType[] { docType };
+            var col = DocumentCollection.Create("uniquename", BuildTempPathAndCreateFolder("F1\\"));
+            mock.DocumentCollections = new IDocumentCollection[] { col };
 
-            var sut = new DocTypeRepository(mock);
+            var sut = new DocumentCollectionRepository(mock);
                         
-            sut.AddFolderToDocType(docType, BuildTempPathAndCreateFolder("someotherPath\\"));
+            sut.AddFolderToDocumentCollection(col, BuildTempPathAndCreateFolder("someotherPath\\"));
 
-            Assert.AreEqual(2, docType.Folders.Count);
+            Assert.AreEqual(2, col.Folders.Count);
         }
 
         [Test]
@@ -75,12 +75,12 @@ namespace DesktopSearch.Core.Tests.Services
             var mock = new NullMockStore();
             string thePath = BuildTempPathAndCreateFolder("samePath\\");
 
-            var docType = DocType.Create("uniquename", thePath);
-            mock.DocTypes = new IDocType[] { docType };
+            var col = DocumentCollection.Create("uniquename", thePath);
+            mock.DocumentCollections = new IDocumentCollection[] { col };
 
-            var sut = new DocTypeRepository(mock);
+            var sut = new DocumentCollectionRepository(mock);
 
-            Assert.Throws<FolderRootPathException>(() => sut.AddFolderToDocType(docType, thePath));
+            Assert.Throws<FolderRootPathException>(() => sut.AddFolderToDocumentCollection(col, thePath));
         }
 
         [Test]
@@ -95,19 +95,19 @@ namespace DesktopSearch.Core.Tests.Services
             folderMoq.Setup(f => f.Path).Returns(Path.GetDirectoryName(thePath));
             folders.Add(folderMoq.Object);
 
-            var dtMoq = new Moq.Mock<IDocType>();
-            dtMoq.Setup(m => m.Name).Returns("DocTypeName");
+            var dtMoq = new Moq.Mock<IDocumentCollection>();
+            dtMoq.Setup(m => m.Name).Returns("DocumentCollectionName");
             dtMoq.Setup(m => m.Folders).Returns(folders);
-            folderMoq.Setup(f => f.DocType).Returns(dtMoq.Object);
-            mock.DocTypes = new IDocType[] { dtMoq.Object };
+            folderMoq.Setup(f => f.DocumentCollection).Returns(dtMoq.Object);
+            mock.DocumentCollections = new IDocumentCollection[] { dtMoq.Object };
 
-            var sut = new DocTypeRepository(mock);
+            var sut = new DocumentCollectionRepository(mock);
 
             Assert.Throws<FolderRootPathException>(() =>
             {
                 try
                 {
-                    sut.AddFolderToDocType(dtMoq.Object, thePath);
+                    sut.AddFolderToDocumentCollection(dtMoq.Object, thePath);
                 }
                 catch(Exception ex)
                 {
@@ -129,19 +129,19 @@ namespace DesktopSearch.Core.Tests.Services
             folderMoq.Setup(f => f.Path).Returns($"{thePath}AnotherChild\\");
             folders.Add(folderMoq.Object);
 
-            var dtMoq = new Moq.Mock<IDocType>();
-            dtMoq.Setup(m => m.Name).Returns("DocTypeName");
+            var dtMoq = new Moq.Mock<IDocumentCollection>();
+            dtMoq.Setup(m => m.Name).Returns("DocumentCollectionName");
             dtMoq.Setup(m => m.Folders).Returns(folders);
-            folderMoq.Setup(f => f.DocType).Returns(dtMoq.Object);
-            mock.DocTypes = new IDocType[] { dtMoq.Object };
+            folderMoq.Setup(f => f.DocumentCollection).Returns(dtMoq.Object);
+            mock.DocumentCollections = new IDocumentCollection[] { dtMoq.Object };
 
-            var sut = new DocTypeRepository(mock);
+            var sut = new DocumentCollectionRepository(mock);
 
             Assert.Throws<FolderRootPathException>(() =>
             {
                 try
                 {
-                    sut.AddFolderToDocType(dtMoq.Object, thePath);
+                    sut.AddFolderToDocumentCollection(dtMoq.Object, thePath);
                 }
                 catch (Exception ex)
                 {

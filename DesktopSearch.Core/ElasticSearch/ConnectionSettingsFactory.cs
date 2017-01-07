@@ -17,7 +17,7 @@ namespace DesktopSearch.Core.ElasticSearch
             settings
                 .MapDefaultTypeIndices(m => m
                     .Add(typeof(DocDescriptor), config.DocumentSearchIndexName)
-                    .Add(typeof(DocType), config.DocumentSearchIndexName));
+                    .Add(typeof(DocumentCollection), config.DocumentSearchIndexName));
 
             // PrivateFieldResolver   Newtonsoft.Json.Serialization.DefaultContractResolver
 

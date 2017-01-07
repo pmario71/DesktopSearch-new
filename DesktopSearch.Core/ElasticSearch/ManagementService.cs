@@ -42,7 +42,7 @@ namespace DesktopSearch.Core.ElasticSearch
                 var docIndex = new CreateIndexDescriptor(_configuration.DocumentSearchIndexName);
 
                 docIndex.Mappings(mp => mp
-                                            .Map<DocTypeConfigurationElement>(m => m.AutoMap())
+                                            .Map<IDocumentCollectionConfigurationElement>(m => m.AutoMap())
                                             .Map<DocDescriptor>(m => m.AutoMap()
                                                 .SourceField(s => s.Excludes(new[] { "content" }))));
                     //.SourceField(s => s.Excludes(new[] { "content" }))

@@ -41,11 +41,17 @@ namespace DesktopSearch.Core.Tests.Processors
 
             var sut = new DocumentFolderProcessor(client.Object, cfg /*, logging.Object*/);
 
-            var cfgFolder = Folder.Create(folder, indexingType: "");
+            var cfgFolder = Folder.Create(folder);
+
+            var dcMock = new Mock<IDocumentCollection>();
+            dcMock.Setup(m => m.Name).Returns("Some name");
+            cfgFolder.DocumentCollection = dcMock.Object;
+            
+
             sut.ProcessAsync(cfgFolder);
         }
 
-        [Test, Ignore("mock TikaExtractor to fix test case")]
+        [Test]
         public async Task Run_on_file()
         {
             //TODO: mock TikaExtractor to fix test case
@@ -62,13 +68,22 @@ namespace DesktopSearch.Core.Tests.Processors
             result.Setup(t => t.IsValid)
                 .Returns(true);
 
-            client.Setup(t => t.IndexAsync(It.Is<DocDescriptor>(d => d.Path == filePath), null, default(CancellationToken)))
-                .Returns(Task.FromResult(result.Object));
+            //client.Setup(t => t.IndexAsync(It.Is<DocDescriptor>(d => d.Path == filePath), null, default(CancellationToken)))
+            client.Setup(t => t.IndexAsync(It.IsAny<DocDescriptor>(), 
+                                           It.IsAny<Func<IndexDescriptor<DocDescriptor>, IIndexRequest>>(), 
+                                           It.IsAny<CancellationToken>()))
+                                                .Returns(Task.FromResult<IIndexResponse>(result.Object));
 
 
             var sut = new DocumentFolderProcessor(client.Object, cfg /*, logging.Object*/);
 
-            var cfgFolder = Folder.Create(folder, indexingType: "");
+            var cfgFolder = Folder.Create(folder);
+
+            var dcMock = new Mock<IDocumentCollection>();
+            dcMock.Setup(m => m.Name).Returns("Some name");
+            cfgFolder.DocumentCollection = dcMock.Object;
+
+
             await sut.ProcessAsync(cfgFolder);
 
             client.VerifyAll();            

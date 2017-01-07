@@ -20,7 +20,7 @@ namespace DesktopSearch.PS
     public class AddDSFolderToIndexCmdlet : PSCmdlet
     {
         private const string AddFolder = "AddFolder";
-        private IDocType _docType;
+        private IDocumentCollection _documentCollection;
 
         [Parameter(Mandatory = true, HelpMessage = "Name of the DocumentCollection for which an additional folder shall be added.")]
         public string DocumentCollectionName { get; set; }
@@ -33,29 +33,29 @@ namespace DesktopSearch.PS
         public string Path { get; set; }
 
         #region Dependencies
-        public IDocTypeRepository Repository { get; set; }
+        public IDocumentCollectionRepository Repository { get; set; }
         #endregion
 
         protected override void BeginProcessing()
         {
             this.Compose();
 
-            if (this.Repository.TryGetDocTypeByName(this.DocumentCollectionName, out _docType))
+            if (this.Repository.TryGetDocumentCollectionByName(this.DocumentCollectionName, out _documentCollection))
             {
                 if (!IndexingStrategy.HasValue)
                 {
                     throw new Exception($"Specified {nameof(DocumentCollectionName)} '{DocumentCollectionName}' is unknown! In order to create a new, {nameof(IndexingStrategy)} needs to be specified as well.");
                 }
 
-                IDocType dt = DocType.Create(this.DocumentCollectionName, this.IndexingStrategy.Value, this.Path);
-                this.Repository.AddDocType(dt);
-                _docType = dt;
+                IDocumentCollection dt = DocumentCollection.Create(this.DocumentCollectionName, this.IndexingStrategy.Value, this.Path);
+                this.Repository.AddDocumentCollection(dt);
+                _documentCollection = dt;
             }
         }
 
         protected override void ProcessRecord()
         {
-            this.Repository.AddFolderToDocType(_docType, this.Path);
+            this.Repository.AddFolderToDocumentCollection(_documentCollection, this.Path);
         }
 
         protected override void EndProcessing()

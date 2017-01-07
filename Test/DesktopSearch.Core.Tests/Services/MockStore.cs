@@ -7,30 +7,30 @@ using DesktopSearch.Core.Services;
 namespace DesktopSearch.Core.Tests.Services
 {
 
-    class NullMockStore : IDocTypePersistence
+    class NullMockStore : IDocumentCollectionPersistence
     {
-        IDocType[] _docTypes;
+        IDocumentCollection[] _documentCollections;
 
-        public IDocType[] DocTypes
+        public IDocumentCollection[] DocumentCollections
         {
             get
             {
-                if (_docTypes == null)
+                if (_documentCollections == null)
                 {
-                    _docTypes = new IDocType[] { };
+                    _documentCollections = new IDocumentCollection[] { };
                 }
-                return _docTypes;
+                return _documentCollections;
             }
-            set => _docTypes = value;
+            set => _documentCollections = value;
         }
 
 
-        public Task<IEnumerable<IDocType>> LoadAsync()
+        public Task<IEnumerable<IDocumentCollection>> LoadAsync()
         {
-            return Task.FromResult<IEnumerable<IDocType>>(this.DocTypes);
+            return Task.FromResult<IEnumerable<IDocumentCollection>>(this.DocumentCollections);
         }
 
-        public Task StoreOrUpdateAsync(IDocType docType)
+        public Task StoreOrUpdateAsync(IDocumentCollection collection)
         {
             return Task.CompletedTask;
         }

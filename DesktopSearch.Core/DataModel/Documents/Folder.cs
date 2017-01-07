@@ -16,7 +16,7 @@ namespace DesktopSearch.Core.DataModel.Documents
         {
         }
 
-        internal static Folder Create(string path, string indexingType=null)
+        internal static Folder Create(string path)
         {
             if (!System.IO.Path.IsPathRooted(path))
                 throw new ArgumentException("Path not rooted!", "path");
@@ -44,7 +44,7 @@ namespace DesktopSearch.Core.DataModel.Documents
         [Keyword(Ignore =true)]
         public string Machinename { get; internal set; }
 
-        public IDocType DocType { get; set; }
+        public IDocumentCollection DocumentCollection { get; set; }
         
 
         public override int GetHashCode()

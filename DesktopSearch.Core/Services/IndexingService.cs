@@ -11,10 +11,10 @@ namespace DesktopSearch.Core.Services
     public class IndexingService : IIndexingService
     {
         private Dictionary<IndexingStrategy, IFolderProcessor> _map;
-        private IDocTypeRepository _docTypeRepository;
+        private IDocumentCollectionRepository _documentCollectionRepository;
 
         public IndexingService(
-            IDocTypeRepository docTypeRepository,
+            IDocumentCollectionRepository documentCollectionRepository,
             DocumentFolderProcessor docFolderProcessor,
             CodeFolderProcessor codeFolderProcessor)
         {
@@ -24,17 +24,17 @@ namespace DesktopSearch.Core.Services
                 { IndexingStrategy.Documents, docFolderProcessor  },
             };
 
-            _docTypeRepository = docTypeRepository;
+            _documentCollectionRepository = documentCollectionRepository;
         }
 
-        public Task IndexRepositoryAsync(IDocType docType, IProgress<int> progress = null)
+        public Task IndexRepositoryAsync(IDocumentCollection documentCollection, IProgress<int> progress = null)
         {
-            var processor = _map[docType.IndexingStrategy];
+            var processor = _map[documentCollection.IndexingStrategy];
 
             IFolder folder;
-            if (!_docTypeRepository.TryGetConfiguredLocalFolder(docType, out folder))
+            if (!_documentCollectionRepository.TryGetConfiguredLocalFolder(documentCollection, out folder))
             {
-                throw new ArgumentException($"The provided IndexedCollection '{docType.Name}' is not hosted locally. Updating the index not possible!");
+                throw new ArgumentException($"The provided IndexedCollection '{documentCollection.Name}' is not hosted locally. Updating the index not possible!");
             }
 
             return processor.ProcessAsync(folder, progress);
@@ -42,14 +42,14 @@ namespace DesktopSearch.Core.Services
 
         public Task IndexRepositoryAsync(IFolder folder, IProgress<int> progress = null)
         {
-            var processor = _map[folder.DocType.IndexingStrategy];
+            var processor = _map[folder.DocumentCollection.IndexingStrategy];
             return processor.ProcessAsync(folder, progress);
         }
     }
 
     public interface IIndexingService
     {
-        Task IndexRepositoryAsync(IDocType docType, IProgress<int> progress = null);
+        Task IndexRepositoryAsync(IDocumentCollection documentCollection, IProgress<int> progress = null);
 
         Task IndexRepositoryAsync(IFolder folder, IProgress<int> progress = null);
     }

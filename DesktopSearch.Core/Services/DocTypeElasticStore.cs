@@ -12,7 +12,7 @@ using System.IO;
 namespace DesktopSearch.Core.Services
 {
 
-    internal class DocTypeElasticStore : IDocTypePersistence
+    internal class DocumentCollectionElasticStore : IDocumentCollectionPersistence
     {
         private readonly ElasticSearchConfig _cfg;
         private readonly IElasticClient _client;
@@ -25,46 +25,46 @@ namespace DesktopSearch.Core.Services
             ContractResolver = new PrivateFieldResolver()
         };
 
-        public DocTypeElasticStore(IElasticClient elasticClient, ElasticSearchConfig config)
+        public DocumentCollectionElasticStore(IElasticClient elasticClient, ElasticSearchConfig config)
         {
             _client = elasticClient;
             _cfg = config;
         }
 
-        public async Task<IEnumerable<IDocType>> LoadAsync()
+        public async Task<IEnumerable<IDocumentCollection>> LoadAsync()
         {
-            var result = await _client.SearchAsync<DocTypeConfigurationElement>(t => t.Index(_cfg.DocumentSearchIndexName).Query(q => q.MatchAll()));
+            var result = await _client.SearchAsync<IDocumentCollectionConfigurationElement>(t => t.Index(_cfg.DocumentSearchIndexName).Query(q => q.MatchAll()));
 
-            var docTypes = new List<IDocType>();
+            var collections = new List<IDocumentCollection>();
             foreach (var item in result.Hits.Select(s => s.Source))
             {
-                docTypes.Add(JsonConvert.DeserializeObject<DocType>(item.Content, _formatSettings));
+                collections.Add(JsonConvert.DeserializeObject<DocumentCollection>(item.Content, _formatSettings));
             }
 
-            return docTypes;
+            return collections;
         }
 
-        public async Task StoreOrUpdateAsync(IDocType docType)
+        public async Task StoreOrUpdateAsync(IDocumentCollection docCollection)
         {
-            var serialized = JsonConvert.SerializeObject(docType, _formatSettings);
+            var serialized = JsonConvert.SerializeObject(docCollection, _formatSettings);
 
-            var myJson = new DocTypeConfigurationElement
+            var myJson = new IDocumentCollectionConfigurationElement
             {
-                Id = docType.Name,
+                Id = docCollection.Name,
                 Content = serialized
             };
-            var result = await _client.IndexAsync<DocTypeConfigurationElement>(myJson, t => t
+            var result = await _client.IndexAsync<IDocumentCollectionConfigurationElement>(myJson, t => t
                                     .Index(_cfg.DocumentSearchIndexName));
 
             if (!result.IsValid)
             {
-                throw new Exception($"Error storing/updating: {docType.Name}\r\n{result.DebugInformation}");
+                throw new Exception($"Error storing/updating: {docCollection.Name}\r\n{result.DebugInformation}");
             }
         }
     }
 
-    [ElasticsearchType(Name = "doctypeconfigurationelement", IdProperty ="Id")]
-    public class DocTypeConfigurationElement
+    [ElasticsearchType(Name = "documentcollectionconfigurationelement", IdProperty ="Id")]
+    public class IDocumentCollectionConfigurationElement
     {
         [Keyword]
         public string Id { get; set; }

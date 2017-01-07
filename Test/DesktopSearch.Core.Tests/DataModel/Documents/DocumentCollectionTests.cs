@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 namespace DesktopSearch.Core.Tests.DataModel.Documents
 {
     [TestFixture]
-    public class DocTypeTests
+    public class DocumentCollectionTests
     {
 
         [TestCase("", "c:\\temp")]
@@ -17,7 +17,7 @@ namespace DesktopSearch.Core.Tests.DataModel.Documents
         [TestCase("Buecher", "\\temp")]
         public void CreateTests(string name, string folder)
         {
-            Assert.Throws<ArgumentException> (() => DocType.Create(name, folder));
+            Assert.Throws<ArgumentException> (() => DocumentCollection.Create(name, folder));
         }
 
     }

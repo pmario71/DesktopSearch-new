@@ -7,57 +7,57 @@ namespace DesktopSearch.Core.Tests.Services
 {
 
     [TestFixture]
-    public class DocTypeRepository_Tests
+    public class DocumentCollectionRepository_Tests
     {
         [Test]
-        public void Can_get_back_added_DocType_by_name_case_insensitive()
+        public void Can_get_back_added_DocumentCollection_by_name_case_insensitive()
         {
-            var sut = new DocTypeRepository(new NullMockStore());
+            var sut = new DocumentCollectionRepository(new NullMockStore());
 
             const string name = "uniquename";
 
-            var docType = DocType.Create(name, Path.GetTempPath());
-            sut.AddDocType(docType);
+            var collection = DocumentCollection.Create(name, Path.GetTempPath());
+            sut.AddDocumentCollection(collection);
 
-            IDocType returnedType;
-            sut.TryGetDocTypeByName(name.ToUpper(), out returnedType);
+            IDocumentCollection returnedType;
+            sut.TryGetDocumentCollectionByName(name.ToUpper(), out returnedType);
 
             Assert.IsNotNull(returnedType);
-            Assert.AreEqual(docType, returnedType);
+            Assert.AreEqual(collection, returnedType);
         }
 
         [Test]
-        public void Can_get_back_added_DocType_by_folder_path_case_insensitive()
+        public void Can_get_back_added_DocumentCollection_by_folder_path_case_insensitive()
         {
-            var sut = new DocTypeRepository(new NullMockStore());
+            var sut = new DocumentCollectionRepository(new NullMockStore());
 
             const string name = "uniquename";
 
-            var docType = DocType.Create(name, Path.GetTempPath());
-            sut.AddDocType(docType);
+            var collection = DocumentCollection.Create(name, Path.GetTempPath());
+            sut.AddDocumentCollection(collection);
 
             string path = $"{Path.GetTempPath()}\\Folder\\filename.pdf".ToUpper();
 
-            IDocType dc;
-            Assert.True( sut.TryGetDocTypeForPath(new FileInfo(path), out dc));
+            IDocumentCollection dc;
+            Assert.True( sut.TryGetDocumentCollectionForPath(new FileInfo(path), out dc));
                         
-            Assert.AreEqual(docType, dc);
+            Assert.AreEqual(collection, dc);
         }
 
         [Test]
-        public void TryGetDocTypeForPath_returns_false_if_DocType_was_not_found()
+        public void TryGetDocumentCollectionForPath_returns_false_if_DocumentCollection_was_not_found()
         {
-            var sut = new DocTypeRepository(new NullMockStore());
+            var sut = new DocumentCollectionRepository(new NullMockStore());
 
             const string name = "uniquename";
 
-            var docType = DocType.Create(name, Path.GetTempPath());
-            sut.AddDocType(docType);
+            var collection = DocumentCollection.Create(name, Path.GetTempPath());
+            sut.AddDocumentCollection(collection);
 
             string path = $"c:\\unknown_path\\unknown_file.pdf".ToUpper();
 
-            IDocType dc;
-            Assert.False(sut.TryGetDocTypeForPath(new FileInfo(path), out dc));
+            IDocumentCollection dc;
+            Assert.False(sut.TryGetDocumentCollectionForPath(new FileInfo(path), out dc));
             Assert.Null(dc);
         }
     }

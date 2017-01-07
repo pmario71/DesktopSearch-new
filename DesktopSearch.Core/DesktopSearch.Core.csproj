@@ -212,6 +212,7 @@
     <Compile Include="ElasticSearch\CustomIDescriptorConverter.cs" />
     <Compile Include="ElasticSearch\Documents\Processor.cs" />
     <Compile Include="ElasticSearch\ManagementService.cs" />
+    <Compile Include="IFolderProcessor.cs" />
     <Compile Include="Services\DocTypeElasticStore.cs" />
     <Compile Include="Services\DocTypeRepository.cs" />
     <Compile Include="Services\FolderRootPathException.cs" />
@@ -240,7 +241,6 @@
     <Compile Include="Extractors\Xaml\XamlParserConfiguration.cs" />
     <Compile Include="FileSystem\ExcludeFileByExtensionFilter.cs" />
     <Compile Include="FileSystem\IncludeFileByExtensionFilter.cs" />
-    <Compile Include="FolderProcessorFactory.cs" />
     <Compile Include="Processors\CodeFolderProcessor.cs" />
     <Compile Include="Processors\DocumentFolderProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

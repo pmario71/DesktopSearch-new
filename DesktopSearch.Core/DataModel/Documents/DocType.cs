@@ -6,21 +6,21 @@ using System.IO;
 
 namespace DesktopSearch.Core.DataModel.Documents
 {
-    [ElasticsearchType(Name = "doctype", IdProperty = "Name")]
-    public sealed class DocType : IDocType
+    [ElasticsearchType(Name = "documentcollection", IdProperty = "Name")]
+    public sealed class DocumentCollection : IDocumentCollection
     {
         private readonly List<Folder> _folders;
 
-        public DocType()
+        public DocumentCollection()
         {
              _folders = new List<Folder>();
         }
 
-        public static IDocType Create(string name, string rootFolder)
+        public static IDocumentCollection Create(string name, string rootFolder)
         {
             return Create(name, IndexingStrategy.Documents, rootFolder);
         }
-        public static IDocType Create(string name, IndexingStrategy indexingStrategy, string rootFolder)
+        public static IDocumentCollection Create(string name, IndexingStrategy indexingStrategy, string rootFolder)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("name");
@@ -28,12 +28,12 @@ namespace DesktopSearch.Core.DataModel.Documents
             if (Uri.CheckHostName(name) == UriHostNameType.Unknown)
                 throw new ArgumentException($"name may not contain whitespaces or special characters: '{name}'");
 
-            var dt = new DocType();
+            var dt = new DocumentCollection();
             dt.Name = name;
             dt.IndexingStrategy = indexingStrategy;
 
             var folder = Folder.Create(rootFolder);
-            folder.DocType = dt;
+            folder.DocumentCollection = dt;
             dt._folders.Add(folder);
 
             return dt;
@@ -51,7 +51,7 @@ namespace DesktopSearch.Core.DataModel.Documents
         /// machine specific storage locations
         /// </summary>
         [JsonIgnore]
-        IReadOnlyCollection<IFolder> IDocType.Folders { get { return _folders; } }
+        IReadOnlyCollection<IFolder> IDocumentCollection.Folders { get { return _folders; } }
 
         [JsonProperty]
         internal List<Folder> Folders { get { return _folders; } }
@@ -80,7 +80,7 @@ namespace DesktopSearch.Core.DataModel.Documents
 
         public override bool Equals(object obj)
         {
-            DocType f = obj as DocType;
+            DocumentCollection f = obj as DocumentCollection;
             if ((f != null ) && 
                 (StringComparer.CurrentCultureIgnoreCase.Compare(this.Name, f.Name) == 0))
             {
@@ -94,18 +94,18 @@ namespace DesktopSearch.Core.DataModel.Documents
     {
         string Path { get; }
 
-        IDocType DocType { get; }
+        IDocumentCollection DocumentCollection { get; }
     }
 
-    public interface IDocType
+    public interface IDocumentCollection
     {
         /// <summary>
-        /// Unique name for the DocType
+        /// Unique name for the <see cref="IDocumentCollection"/>
         /// </summary>
         string Name { get; }
 
         /// <summary>
-        /// Folders contributing to the <see cref="IDocType"/>
+        /// Folders contributing to the <see cref="IDocumentCollection"/>
         /// </summary>
         IReadOnlyCollection<IFolder> Folders { get; }
 

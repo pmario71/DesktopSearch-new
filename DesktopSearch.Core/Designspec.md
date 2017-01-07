@@ -9,39 +9,42 @@
 
 ![Extractors](../Documents/images/Extractors.png)
 
-### DocTypes & Folders
+### DocumentCollection & Folders
 
-`DocType` refers to a logical group of files that are stored under a single root directory (Buecher, Unterlagen, Rechnungen).\
-The assignment of a file to a given `DocType` is inferred from its location when it is indexed.
+`DocumentCollection` refers to a logical group of files, which can be stored under one or more root folders (e.g. Buecher, Unterlagen, Rechnungen).\
+Such folders can be replicated to different machines.
+The assignment of a file to a given `DocumentCollection` is inferred from its location when it is indexed.
 
-* `DocType` --> `Folder`
-* "file path" starts with `Folder`'s path  =>  file belongs to according `DocType`
+* `DocumentCollection` --> `Folder`
+* "file path" starts with `Folder`'s path  =>  file belongs to according `DocumentCollection`
 * a `Folder`can have multiple storage locations on different machines
 * `DocDescriptor.Path` holds a uri with the following encoding: `DesktopSearch://Buecher/someDirectory/filename.pdf`
   * `Uri.Scheme` : `DesktopSearch` to potentially be able to define a url handler for it.
-  * `Uri.Host`   : `Buecher` specifies the `DocType`
+  * `Uri.Host`   : `Buecher` specifies the `DocumentCollection`
   * `LocalPath`  : specifies the relative url underneath the root folder
-  * full path can only be resolved when `DocType` & `machinename` is known
+  * full path can only be resolved when `DocumentCollection` & `machinename` is known
 
   ![DocDescriptor - DocType - Folder Relationship](../Documents/images/DocType.png)
+
+### IndexingService
+
+Responsible for creating of updating an index over configured DocumentCollections.
 
 ### SearchService
 
 ![SearchService Dependencies](../Documents/images/SearchServiceStatic.png)
 
-* SearchService combines search as well as indexing functionality (should be changed!)
+* SearchService focuses on searching
 
 ### FolderProcessor
 
-Responsible for walking a folder (recursively) and indexing all its files using the configured strategy (code, documents)
+* Responsible for walking a folder (recursively) and indexing all its files using the configured strategy (code, documents)
+* comes in two flavors currently:
+  * CodeFolderProcessor\
+    Takes the contents of e.g. a files and extracts relevant index information using Roslyn
 
-### CodeFolderProcessor
-
-Takes the contents of e.g. a files and extracts relevant index information using Roslyn
-
-### DocumentFolderProcessor
-
-Takes the contents of e.g. a files and sends it to ElasticSearch directly so that it is processed by Tika
+  * DocumentFolderProcessor\
+    Takes the contents of e.g. a files and sends it to ElasticSearch directly so that it is processed by Tika
 
 ## Configuration
 
