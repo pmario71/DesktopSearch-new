@@ -1,5 +1,6 @@
 ﻿using DesktopSearch.Core.DataModel.Documents;
 using DesktopSearch.Core.Services;
+using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -58,15 +59,19 @@ namespace DesktopSearch.Core.Tests.Services
         [Test]
         public void Can_add_folder_to_DocumentCollection()
         {
-            var mock = new NullMockStore();
+            var mock2 = new Mock<IDocumentCollectionPersistence>();
+            
             var col = DocumentCollection.Create("uniquename", BuildTempPathAndCreateFolder("F1\\"));
-            mock.DocumentCollections = new IDocumentCollection[] { col };
 
-            var sut = new DocumentCollectionRepository(mock);
+            IEnumerable<IDocumentCollection> dcs = new IDocumentCollection[] { col };
+            mock2.Setup(m => m.LoadAsync()).Returns(Task.FromResult(dcs));
+
+            var sut = new DocumentCollectionRepository(mock2.Object);
                         
             sut.AddFolderToDocumentCollection(col, BuildTempPathAndCreateFolder("someotherPath\\"));
 
             Assert.AreEqual(2, col.Folders.Count);
+            mock2.Verify(m => m.StoreOrUpdateAsync(It.IsAny<IDocumentCollection>())); // actual store happened
         }
 
         [Test]

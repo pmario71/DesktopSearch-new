@@ -82,6 +82,8 @@ namespace DesktopSearch.Core.Services
             ValidateBeforeAdding(folder);
             folder.DocumentCollection = documentCollection;  //TODO: unfortunate, that back link on folder needs to be manually set!
             ((DocumentCollection)documentCollection).Folders.Add(folder);
+
+            _store.StoreOrUpdateAsync(documentCollection).Wait();
         }
 
         public IEnumerable<IDocumentCollection> GetIndexedCollections()
