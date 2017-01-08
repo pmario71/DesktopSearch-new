@@ -12,12 +12,11 @@ namespace DesktopSearch.Core.Tests.DataModel.Documents
     public class DocumentCollectionTests
     {
 
-        [TestCase("", "c:\\temp")]
-        [TestCase("rewq|fdas", "c:\\temp")]
-        [TestCase("Buecher", "\\temp")]
-        public void CreateTests(string name, string folder)
+        [TestCase("")]
+        [TestCase("rewq|fdas")]
+        public void CreateTests(string name)
         {
-            Assert.Throws<ArgumentException> (() => DocumentCollection.Create(name, folder));
+            Assert.Throws<ArgumentException> (() => DocumentCollection.Create(name));
         }
 
     }

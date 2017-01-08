@@ -27,7 +27,11 @@ namespace DesktopSearch.Core.Tests.Services
 
             var sut = new DocumentCollectionElasticStore(client, ElasticTestClientFactory.Config);
 
-            var documentCollection = DocumentCollection.Create("Buecher", IndexingStrategy.Code, Path.GetTempPath());
+            var documentCollection = DocumentCollection.Create("Buecher", IndexingStrategy.Code);
+            var folder = Folder.Create(Path.GetTempPath());
+            folder.DocumentCollection = documentCollection;
+            ((DocumentCollection)documentCollection).Folders.Add(folder);
+            
             await sut.StoreOrUpdateAsync(documentCollection);
 
             client.Refresh(ElasticTestClientFactory.Config.DocumentSearchIndexName);

@@ -32,13 +32,14 @@ namespace DesktopSearch.Core.Tests.Services
         {
             var mock2 = new Mock<IDocumentCollectionPersistence>();
             
-            var col = DocumentCollection.Create("uniquename", BuildTempPathAndCreateFolder("F1\\"));
+            var col = DocumentCollection.Create("uniquename");
 
             IEnumerable<IDocumentCollection> dcs = new IDocumentCollection[] { col };
             mock2.Setup(m => m.LoadAsync()).Returns(Task.FromResult(dcs));
 
             var sut = new DocumentCollectionRepository(mock2.Object);
-                        
+            
+            sut.AddFolderToDocumentCollection(col, BuildTempPathAndCreateFolder("F1\\"));
             sut.AddFolderToDocumentCollection(col, BuildTempPathAndCreateFolder("someotherPath\\"));
 
             Assert.AreEqual(2, col.Folders.Count);
@@ -51,10 +52,11 @@ namespace DesktopSearch.Core.Tests.Services
             var mock = new NullMockStore();
             string thePath = BuildTempPathAndCreateFolder("samePath\\");
 
-            var col = DocumentCollection.Create("uniquename", thePath);
+            var col = DocumentCollection.Create("uniquename");
             mock.DocumentCollections = new IDocumentCollection[] { col };
 
             var sut = new DocumentCollectionRepository(mock);
+            sut.AddFolderToDocumentCollection(col, thePath);
 
             Assert.Throws<FolderRootPathException>(() => sut.AddFolderToDocumentCollection(col, thePath));
         }

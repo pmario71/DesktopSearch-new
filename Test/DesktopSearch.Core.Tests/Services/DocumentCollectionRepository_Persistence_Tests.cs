@@ -29,7 +29,7 @@ namespace DesktopSearch.Core.Tests.Services
 
             const string name = "uniquename";
 
-            var collection = DocumentCollection.Create(name, Path.GetTempPath());
+            var collection = DocumentCollection.Create(name);
             sut.AddDocumentCollection(collection);
 
             IDocumentCollection returnedType;

@@ -19,21 +19,8 @@ namespace DesktopSearch.Core.Tests.Services
 
             var sut = new DocumentCollectionRepository(new NullMockStore());
 
-            var collection = DocumentCollection.Create("uniquename", Path.GetTempPath());
+            var collection = DocumentCollection.Create("uniquename");
             sut.AddDocumentCollection(collection);
-        }
-
-        [Test]
-        public void Adding_same_folder_twice_to_different_collections_throws()
-        {
-            var sut = new DocumentCollectionRepository(new NullMockStore());
-
-            var col1 = DocumentCollection.Create("uniquename", Path.GetTempPath());
-            var col2 = DocumentCollection.Create("uniquename2", Path.GetTempPath());
-
-            sut.AddDocumentCollection(col1);
-
-            Assert.Throws<FolderRootPathException>(() => sut.AddDocumentCollection(col2));
         }
     }
 

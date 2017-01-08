@@ -16,11 +16,11 @@ namespace DesktopSearch.Core.DataModel.Documents
              _folders = new List<Folder>();
         }
 
-        public static IDocumentCollection Create(string name, string rootFolder)
+        public static IDocumentCollection Create(string name)
         {
-            return Create(name, IndexingStrategy.Documents, rootFolder);
+            return Create(name, IndexingStrategy.Documents);
         }
-        public static IDocumentCollection Create(string name, IndexingStrategy indexingStrategy, string rootFolder=null)
+        public static IDocumentCollection Create(string name, IndexingStrategy indexingStrategy)
         {
             if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("name");
@@ -32,12 +32,12 @@ namespace DesktopSearch.Core.DataModel.Documents
             dt.Name = name;
             dt.IndexingStrategy = indexingStrategy;
 
-            if (rootFolder != null)
-            {
-                var folder = Folder.Create(rootFolder);
-                folder.DocumentCollection = dt;
-                dt._folders.Add(folder);
-            }
+            //if (rootFolder != null)
+            //{
+            //    var folder = Folder.Create(rootFolder);
+            //    folder.DocumentCollection = dt;
+            //    dt._folders.Add(folder);
+            //}
 
             return dt;
         }

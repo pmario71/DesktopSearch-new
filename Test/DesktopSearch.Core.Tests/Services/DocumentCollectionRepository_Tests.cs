@@ -16,7 +16,7 @@ namespace DesktopSearch.Core.Tests.Services
 
             const string name = "uniquename";
 
-            var collection = DocumentCollection.Create(name, Path.GetTempPath());
+            var collection = DocumentCollection.Create(name);
             sut.AddDocumentCollection(collection);
 
             IDocumentCollection returnedType;
@@ -33,8 +33,9 @@ namespace DesktopSearch.Core.Tests.Services
 
             const string name = "uniquename";
 
-            var collection = DocumentCollection.Create(name, Path.GetTempPath());
+            var collection = DocumentCollection.Create(name);
             sut.AddDocumentCollection(collection);
+            sut.AddFolderToDocumentCollection(collection, Path.GetTempPath());
 
             string path = $"{Path.GetTempPath()}\\Folder\\filename.pdf".ToUpper();
 
@@ -51,7 +52,7 @@ namespace DesktopSearch.Core.Tests.Services
 
             const string name = "uniquename";
 
-            var collection = DocumentCollection.Create(name, Path.GetTempPath());
+            var collection = DocumentCollection.Create(name);
             sut.AddDocumentCollection(collection);
 
             string path = $"c:\\unknown_path\\unknown_file.pdf".ToUpper();
