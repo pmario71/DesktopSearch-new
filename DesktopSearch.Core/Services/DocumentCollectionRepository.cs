@@ -11,7 +11,7 @@ using System.Collections.Specialized;
 
 namespace DesktopSearch.Core.Services
 {
-    internal class DocumentCollectionRepository : IDocumentCollectionRepository
+    public class DocumentCollectionRepository : IDocumentCollectionRepository
     {
         private readonly IDocumentCollectionPersistence _store;
 
@@ -30,6 +30,12 @@ namespace DesktopSearch.Core.Services
 
         public void AddDocumentCollection(IDocumentCollection documentCollection)
         {
+            if (documentCollection == null)
+                throw new ArgumentNullException(nameof(documentCollection));
+
+            if (_docCollectionCache.Result.Contains(documentCollection))
+                throw new Exception($"A collection with name '{documentCollection.Name}' does already exist!");
+
             CheckIfAnyLinkedFolderIsInUse(documentCollection);
 
             _docCollectionCache.Result.Add(documentCollection);
@@ -74,6 +80,7 @@ namespace DesktopSearch.Core.Services
 
             var folder = Folder.Create(path);
             ValidateBeforeAdding(folder);
+            folder.DocumentCollection = documentCollection;  //TODO: unfortunate, that back link on folder needs to be manually set!
             ((DocumentCollection)documentCollection).Folders.Add(folder);
         }
 
@@ -121,7 +128,7 @@ namespace DesktopSearch.Core.Services
         #endregion
     }
 
-    internal interface IDocumentCollectionPersistence
+    public interface IDocumentCollectionPersistence
     {
         Task<IEnumerable<IDocumentCollection>> LoadAsync();
 

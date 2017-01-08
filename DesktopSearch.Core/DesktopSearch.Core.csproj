@@ -194,8 +194,8 @@
     <Compile Include="Configuration\CodeSearch.cs" />
     <Compile Include="Configuration\ConfigAccess.cs" />
     <Compile Include="Configuration\ConfigBootstrapping.cs" />
+    <Compile Include="DataModel\Documents\DocumentCollection.cs" />
     <Compile Include="DataModel\Documents\Folder.cs" />
-    <Compile Include="DataModel\Documents\DocType.cs" />
     <Compile Include="Configuration\DocumentSearch.cs" />
     <Compile Include="Configuration\ElasticSearchConfig.cs" />
     <Compile Include="Configuration\Providers\IStreamFactory.cs" />
@@ -214,7 +214,7 @@
     <Compile Include="ElasticSearch\ManagementService.cs" />
     <Compile Include="IFolderProcessor.cs" />
     <Compile Include="Services\DocTypeElasticStore.cs" />
-    <Compile Include="Services\DocTypeRepository.cs" />
+    <Compile Include="Services\DocumentCollectionRepository.cs" />
     <Compile Include="Services\FolderRootPathException.cs" />
     <Compile Include="Services\IDocTypeRepository.cs" />
     <Compile Include="Services\IndexingService.cs" />

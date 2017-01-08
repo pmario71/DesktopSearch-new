@@ -33,21 +33,23 @@ namespace DesktopSearch.PS
         public string Path { get; set; }
 
         #region Dependencies
+        [Import]
         public IDocumentCollectionRepository Repository { get; set; }
         #endregion
 
         protected override void BeginProcessing()
         {
+            AppConfig.EnableLocalAssemblyResolution();
             this.Compose();
 
-            if (this.Repository.TryGetDocumentCollectionByName(this.DocumentCollectionName, out _documentCollection))
+            if (!this.Repository.TryGetDocumentCollectionByName(this.DocumentCollectionName, out _documentCollection))
             {
                 if (!IndexingStrategy.HasValue)
                 {
                     throw new Exception($"Specified {nameof(DocumentCollectionName)} '{DocumentCollectionName}' is unknown! In order to create a new, {nameof(IndexingStrategy)} needs to be specified as well.");
                 }
 
-                IDocumentCollection dt = DocumentCollection.Create(this.DocumentCollectionName, this.IndexingStrategy.Value, this.Path);
+                IDocumentCollection dt = DocumentCollection.Create(this.DocumentCollectionName, this.IndexingStrategy.Value);
                 this.Repository.AddDocumentCollection(dt);
                 _documentCollection = dt;
             }

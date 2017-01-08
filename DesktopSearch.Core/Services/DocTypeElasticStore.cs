@@ -12,7 +12,7 @@ using System.IO;
 namespace DesktopSearch.Core.Services
 {
 
-    internal class DocumentCollectionElasticStore : IDocumentCollectionPersistence
+    public class DocumentCollectionElasticStore : IDocumentCollectionPersistence
     {
         private readonly ElasticSearchConfig _cfg;
         private readonly IElasticClient _client;

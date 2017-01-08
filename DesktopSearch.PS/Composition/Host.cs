@@ -31,8 +31,6 @@ namespace DesktopSearch.PS.Composition
 
             _config = builder.Build();
 
-            
-
             var conventions = new RegistrationBuilder();
 
             conventions.ForType<ClientFactory>()
@@ -42,10 +40,12 @@ namespace DesktopSearch.PS.Composition
             conventions.ForType<Nest.ElasticClient>().Export<Nest.IElasticClient>();
             conventions.ForType<Core.ElasticSearch.ManagementService>().Export<Core.ElasticSearch.ManagementService>();
             
+            conventions.ForType<Core.Services.DocumentCollectionElasticStore>().Export<Core.Services.IDocumentCollectionPersistence>();
+            conventions.ForType<Core.Services.DocumentCollectionRepository>().Export<Core.Services.IDocumentCollectionRepository>();
+            
             conventions.ForType<Core.Services.SearchService>().Export<Core.Services.ISearchService>();
             conventions.ForType<Core.Services.IndexingService>().Export<Core.Services.IIndexingService>();
 
-            //conventions.ForType<Core.FolderProcessorFactory>().Export<Core.FolderProcessorFactory>();
             conventions.ForType<Core.Processors.CodeFolderProcessor>().Export<Core.Processors.CodeFolderProcessor>();
             conventions.ForType<Core.Processors.DocumentFolderProcessor>().Export<Core.Processors.DocumentFolderProcessor>();
 

@@ -285,13 +285,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Cmdlets\AddDSFolderToIndexCmdlet.cs" />
-    <Compile Include="Cmdlets\Class1.cs" />
     <Compile Include="Cmdlets\EditTagCmdlet.cs" />
     <Compile Include="Cmdlets\GetTikaExtractCmdlet.cs" />
     <Compile Include="Cmdlets\GetTikaExtractRawCmdlet.cs" />
     <Compile Include="Cmdlets\ImportFileCmdlet.cs" />
     <Compile Include="Cmdlets\InitializeDSIndexCmdlet.cs" />
     <Compile Include="Cmdlets\SaveDSSettingCmdlet.cs" />
+    <Compile Include="Cmdlets\SearchDSCmdlet.cs" />
     <Compile Include="Cmdlets\SyncDSIndexCmdlet.cs" />
     <Compile Include="Composition\Host.cs" />
     <Compile Include="Cmdlets\GetDSSettingJSONCmdlet.cs" />
