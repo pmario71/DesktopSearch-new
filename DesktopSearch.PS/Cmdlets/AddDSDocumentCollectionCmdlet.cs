@@ -16,8 +16,8 @@ using DesktopSearch.Core.Services;
 
 namespace DesktopSearch.PS
 {
-    [Cmdlet(VerbsCommon.Add, "DSFolderToIndex")]
-    public class AddDSFolderToIndexCmdlet : PSCmdlet
+    [Cmdlet(VerbsCommon.Add, "DSDocumentCollection")]
+    public class AddDSDocumentCollectionCmdlet : PSCmdlet
     {
         private const string AddFolder = "AddFolder";
         private IDocumentCollection _documentCollection;

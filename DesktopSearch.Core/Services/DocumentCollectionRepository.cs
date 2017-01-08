@@ -74,21 +74,6 @@ namespace DesktopSearch.Core.Services
 
             documentCollection = (result) ? folder.DocumentCollection : null;
             return result;
-
-            //if (file == null || !Path.IsPathRooted(file.FullName))
-            //    throw new ArgumentException(nameof(file));
-
-            //foreach (var dt in _docCollectionCache.Result)
-            //{
-            //    if (dt.Folders.SingleOrDefault(i => file.FullName.StartsWith(i.Path, StringComparison.OrdinalIgnoreCase)) != null)
-            //    {
-            //        documentCollection = dt;
-            //        return true;
-            //    }
-            //}
-
-            //documentCollection = null;
-            //return false;
         }
 
         public bool TryGetConfiguredLocalFolder(IDocumentCollection documentCollection, out IFolder localFolder)
