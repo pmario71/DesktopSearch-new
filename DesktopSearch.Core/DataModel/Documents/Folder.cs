@@ -61,5 +61,10 @@ namespace DesktopSearch.Core.DataModel.Documents
             }
             return false;
         }
+
+        public override string ToString()
+        {
+            return $"{Path} ({Machinename})";
+        }
     }
 }

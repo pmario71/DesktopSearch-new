@@ -235,9 +235,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <Compile Include="Services\DocTypeElasticStoreTests.cs" />
-    <Compile Include="Services\DocTypeRepository_AddDocType_Tests.cs" />
-    <Compile Include="Services\DocTypeRepository_Persistence_Tests.cs" />
-    <Compile Include="Services\DocTypeRepository_Tests.cs" />
+    <Compile Include="Services\DocumentCollectionRepository_AddDocumentCollection_Tests.cs" />
+    <Compile Include="Services\DocumentCollectionRepository_AddFolderToDocumentCollection_Tests.cs" />
+    <Compile Include="Services\DocumentCollectionRepository_Persistence_Tests.cs" />
+    <Compile Include="Services\DocumentCollectionRepository_Tests.cs" />
     <Compile Include="Services\MockStore.cs" />
     <Compile Include="Tagging\TagDescriptorTests.cs" />
     <Compile Include="TestDefinitions.cs" />
