@@ -47,23 +47,48 @@ namespace DesktopSearch.Core.Services
             documentCollection = _docCollectionCache.Result.SingleOrDefault(p => StringComparer.OrdinalIgnoreCase.Compare(p.Name, name) == 0);
             return documentCollection != null;
         }
-        
-        public bool TryGetDocumentCollectionForPath(FileInfo file, out IDocumentCollection documentCollection)
+
+        public bool TryGetFolderForPath(FileInfo file, out IFolder folder)
         {
             if (file == null || !Path.IsPathRooted(file.FullName))
                 throw new ArgumentException(nameof(file));
 
             foreach (var dt in _docCollectionCache.Result)
             {
-                if (dt.Folders.SingleOrDefault(i => file.FullName.StartsWith(i.Path, StringComparison.OrdinalIgnoreCase)) != null)
+                IFolder folder1 = dt.Folders.SingleOrDefault(i => file.FullName.StartsWith(i.Path, StringComparison.OrdinalIgnoreCase));
+                if (folder1 != null)
                 {
-                    documentCollection = dt;
+                    folder = folder1;
                     return true;
                 }
             }
 
-            documentCollection = null;
+            folder = null;
             return false;
+        }
+
+        public bool TryGetDocumentCollectionForPath(FileInfo file, out IDocumentCollection documentCollection)
+        {
+            IFolder folder;
+            bool result = TryGetFolderForPath(file, out folder);
+
+            documentCollection = (result) ? folder.DocumentCollection : null;
+            return result;
+
+            //if (file == null || !Path.IsPathRooted(file.FullName))
+            //    throw new ArgumentException(nameof(file));
+
+            //foreach (var dt in _docCollectionCache.Result)
+            //{
+            //    if (dt.Folders.SingleOrDefault(i => file.FullName.StartsWith(i.Path, StringComparison.OrdinalIgnoreCase)) != null)
+            //    {
+            //        documentCollection = dt;
+            //        return true;
+            //    }
+            //}
+
+            //documentCollection = null;
+            //return false;
         }
 
         public bool TryGetConfiguredLocalFolder(IDocumentCollection documentCollection, out IFolder localFolder)

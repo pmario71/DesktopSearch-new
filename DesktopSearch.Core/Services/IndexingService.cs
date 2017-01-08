@@ -1,7 +1,9 @@
 ﻿using DesktopSearch.Core.DataModel.Documents;
+using DesktopSearch.Core.ElasticSearch;
 using DesktopSearch.Core.Processors;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,8 +15,11 @@ namespace DesktopSearch.Core.Services
         private Dictionary<IndexingStrategy, IFolderProcessor> _map;
         private IDocumentCollectionRepository _documentCollectionRepository;
 
+        Task EnsureInitialized = null;
+
         public IndexingService(
             IDocumentCollectionRepository documentCollectionRepository,
+            ManagementService mgtSvc,
             DocumentFolderProcessor docFolderProcessor,
             CodeFolderProcessor codeFolderProcessor)
         {
@@ -25,10 +30,14 @@ namespace DesktopSearch.Core.Services
             };
 
             _documentCollectionRepository = documentCollectionRepository;
+
+            EnsureInitialized = mgtSvc.EnsureIndicesCreated();
         }
 
-        public Task IndexRepositoryAsync(IDocumentCollection documentCollection, IProgress<int> progress = null)
+        public async Task IndexRepositoryAsync(IDocumentCollection documentCollection, IProgress<int> progress = null)
         {
+            await EnsureInitialized;
+
             var processor = _map[documentCollection.IndexingStrategy];
 
             IFolder folder;
@@ -37,20 +46,42 @@ namespace DesktopSearch.Core.Services
                 throw new ArgumentException($"The provided IndexedCollection '{documentCollection.Name}' is not hosted locally. Updating the index not possible!");
             }
 
-            return processor.ProcessAsync(folder, progress);
+            await processor.ProcessAsync(folder, progress);
         }
 
-        public Task IndexRepositoryAsync(IFolder folder, IProgress<int> progress = null)
+        public async Task IndexRepositoryAsync(IFolder folder, IProgress<int> progress = null)
         {
+            await EnsureInitialized;
+
             var processor = _map[folder.DocumentCollection.IndexingStrategy];
-            return processor.ProcessAsync(folder, progress);
+            await processor.ProcessAsync(folder, progress);
         }
-    }
 
-    public interface IIndexingService
-    {
-        Task IndexRepositoryAsync(IDocumentCollection documentCollection, IProgress<int> progress = null);
+        public async Task IndexDocumentAsync(string documentPath)
+        {
+            await EnsureInitialized;
 
-        Task IndexRepositoryAsync(IFolder folder, IProgress<int> progress = null);
+            IFolder folder;
+            if (!_documentCollectionRepository.TryGetFolderForPath(new FileInfo(documentPath), out folder))
+            {
+                throw new ArgumentException($"File '{documentPath}' is not part of any DocumentCollection!");
+            }
+
+            var processor = _map[folder.DocumentCollection.IndexingStrategy];
+
+            await processor.ProcessAsync(documentPath, folder.DocumentCollection.Name);
+        }
+
+        public Task IndexDocumentAsync(DocDescriptor document)
+        {
+            IFolder folder;
+            if (!_documentCollectionRepository.TryGetFolderForPath(new FileInfo(document.Path), out folder))
+            {
+                throw new ArgumentException($"Location of document '{document.Path}' is not part of any DocumentCollection!", nameof(document));
+            }
+
+            var processor = _map[folder.DocumentCollection.IndexingStrategy] as DocumentFolderProcessor;
+            return processor.ProcessAsync(document, folder.DocumentCollection.Name);
+        }
     }
 }

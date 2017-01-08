@@ -216,7 +216,8 @@
     <Compile Include="Services\DocumentCollectionElasticStore.cs" />
     <Compile Include="Services\DocumentCollectionRepository.cs" />
     <Compile Include="Services\FolderRootPathException.cs" />
-    <Compile Include="Services\IDocTypeRepository.cs" />
+    <Compile Include="Services\IDocumentCollectionRepository.cs" />
+    <Compile Include="Services\IIndexingService.cs" />
     <Compile Include="Services\IndexingService.cs" />
     <Compile Include="Services\ISearchService.cs" />
     <Compile Include="Services\SearchService.cs" />

@@ -10,41 +10,34 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using DesktopSearch.Core.Extractors.Tika;
+using DesktopSearch.Core.Services;
 
 namespace DesktopSearch.Core.Processors
 {
     public class DocumentFolderProcessor : IFolderProcessor
     {
-        private readonly IElasticClient _client;
-        private readonly ElasticSearchConfig _configuration;
-        DesktopSearch.Core.Extractors.Tika.TikaServerExtractor _extractor;
+        private readonly IElasticClient       _client;
+        private readonly ElasticSearchConfig  _configuration;
+        private TikaServerExtractor           _extractor;
+        private IDocumentCollectionRepository _documentCollectionRepository;
+
         //private readonly ILogger<DocumentFolderProcessor> _logging;
 
-        public DocumentFolderProcessor(IElasticClient client, ElasticSearchConfig config/*, ILogger logging*/)
+        public DocumentFolderProcessor(
+            IDocumentCollectionRepository documentCollectionRepository,
+            IElasticClient client, 
+            ElasticSearchConfig config/*, ILogger logging*/)
         {
-            _client = client;
-            _configuration = config;
-            _extractor = new TikaServerExtractor();
-            //_logging = logging;
+            _documentCollectionRepository = documentCollectionRepository;
+            _client                       = client;
+            _configuration                = config;
+            _extractor                    = new TikaServerExtractor();
+            //_logging                    = logging;
         }
 
         public Task ProcessAsync(IFolder folder)
         {
             return ProcessAsync(folder, null);
-        }
-
-        public Task ProcessAsync(string file, string documentCollectionName)
-        {
-            return ExtractFilesAsync(new[] { file }, documentCollectionName, null);
-        }
-
-        public async Task Process(DocDescriptor document)
-        {
-            var result = await _client.IndexAsync(document, (indexSelector) => indexSelector.Index(_configuration.DocumentSearchIndexName));
-            if (!result.IsValid)
-            {
-                throw new Exception(result.DebugInformation);
-            }
         }
 
         public Task ProcessAsync(IFolder folder, IProgress<int> progress)
@@ -55,6 +48,20 @@ namespace DesktopSearch.Core.Processors
                                           .Where(f => extensionFilter.FilterByExtension(f));
 
             return ExtractFilesAsync(filesToProcess, folder.DocumentCollection.Name, progress);
+        }
+
+        public Task ProcessAsync(string file, string documentCollectionName)
+        {
+            return ExtractFilesAsync(new[] { file }, documentCollectionName, null);
+        }
+
+        public async Task ProcessAsync(DocDescriptor document, string documentCollectionName)
+        {
+            var result = await ProcessAsyncInt(document, documentCollectionName);
+            if (!result.IsValid)
+            {
+                throw new Exception(result.DebugInformation);
+            }
         }
 
         private async Task ExtractFilesAsync(IEnumerable<string> filesToParse, string documentCollectionName, IProgress<int> progress=null)
@@ -69,10 +76,7 @@ namespace DesktopSearch.Core.Processors
                 Extractors.ParserContext context = new Extractors.ParserContext();
                 var docDesc = await _extractor.ExtractAsync(context, new FileInfo(filePath));
 
-                docDesc.DocumentCollection = documentCollectionName;
-
-                var result = await _client.IndexAsync(docDesc, (indexSelector) => indexSelector.Index(_configuration.DocumentSearchIndexName));
-
+                var result = await ProcessAsyncInt(docDesc, documentCollectionName);
                 if (!result.IsValid)
                 {
                     //_logging.LogWarning($"Failed to index document: {filePath}!", result.OriginalException);
@@ -90,6 +94,15 @@ namespace DesktopSearch.Core.Processors
                     progress.Report((int)(current * 100 / (double)maxFiles));
                 }
             }
+        }
+
+        private async Task<IIndexResponse> ProcessAsyncInt(DocDescriptor docDesc, string documentCollectionName)
+        {
+            docDesc.DocumentCollection = documentCollectionName;
+
+            var result = await _client.IndexAsync(docDesc, 
+                                  (indexSelector) => indexSelector.Index(_configuration.DocumentSearchIndexName));
+            return result;
         }
     }
 }

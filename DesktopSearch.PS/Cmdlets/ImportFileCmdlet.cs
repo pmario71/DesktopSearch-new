@@ -22,7 +22,7 @@ namespace DesktopSearch.PS.Cmdlets
 
         #region Dependencies
         [Import]
-        public Core.Services.ISearchService SearchService { get; set; }
+        public Core.Services.IIndexingService IndexService { get; set; }
         #endregion
 
         protected override void BeginProcessing()
@@ -35,7 +35,7 @@ namespace DesktopSearch.PS.Cmdlets
         {
             AsyncPump.Run(async () =>
             {
-                await this.SearchService.IndexDocumentAsync(this.File, (string)_contentTypeParameter.Value);
+                await this.IndexService.IndexDocumentAsync(this.File);//, (string)_contentTypeParameter.Value);
             });
         }
 

@@ -10,7 +10,7 @@ namespace DesktopSearch.Core
 {
     public interface IFolderProcessor
     {
-        Task ProcessAsync(string file, string indexingTypeName);
+        Task ProcessAsync(string file, string documentCollectionName);
 
         Task ProcessAsync(IFolder folder);
 

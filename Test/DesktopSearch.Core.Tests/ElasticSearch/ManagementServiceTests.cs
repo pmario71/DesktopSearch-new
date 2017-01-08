@@ -3,6 +3,7 @@ using DesktopSearch.Core.DataModel.Documents;
 using DesktopSearch.Core.ElasticSearch;
 using DesktopSearch.Core.Processors;
 using DesktopSearch.Core.Services;
+using Moq;
 using Nest;
 using NUnit.Framework;
 using System;
@@ -22,13 +23,16 @@ namespace DesktopSearch.Core.Tests.ElasticSearch
         [Test, Explicit(TestDefinitions.Requires_running_ES_service_instance)]
         public async Task Setup_and_populate_Index()
         {
+            var docColRepo = new Mock<IDocumentCollectionRepository>();
             var esClient = ElasticTestClientFactory.Create();
 
             var sut = new Core.ElasticSearch.ManagementService(esClient, ElasticTestClientFactory.Config);
 
             await sut.EnsureIndicesCreated();
 
-            var docFolderProcessoer = new DocumentFolderProcessor(esClient, ElasticTestClientFactory.Config);
+            var docFolderProcessoer = new DocumentFolderProcessor(
+                                                    docColRepo.Object,
+                                                    esClient, ElasticTestClientFactory.Config);
 
             await docFolderProcessoer.ProcessAsync(testDataPath + "zen-of-results.pdf", Core.Configuration.DocumentSearch.ContentType.Artikel);
 
@@ -59,7 +63,8 @@ namespace DesktopSearch.Core.Tests.ElasticSearch
         public async Task Index_Documents()
         {
             IElasticClient client;
-            SearchService searchSvs = CreateSearchService(out client);
+            SearchService searchSvc;
+            IndexingService indexingSvc = CreateIndexingService(out client, out searchSvc);
 
             var dd1 = new DocDescriptor()
             {
@@ -90,11 +95,11 @@ In the first of the two expressions in Listing 9-5, we first do the complete joi
 and Member (the innermost set of parentheses). This involves comparing all the rows from"
             };
 
-            await searchSvs.IndexDocumentAsync(dd1);
+            await indexingSvc.IndexDocumentAsync(dd1);
 
             client.Refresh(ElasticTestClientFactory.Config.DocumentSearchIndexName);
 
-            var results = await searchSvs.SearchDocumentAsync("SQL");
+            var results = await searchSvc.SearchDocumentAsync("SQL");
 
             var hit = results.SingleOrDefault(r => r.Source.Path == dd1.Path);
 
@@ -105,7 +110,8 @@ and Member (the innermost set of parentheses). This involves comparing all the r
         public async Task Search_Documents()
         {
             IElasticClient esClient;
-            SearchService searchSvs = CreateSearchService(out esClient);
+            SearchService searchSvc;
+            IndexingService indexingSvc = CreateIndexingService(out esClient, out searchSvc);
 
             // because 
             var result = esClient.Search<DocDescriptor>(s => s
@@ -129,17 +135,33 @@ and Member (the innermost set of parentheses). This involves comparing all the r
         private SearchService CreateSearchService()
         {
             IElasticClient esClient;
-            return CreateSearchService(out esClient);
+            SearchService searchSvc;
+            CreateIndexingService(out esClient, out searchSvc);
+            return searchSvc;
         }
 
-        private static SearchService CreateSearchService(out IElasticClient esClient)
+        private IndexingService CreateIndexingService()
+        {
+            IElasticClient esClient;
+            SearchService searchSvc;
+            return CreateIndexingService(out esClient, out searchSvc);
+        }
+
+        private static IndexingService CreateIndexingService(out IElasticClient esClient, out SearchService searchSvc)
         {
             esClient = ElasticTestClientFactory.Create();
             var mgtmSvc = new Core.ElasticSearch.ManagementService(esClient, ElasticTestClientFactory.Config);
-            var docProc = new DocumentFolderProcessor(esClient, ElasticTestClientFactory.Config);
 
-            var searchSvs = new SearchService(esClient, ElasticTestClientFactory.Config, mgtmSvc, docProc);
-            return searchSvs;
+            var mock = new Services.NullMockStore();
+            var dcr = new DocumentCollectionRepository(mock);
+
+            var docProc = new DocumentFolderProcessor(dcr, esClient, ElasticTestClientFactory.Config);
+
+            var indexingSvc = new IndexingService(dcr, mgtmSvc, docProc, null);
+
+            searchSvc = new SearchService(esClient, ElasticTestClientFactory.Config, mgtmSvc, docProc);
+
+            return indexingSvc;
         }
     }
 

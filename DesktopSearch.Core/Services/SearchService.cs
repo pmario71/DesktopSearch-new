@@ -64,19 +64,12 @@ namespace DesktopSearch.Core.Services
         #endregion
 
         #region API
-        public async Task IndexDocumentAsync(string documentPath, string indexingTypeName)
-        {
-            await EnsureInitialized;
+        //public async Task IndexDocumentAsync(DocDescriptor document)
+        //{
+        //    await EnsureInitialized;
 
-            await _docFolderProcessor.ProcessAsync(documentPath, indexingTypeName);
-        }
-
-        public async Task IndexDocumentAsync(DocDescriptor document)
-        {
-            await EnsureInitialized;
-
-            await _docFolderProcessor.Process(document);
-        }
+        //    await _docFolderProcessor.ProcessAsync(document);
+        //}
 
         public async Task IndexCodeFileAsync(string codefilePath)
         {

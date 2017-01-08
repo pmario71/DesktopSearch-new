@@ -1,6 +1,7 @@
 ﻿using DesktopSearch.Core.Configuration;
 using DesktopSearch.Core.DataModel.Documents;
 using DesktopSearch.Core.Processors;
+using DesktopSearch.Core.Services;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Nest;
@@ -32,6 +33,7 @@ namespace DesktopSearch.Core.Tests.Processors
         [Test]
         public void Run_on_empty_folder()
         {
+            var docColRepo = new Mock<IDocumentCollectionRepository>();
             var client = new Moq.Mock<IElasticClient>();
             var cfg = new ElasticSearchConfig();
             var logging = new Moq.Mock<ILogger<DocumentFolderProcessor>>();
@@ -39,7 +41,7 @@ namespace DesktopSearch.Core.Tests.Processors
             string folder = CreateTestFolder();
 
 
-            var sut = new DocumentFolderProcessor(client.Object, cfg /*, logging.Object*/);
+            var sut = new DocumentFolderProcessor(docColRepo.Object, client.Object, cfg /*, logging.Object*/);
 
             var cfgFolder = Folder.Create(folder);
 
@@ -55,6 +57,7 @@ namespace DesktopSearch.Core.Tests.Processors
         public async Task Run_on_file()
         {
             //TODO: mock TikaExtractor to fix test case
+            var docColRepo = new Mock<IDocumentCollectionRepository>();
             var client = new Moq.Mock<IElasticClient>();
             var cfg = new ElasticSearchConfig();
             var logging = new Moq.Mock<ILogger<DocumentFolderProcessor>>();
@@ -75,7 +78,7 @@ namespace DesktopSearch.Core.Tests.Processors
                                                 .Returns(Task.FromResult<IIndexResponse>(result.Object));
 
 
-            var sut = new DocumentFolderProcessor(client.Object, cfg /*, logging.Object*/);
+            var sut = new DocumentFolderProcessor(docColRepo.Object, client.Object, cfg /*, logging.Object*/);
 
             var cfgFolder = Folder.Create(folder);
 

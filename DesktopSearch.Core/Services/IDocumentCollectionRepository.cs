@@ -22,6 +22,14 @@ namespace DesktopSearch.Core.Services
         bool TryGetDocumentCollectionForPath(FileInfo file, out IDocumentCollection documentCollection);
 
         /// <summary>
+        /// Tries to finds a registered <see cref="IFolder"/> by matching the file location against against linked <see cref="IFolder"/>s.
+        /// </summary>
+        /// <param name="file"></param>
+        /// <param name="folder"></param>
+        /// <returns>true, if found</returns>
+        bool TryGetFolderForPath(FileInfo file, out IFolder folder);
+
+        /// <summary>
         /// Tries to find if a local <see cref="IFolder"/> is defined for the provided <see cref="IDocumentCollection"/> instance.
         /// </summary>
         /// <param name="documentCollection"></param>
