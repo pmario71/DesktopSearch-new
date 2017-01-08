@@ -234,7 +234,7 @@
     <None Include="TestData\IndexExtractors\Roslyn\APIClass.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Compile Include="Services\DocTypeElasticStoreTests.cs" />
+    <Compile Include="Services\DocumentCollectionElasticStoreTests.cs" />
     <Compile Include="Services\DocumentCollectionRepository_AddDocumentCollection_Tests.cs" />
     <Compile Include="Services\DocumentCollectionRepository_AddFolderToDocumentCollection_Tests.cs" />
     <Compile Include="Services\DocumentCollectionRepository_Persistence_Tests.cs" />

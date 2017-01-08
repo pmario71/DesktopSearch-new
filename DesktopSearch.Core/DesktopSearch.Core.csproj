@@ -213,7 +213,7 @@
     <Compile Include="ElasticSearch\Documents\Processor.cs" />
     <Compile Include="ElasticSearch\ManagementService.cs" />
     <Compile Include="IFolderProcessor.cs" />
-    <Compile Include="Services\DocTypeElasticStore.cs" />
+    <Compile Include="Services\DocumentCollectionElasticStore.cs" />
     <Compile Include="Services\DocumentCollectionRepository.cs" />
     <Compile Include="Services\FolderRootPathException.cs" />
     <Compile Include="Services\IDocTypeRepository.cs" />

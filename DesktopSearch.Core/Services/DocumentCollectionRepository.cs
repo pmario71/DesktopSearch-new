@@ -73,7 +73,7 @@ namespace DesktopSearch.Core.Services
             return localFolder != null;
         }
 
-        public void AddFolderToDocumentCollection(IDocumentCollection documentCollection, string path)
+        public IFolder AddFolderToDocumentCollection(IDocumentCollection documentCollection, string path)
         {
             if (documentCollection == null)
                 throw new ArgumentNullException(nameof(documentCollection));
@@ -84,6 +84,8 @@ namespace DesktopSearch.Core.Services
             ((DocumentCollection)documentCollection).Folders.Add(folder);
 
             _store.StoreOrUpdateAsync(documentCollection).Wait();
+
+            return folder;
         }
 
         public IEnumerable<IDocumentCollection> GetIndexedCollections()
@@ -109,8 +111,9 @@ namespace DesktopSearch.Core.Services
             ));
             if (childOrParent != null)
             {
-                string msg = $@"Folder {folder.Path} cannot be added!\r\nIt would conflict with a folder belonging to DocumentCollection 
-'{childOrParent.DocumentCollection.Name}'. New folders neither can be a child or a parent of an already existing folder!
+                string msg = $@"Folder {folder.Path} cannot be added!
+It would conflict with a folder belonging to DocumentCollection '{childOrParent.DocumentCollection.Name}'. 
+New folders neither can be a child or a parent of an already existing folder!
 ";
                 throw new FolderRootPathException(msg);
             }

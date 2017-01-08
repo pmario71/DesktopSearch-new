@@ -40,6 +40,8 @@ namespace DesktopSearch.Core.Tests.Services
 
             Assert.AreEqual(documentCollection.Name, result.First().Name);
             Assert.AreEqual(documentCollection.IndexingStrategy, result.First().IndexingStrategy);
+
+            Assert.AreEqual(1, result.First().Folders.Count());
             Assert.AreEqual(documentCollection.Folders.First().Path, result.First().Folders.First().Path);
         }
 

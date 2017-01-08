@@ -9,6 +9,7 @@ namespace DesktopSearch.Core.DataModel.Documents
     [ElasticsearchType(Name = "documentcollection", IdProperty = "Name")]
     public sealed class DocumentCollection : IDocumentCollection
     {
+        [JsonIgnore]
         private readonly List<Folder> _folders;
 
         public DocumentCollection()

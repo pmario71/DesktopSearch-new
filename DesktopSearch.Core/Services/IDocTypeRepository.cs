@@ -47,6 +47,6 @@ namespace DesktopSearch.Core.Services
         /// </summary>
         /// <param name="documentCollection"></param>
         /// <param name="path"></param>
-        void AddFolderToDocumentCollection(IDocumentCollection documentCollection, string path);
+        IFolder AddFolderToDocumentCollection(IDocumentCollection documentCollection, string path);
     }
 }
