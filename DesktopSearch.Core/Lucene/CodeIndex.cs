@@ -40,7 +40,7 @@ namespace DesktopSearch.Core.Lucene
             _analyzer = new PerFieldAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48),
                 new Dictionary<string, Analyzer>
                 {
-                    {"comment", new RepositoryNamesAnalyzer()},
+                    {"comment", new StandardAnalyzer(LuceneVersion.LUCENE_48)},
                 });
 
             _queryParser = new MultiFieldQueryParser(LuceneVersion.LUCENE_48,
