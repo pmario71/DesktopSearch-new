@@ -143,13 +143,6 @@ New folders neither can be a child or a parent of an already existing folder!
         #endregion
     }
 
-    public interface IDocumentCollectionPersistence
-    {
-        Task<IEnumerable<IDocumentCollection>> LoadAsync();
-
-        Task StoreOrUpdateAsync(IDocumentCollection documentCollection);
-    }
-
     class ValidatingCollection<T> : ObservableCollection<T>
     {
         private readonly Action<T> _validator;

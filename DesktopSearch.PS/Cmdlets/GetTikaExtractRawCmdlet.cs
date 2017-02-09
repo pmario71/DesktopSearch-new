@@ -16,13 +16,12 @@ namespace DesktopSearch.PS
     [Cmdlet(VerbsCommon.Get, "TikaExtractRaw")]
     public class GetTikaExtractRawCmdlet : PSCmdlet
     {
-        private TikaServerExtractor _extractor;
-
         [Parameter(Mandatory = true, HelpMessage = "Files to extract index for.")]
         public string[] File { get; set; }
 
 
         #region Dependencies
+        public ITikaServerExtractor Extractor { get; set; }
         #endregion
 
         protected override void BeginProcessing()
@@ -30,8 +29,6 @@ namespace DesktopSearch.PS
             AppConfig.EnableLocalAssemblyResolution();
 
             this.Compose();
-
-            _extractor = new TikaServerExtractor();
         }
 
         protected override void ProcessRecord()
@@ -45,22 +42,13 @@ namespace DesktopSearch.PS
 
                 foreach (var file in this.File)
                 {
-                    var result = await _extractor.SendToTikaAsync(new System.IO.FileInfo(file));
+                    var result = await Extractor.SendToTikaAsync(new System.IO.FileInfo(file));
                     WriteObject(result);
 
                     progress.PercentComplete = (int)Math.Round((++filesProcessed)*filesTotalIncrement);
                     WriteProgress(progress);
                 }
             });
-        }
-
-        protected override void EndProcessing()
-        {
-            if (_extractor != null)
-            {
-                _extractor.Dispose();
-                _extractor = null;
-            }
         }
     }
 }

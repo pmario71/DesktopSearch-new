@@ -294,6 +294,7 @@
     <Compile Include="Cmdlets\SaveDSSettingCmdlet.cs" />
     <Compile Include="Cmdlets\SearchDSCmdlet.cs" />
     <Compile Include="Cmdlets\SyncDSIndexCmdlet.cs" />
+    <Compile Include="Composition\CustomizedBootstrapper.cs" />
     <Compile Include="Composition\Host.cs" />
     <Compile Include="Cmdlets\GetDSSettingJSONCmdlet.cs" />
     <Compile Include="Cmdlets\GetDSSettingCmdlet.cs" />

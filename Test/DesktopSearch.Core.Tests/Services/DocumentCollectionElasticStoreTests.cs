@@ -3,6 +3,7 @@ using DesktopSearch.Core.DataModel.Documents;
 using DesktopSearch.Core.ElasticSearch;
 using DesktopSearch.Core.Services;
 using DesktopSearch.Core.Tests.ElasticSearch;
+using DesktopSearch.Core.Tests.Utils;
 using Nest;
 using NUnit.Framework;
 using System;
@@ -22,7 +23,10 @@ namespace DesktopSearch.Core.Tests.Services
         {
             var client = ElasticTestClientFactory.Create();
 
-            var mgmSvc = new ManagementService(client, ElasticTestClientFactory.Config);
+            var mgmSvc = new ManagementService(
+                client, 
+                OptionsProvider<ElasticSearchConfig>.Get(ElasticTestClientFactory.Config));
+
             await mgmSvc.EnsureIndicesCreated();
 
             var sut = new DocumentCollectionElasticStore(client, ElasticTestClientFactory.Config);

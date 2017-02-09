@@ -1,7 +1,10 @@
 ﻿using DesktopSearch.Core.Configuration;
 using DesktopSearch.Core.DataModel.Documents;
+using DesktopSearch.Core.Extractors.Tika;
 using DesktopSearch.Core.Processors;
 using DesktopSearch.Core.Services;
+using DesktopSearch.Core.Tests.ElasticSearch;
+using DesktopSearch.Core.Tests.Utils;
 using Microsoft.Extensions.Logging;
 using Moq;
 using Nest;
@@ -35,13 +38,19 @@ namespace DesktopSearch.Core.Tests.Processors
         {
             var docColRepo = new Mock<IDocumentCollectionRepository>();
             var client = new Moq.Mock<IElasticClient>();
-            var cfg = new ElasticSearchConfig();
+            var cfg = OptionsProvider<ElasticSearchConfig>.Get(ElasticTestClientFactory.Config);
+            var tikaExtractor = new Mock<ITikaServerExtractor>();
             var logging = new Moq.Mock<ILogger<DocumentFolderProcessor>>();
 
             string folder = CreateTestFolder();
 
 
-            var sut = new DocumentFolderProcessor(docColRepo.Object, client.Object, cfg /*, logging.Object*/);
+            var sut = new DocumentFolderProcessor(
+                docColRepo.Object, 
+                client.Object, 
+                cfg,
+                tikaExtractor.Object
+                /*, logging.Object*/);
 
             var cfgFolder = Folder.Create(folder);
 
@@ -56,11 +65,15 @@ namespace DesktopSearch.Core.Tests.Processors
         [Test]
         public async Task Run_on_file()
         {
-            //TODO: mock TikaExtractor to fix test case
             var docColRepo = new Mock<IDocumentCollectionRepository>();
             var client = new Moq.Mock<IElasticClient>();
-            var cfg = new ElasticSearchConfig();
+            var cfg = OptionsProvider<ElasticSearchConfig>.Get(ElasticTestClientFactory.Config);
             var logging = new Moq.Mock<ILogger<DocumentFolderProcessor>>();
+            var tika = new Moq.Mock<ITikaServerExtractor>();
+
+            var docDesc = new DocDescriptor();
+            tika.Setup(t => t.ExtractAsync(It.IsAny<Extractors.ParserContext>(), It.IsAny<FileInfo>())).
+                ReturnsAsync(docDesc);
 
             string folder = CreateTestFolder();
             var filePath = folder + "\\TestDocument.txt";
@@ -78,7 +91,12 @@ namespace DesktopSearch.Core.Tests.Processors
                                                 .Returns(Task.FromResult<IIndexResponse>(result.Object));
 
 
-            var sut = new DocumentFolderProcessor(docColRepo.Object, client.Object, cfg /*, logging.Object*/);
+            var sut = new DocumentFolderProcessor(
+                docColRepo.Object, 
+                client.Object, 
+                cfg,
+                tika.Object
+                /*, logging.Object*/);
 
             var cfgFolder = Folder.Create(folder);
 

@@ -3,6 +3,7 @@ using DesktopSearch.Core.DataModel.Code;
 using DesktopSearch.Core.DataModel.Documents;
 using DesktopSearch.Core.Services;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Nest;
 using System;
 using System.Collections.Generic;
@@ -20,11 +21,11 @@ namespace DesktopSearch.Core.ElasticSearch
 
         //private readonly ILogger _logger;
 
-        public ManagementService(IElasticClient client, ElasticSearchConfig config/*, ILogger logger*/)
+        public ManagementService(IElasticClient client, IOptions<ElasticSearchConfig> config/*, ILogger logger*/)
         {
             //_logger = logger;
             _client = client;
-            _configuration = config;
+            _configuration = config.Value;
         }
 
         public async Task EnsureIndicesCreated()

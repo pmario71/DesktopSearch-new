@@ -8,5 +8,14 @@ namespace DesktopSearch.Core.Configuration
     public class CodeSearch
     {
         public const string IndexName = "codesearch";
+
+
+        public CodeSearch()
+        {
+            this.Folders = new List<string>();
+        }
+
+
+        public ICollection<string> Folders { get; private set; }
     }
 }

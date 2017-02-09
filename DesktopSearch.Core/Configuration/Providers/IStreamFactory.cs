@@ -17,9 +17,9 @@ namespace DesktopSearch.Core.Configuration
         private const string _settingsFile = "appsettings.json";
         private readonly string _directory;
 
-        public FileStreamFactory()
+        public FileStreamFactory(ICurrentDirectoryProvider currentDirectory)
         {
-            _directory = Directory.GetCurrentDirectory();
+            _directory = currentDirectory.GetCurrentDirectory(); //Directory.GetCurrentDirectory();
         }
 
         public Stream GetReadableStream()

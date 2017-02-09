@@ -8,6 +8,8 @@ using NUnit.Framework;
 using DesktopSearch.Core.Tika;
 using System.Diagnostics;
 using DesktopSearch.Core.Tests;
+using DesktopSearch.Core.Configuration;
+using DesktopSearch.Core.Tests.Utils;
 
 namespace DesktopSearch.Core.Extractors.Tika
 {
@@ -41,7 +43,7 @@ namespace DesktopSearch.Core.Extractors.Tika
             string fullTestFilename = $"{TestContext.CurrentContext.WorkDirectory}\\{testFile}";
 
             //var context = new ParserContext();
-            using (var target = new TikaServerExtractor())
+            using (var target = new TikaServerExtractor(OptionsProvider<TikaConfig>.Get()))
             {
                 var ctx = new ParserContext();
                 var sw = Stopwatch.StartNew();
@@ -79,7 +81,7 @@ namespace DesktopSearch.Core.Extractors.Tika
             Console.WriteLine($"running {testcycles} testcycles (values in [ms])");
             Console.WriteLine("==================================================");
 
-            using (var target = new TikaServerExtractor())
+            using (var target = new TikaServerExtractor(OptionsProvider<TikaConfig>.Get()))
             {
                 var durations = new TimeSpan[files.Length];
                 var ctx = new ParserContext();

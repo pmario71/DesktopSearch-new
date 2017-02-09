@@ -11,7 +11,7 @@ using System.Threading.Tasks;
 
 namespace DesktopSearch.PS.Tests.Configuration
 {
-    [TestFixture]
+    [TestFixture, Ignore("To be removed!")]
     public class ConfigAccessTests
     {
 

@@ -44,7 +44,7 @@ namespace DesktopSearch.PS.Composition
             conventions.ForType<Core.Services.DocumentCollectionRepository>().Export<Core.Services.IDocumentCollectionRepository>();
             
             conventions.ForType<Core.Services.SearchService>().Export<Core.Services.ISearchService>();
-            conventions.ForType<Core.Services.IndexingService>().Export<Core.Services.IIndexingService>();
+            conventions.ForType<Core.Services.DocumentIndexingService>().Export<Core.Services.IDocumentIndexingService>();
 
             conventions.ForType<Core.Processors.CodeFolderProcessor>().Export<Core.Processors.CodeFolderProcessor>();
             conventions.ForType<Core.Processors.DocumentFolderProcessor>().Export<Core.Processors.DocumentFolderProcessor>();
@@ -57,7 +57,7 @@ namespace DesktopSearch.PS.Composition
             var container = new CompositionContainer(new AggregateCatalog(cat0, cat1));
 
             var ca = new ContainerAccess(container);
-            container.ComposeExportedValue<IContainer>(ca);
+            //container.ComposeExportedValue<IContainer>(ca);  NOT_USED
 
             // add configuration
             var elasticSearchConfig = new Core.Configuration.ElasticSearchConfig();
@@ -104,11 +104,13 @@ namespace DesktopSearch.PS.Composition
         }
 
         public TInstance GetService<TInstance>()
+            where TInstance : class
         {
             return _container.GetExportedValue<TInstance>();
         }
 
         public IFace GetService<IFace, TInstance>()
+            where IFace : class
         {
             return _container.GetExportedValue<IFace>();
         }

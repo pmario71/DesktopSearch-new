@@ -84,3 +84,11 @@ Measuring over standalone Tika container and version running together with Elast
 | 7 | 624   | 572 | 627   | 627   |
 | 8 | 597   | 600 | 655   | 668   |
 | 9 | 670   | 783 | 662   | 809   |
+
+## ElasticSearch
+
+Modifiacations to when running ElasticSearch:
+
+* `.\config\elasticsearch.yml`\
+  `path.data: C:/Users/ESIndexData`
+

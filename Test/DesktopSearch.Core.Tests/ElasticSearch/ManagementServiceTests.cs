@@ -3,6 +3,7 @@ using DesktopSearch.Core.DataModel.Documents;
 using DesktopSearch.Core.ElasticSearch;
 using DesktopSearch.Core.Processors;
 using DesktopSearch.Core.Services;
+using DesktopSearch.Core.Tests.Utils;
 using Moq;
 using Nest;
 using NUnit.Framework;
@@ -12,6 +13,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static DesktopSearch.Core.Configuration.DocumentSearch;
+using Microsoft.Extensions.Options;
+using DesktopSearch.Core.Extractors.Tika;
 
 namespace DesktopSearch.Core.Tests.ElasticSearch
 {
@@ -26,13 +29,18 @@ namespace DesktopSearch.Core.Tests.ElasticSearch
             var docColRepo = new Mock<IDocumentCollectionRepository>();
             var esClient = ElasticTestClientFactory.Create();
 
-            var sut = new Core.ElasticSearch.ManagementService(esClient, ElasticTestClientFactory.Config);
+            var options = OptionsProvider<ElasticSearchConfig>.Get(ElasticTestClientFactory.Config);
+
+            var sut = new Core.ElasticSearch.ManagementService(esClient, options);
 
             await sut.EnsureIndicesCreated();
 
+            
             var docFolderProcessoer = new DocumentFolderProcessor(
                                                     docColRepo.Object,
-                                                    esClient, ElasticTestClientFactory.Config);
+                                                    esClient,
+                                                    options,
+                                                    new TikaServerExtractor(OptionsProvider<TikaConfig>.Get()));
 
             await docFolderProcessoer.ProcessAsync(testDataPath + "zen-of-results.pdf", Core.Configuration.DocumentSearch.ContentType.Artikel);
 
@@ -42,8 +50,8 @@ namespace DesktopSearch.Core.Tests.ElasticSearch
             //    Assert.True(result.IsValid, "Indexing test document failed!");
             //}
         }
-
-        [Test, Explicit]
+        
+        [Test, Explicit(TestDefinitions.Requires_running_ES_service_instance)]
         public async Task Search_for_documents()
         {
             SearchService searchSvs = CreateSearchService();
@@ -64,7 +72,7 @@ namespace DesktopSearch.Core.Tests.ElasticSearch
         {
             IElasticClient client;
             SearchService searchSvc;
-            IndexingService indexingSvc = CreateIndexingService(out client, out searchSvc);
+            DocumentIndexingService indexingSvc = CreateIndexingService(out client, out searchSvc);
 
             var dd1 = new DocDescriptor()
             {
@@ -111,7 +119,7 @@ and Member (the innermost set of parentheses). This involves comparing all the r
         {
             IElasticClient esClient;
             SearchService searchSvc;
-            IndexingService indexingSvc = CreateIndexingService(out esClient, out searchSvc);
+            DocumentIndexingService indexingSvc = CreateIndexingService(out esClient, out searchSvc);
 
             // because 
             var result = esClient.Search<DocDescriptor>(s => s
@@ -140,24 +148,26 @@ and Member (the innermost set of parentheses). This involves comparing all the r
             return searchSvc;
         }
 
-        private IndexingService CreateIndexingService()
+        private DocumentIndexingService CreateIndexingService()
         {
             IElasticClient esClient;
             SearchService searchSvc;
             return CreateIndexingService(out esClient, out searchSvc);
         }
 
-        private static IndexingService CreateIndexingService(out IElasticClient esClient, out SearchService searchSvc)
+        private static DocumentIndexingService CreateIndexingService(out IElasticClient esClient, out SearchService searchSvc)
         {
+            var config = OptionsProvider<ElasticSearchConfig>.Get(ElasticTestClientFactory.Config);
+
             esClient = ElasticTestClientFactory.Create();
-            var mgtmSvc = new Core.ElasticSearch.ManagementService(esClient, ElasticTestClientFactory.Config);
+            var mgtmSvc = new Core.ElasticSearch.ManagementService(esClient, config);
 
             var mock = new Services.NullMockStore();
             var dcr = new DocumentCollectionRepository(mock);
 
-            var docProc = new DocumentFolderProcessor(dcr, esClient, ElasticTestClientFactory.Config);
+            var docProc = new DocumentFolderProcessor(dcr, esClient, config, new TikaServerExtractor(OptionsProvider<TikaConfig>.Get()));
 
-            var indexingSvc = new IndexingService(dcr, mgtmSvc, docProc, null);
+            var indexingSvc = new DocumentIndexingService(dcr, mgtmSvc, docProc, null);
 
             searchSvc = new SearchService(esClient, ElasticTestClientFactory.Config, mgtmSvc, docProc);
 
@@ -186,7 +196,7 @@ and Member (the innermost set of parentheses). This involves comparing all the r
                 config = _config.Value;
             }
 
-            var cfg = ConnectionSettingsFactory.Create(config);
+            var cfg = ConnectionSettingsFactory.Create(OptionsProvider<ElasticSearchConfig>.Get(ElasticTestClientFactory.Config));
             cfg.DisableDirectStreaming()
                .OnRequestCompleted(details =>
                {

@@ -21,8 +21,8 @@ namespace DesktopSearch.Core
     {
         object GetService(Type type);
 
-        TInstance GetService<TInstance>();
+        TInstance GetService<TInstance>() where TInstance : class;
 
-        IFace GetService<IFace, TInstance>();
+        IFace GetService<IFace, TInstance>() where IFace : class;
     }
 }

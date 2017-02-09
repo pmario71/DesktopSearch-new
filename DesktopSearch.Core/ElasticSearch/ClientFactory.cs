@@ -19,6 +19,7 @@ namespace DesktopSearch.Core.ElasticSearch
             _settings.DefaultIndex("docsearch");
         }
 
+        // TODO: rename to CreateSearchClient() when move to SimpleInjector is completed
         public IElasticClient SearchClient
         {
             get

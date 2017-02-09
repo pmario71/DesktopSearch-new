@@ -79,42 +79,5 @@ namespace DesktopSearch.Core.DataModel.Code
                 return this._members; 
             }
         }
-
-        //IList<MethodDescriptor> _methods;
-        //public IList<MethodDescriptor> Methods
-        //{
-        //    get
-        //    {
-        //        if (_methods == null)
-        //        {
-        //            if (_members.IsValueCreated)
-        //            {
-
-        //                _methods = _members.Value.Where(t => t.Type == MemberType.Method).Cast<MethodDescriptor>().ToList();
-        //                return _methods;
-        //            }
-        //        }
-        //        return null;
-        //    }
-        //    //set
-        //    //{
-        //    //    //if (_members.IsValueCreated)
-        //    //    //{
-        //    //    //    _members.Value.Where(t => t.Type != MemberType.Method)
-        //    //    //}
-        //    //    _methods = value;
-        //    //    foreach (var item in value)
-        //    //    {
-        //    //        _members.Value.Add(item);
-        //    //    }
-        //    //}
-        //}
-    }
-
-    public enum Visibility
-    {
-        Public,
-        Internal,
-        Private,
     }
 }

@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using DesktopSearch.Core.Extractors.Tika;
 using DesktopSearch.Core.Services;
+using Microsoft.Extensions.Options;
 
 namespace DesktopSearch.Core.Processors
 {
@@ -18,7 +19,7 @@ namespace DesktopSearch.Core.Processors
     {
         private readonly IElasticClient       _client;
         private readonly ElasticSearchConfig  _configuration;
-        private TikaServerExtractor           _extractor;
+        private ITikaServerExtractor          _extractor;
         private IDocumentCollectionRepository _documentCollectionRepository;
 
         //private readonly ILogger<DocumentFolderProcessor> _logging;
@@ -26,12 +27,13 @@ namespace DesktopSearch.Core.Processors
         public DocumentFolderProcessor(
             IDocumentCollectionRepository documentCollectionRepository,
             IElasticClient client, 
-            ElasticSearchConfig config/*, ILogger logging*/)
+            IOptions<ElasticSearchConfig> config,
+            ITikaServerExtractor extractor/*, ILogger logging*/)
         {
             _documentCollectionRepository = documentCollectionRepository;
             _client                       = client;
-            _configuration                = config;
-            _extractor                    = new TikaServerExtractor();
+            _configuration                = config.Value;
+            _extractor                    = extractor;
             //_logging                    = logging;
         }
 

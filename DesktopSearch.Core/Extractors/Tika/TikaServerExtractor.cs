@@ -9,10 +9,18 @@ using DesktopSearch.Core.Tika;
 using DesktopSearch.Core.DataModel.Documents;
 using System.Threading.Tasks;
 using DesktopSearch.Core.Contracts;
+using DesktopSearch.Core.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace DesktopSearch.Core.Extractors.Tika
 {
-    public class TikaServerExtractor : IDisposable
+    public interface ITikaServerExtractor
+    {
+        Task<DocDescriptor> ExtractAsync(ParserContext context, FileInfo filePath);
+        Task<TikaRawResult> SendToTikaAsync(FileInfo filePath);
+    }
+
+    public class TikaServerExtractor : ITikaServerExtractor, IDisposable
     {
         private const string ContentTag = "X-TIKA:content";
         private const string ContentTypeTag = "Content-Type";
@@ -20,21 +28,14 @@ namespace DesktopSearch.Core.Extractors.Tika
         private readonly HttpClient _client;
 
         /// <summary>
-        /// Use local Tika Server listenting on default port (9998).
-        /// </summary>
-        public TikaServerExtractor() : this(new Uri("http://localhost:9998/"))
-        {
-        }
-
-        /// <summary>
         /// Make extractor use a Tika Server on different uri.
         /// </summary>
         /// <param name="uri"></param>
-        public TikaServerExtractor(Uri uri)
+        public TikaServerExtractor(IOptions<TikaConfig> config)
         {
             _client = new HttpClient()
             {
-                BaseAddress = uri
+                BaseAddress = new Uri(config.Value.Uri)
             };
             _client.DefaultRequestHeaders.Accept.Clear();
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
