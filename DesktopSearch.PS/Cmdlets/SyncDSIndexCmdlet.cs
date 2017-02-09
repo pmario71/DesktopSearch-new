@@ -27,7 +27,7 @@ namespace DesktopSearch.PS
         internal IDocumentCollectionRepository Repository { get; set; }
 
         [Import]
-        internal IDocumentIndexingService IndexingService { get; set; }
+        internal IIndexingService IndexingService { get; set; }
 
         #endregion
 

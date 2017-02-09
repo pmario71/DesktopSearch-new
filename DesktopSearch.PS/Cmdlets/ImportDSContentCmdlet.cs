@@ -29,7 +29,7 @@ namespace DesktopSearch.PS.Cmdlets
 
         #region Dependencies
         [Import]
-        public Core.Services.IDocumentIndexingService IndexService { get; set; }
+        public Core.Services.IIndexingService IndexService { get; set; }
         #endregion
 
         protected override void BeginProcessing()

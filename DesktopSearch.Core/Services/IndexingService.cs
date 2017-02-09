@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace DesktopSearch.Core.Services
 {
-    public class DocumentIndexingService : IDocumentIndexingService
+    public class IndexingService : IIndexingService
     {
         private Dictionary<IndexingStrategy, IFolderProcessor> _map;
         private IDocumentCollectionRepository _documentCollectionRepository;
 
         Task EnsureInitialized = null;
 
-        public DocumentIndexingService(
+        public IndexingService(
             IDocumentCollectionRepository documentCollectionRepository,
             ManagementService mgtSvc,
             DocumentFolderProcessor docFolderProcessor,

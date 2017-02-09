@@ -72,7 +72,7 @@ namespace DesktopSearch.Core.Tests.ElasticSearch
         {
             IElasticClient client;
             SearchService searchSvc;
-            DocumentIndexingService indexingSvc = CreateIndexingService(out client, out searchSvc);
+            IndexingService indexingSvc = CreateIndexingService(out client, out searchSvc);
 
             var dd1 = new DocDescriptor()
             {
@@ -119,7 +119,7 @@ and Member (the innermost set of parentheses). This involves comparing all the r
         {
             IElasticClient esClient;
             SearchService searchSvc;
-            DocumentIndexingService indexingSvc = CreateIndexingService(out esClient, out searchSvc);
+            IndexingService indexingSvc = CreateIndexingService(out esClient, out searchSvc);
 
             // because 
             var result = esClient.Search<DocDescriptor>(s => s
@@ -148,14 +148,14 @@ and Member (the innermost set of parentheses). This involves comparing all the r
             return searchSvc;
         }
 
-        private DocumentIndexingService CreateIndexingService()
+        private IndexingService CreateIndexingService()
         {
             IElasticClient esClient;
             SearchService searchSvc;
             return CreateIndexingService(out esClient, out searchSvc);
         }
 
-        private static DocumentIndexingService CreateIndexingService(out IElasticClient esClient, out SearchService searchSvc)
+        private static IndexingService CreateIndexingService(out IElasticClient esClient, out SearchService searchSvc)
         {
             var config = OptionsProvider<ElasticSearchConfig>.Get(ElasticTestClientFactory.Config);
 
@@ -167,7 +167,7 @@ and Member (the innermost set of parentheses). This involves comparing all the r
 
             var docProc = new DocumentFolderProcessor(dcr, esClient, config, new TikaServerExtractor(OptionsProvider<TikaConfig>.Get()));
 
-            var indexingSvc = new DocumentIndexingService(dcr, mgtmSvc, docProc, null);
+            var indexingSvc = new IndexingService(dcr, mgtmSvc, docProc, null);
 
             searchSvc = new SearchService(esClient, ElasticTestClientFactory.Config, mgtmSvc, docProc);
 

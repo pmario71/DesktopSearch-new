@@ -228,6 +228,7 @@
     <Compile Include="Configuration\CodeSearch.cs" />
     <Compile Include="Configuration\ConfigAccess.cs" />
     <Compile Include="Configuration\ConfigBootstrapping.cs" />
+    <Compile Include="Configuration\IConfigAccess.cs" />
     <Compile Include="Configuration\Providers\ICurrentDirectoryProvider.cs" />
     <Compile Include="Configuration\TikaConfig.cs" />
     <Compile Include="DataModel\Code\Visibility.cs" />
@@ -257,7 +258,6 @@
     <Compile Include="Lucene\Analyzers\LowercaseKeywordAnalyzer.cs" />
     <Compile Include="Lucene\Analyzers\RepositoryNamesAnalyzer.cs" />
     <Compile Include="Lucene\CodeIndex.cs" />
-    <Compile Include="Lucene\DocumentCollectionRepository.cs" />
     <Compile Include="Services\DocumentCollectionElasticStore.cs" />
     <Compile Include="Services\DocumentCollectionRepository.cs" />
     <Compile Include="Services\FolderRootPathException.cs" />
@@ -325,48 +325,6 @@
   <ItemGroup>
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.Analyzers.dll" />
     <Analyzer Include="..\packages\Microsoft.CodeAnalysis.Analyzers.1.1.0\analyzers\dotnet\cs\Microsoft.CodeAnalysis.CSharp.Analyzers.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\packages\ICU4NET-ICU4C55.1-bin32.1.0.0\ref\icudt55.dll">
-      <Link>icudt55.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\packages\ICU4NET-ICU4C55.1-bin32.1.0.0\ref\icuin55.dll">
-      <Link>icuin55.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\packages\ICU4NET-ICU4C55.1-bin32.1.0.0\ref\icuio55.dll">
-      <Link>icuio55.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\packages\ICU4NET-ICU4C55.1-bin32.1.0.0\ref\icule55.dll">
-      <Link>icule55.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\packages\ICU4NET-ICU4C55.1-bin32.1.0.0\ref\iculx55.dll">
-      <Link>iculx55.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\packages\ICU4NET-ICU4C55.1-bin32.1.0.0\ref\icutu55.dll">
-      <Link>icutu55.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="..\packages\ICU4NET-ICU4C55.1-bin32.1.0.0\ref\icuuc55.dll">
-      <Link>icuuc55.dll</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

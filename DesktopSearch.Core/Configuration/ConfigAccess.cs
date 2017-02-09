@@ -12,7 +12,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace DesktopSearch.Core.Configuration
 {
-    public class ConfigAccess
+    public class ConfigAccess : IConfigAccess
     {
         private static JsonSerializerSettings _formatSettings = new JsonSerializerSettings
         {

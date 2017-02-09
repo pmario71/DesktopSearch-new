@@ -44,7 +44,7 @@ namespace DesktopSearch.PS.Composition
             conventions.ForType<Core.Services.DocumentCollectionRepository>().Export<Core.Services.IDocumentCollectionRepository>();
             
             conventions.ForType<Core.Services.SearchService>().Export<Core.Services.ISearchService>();
-            conventions.ForType<Core.Services.DocumentIndexingService>().Export<Core.Services.IDocumentIndexingService>();
+            conventions.ForType<Core.Services.IndexingService>().Export<Core.Services.IIndexingService>();
 
             conventions.ForType<Core.Processors.CodeFolderProcessor>().Export<Core.Processors.CodeFolderProcessor>();
             conventions.ForType<Core.Processors.DocumentFolderProcessor>().Export<Core.Processors.DocumentFolderProcessor>();

@@ -37,6 +37,9 @@
     <Reference Include="Elasticsearch.Net, Version=5.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Elasticsearch.Net.5.0.0\lib\net46\Elasticsearch.Net.dll</HintPath>
     </Reference>
+    <Reference Include="Lucene.Net, Version=4.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Lucene.Net.4.8.0.770-beta\lib\net451\Lucene.Net.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.CodeAnalysis, Version=1.3.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.CodeAnalysis.Common.1.3.2\lib\net45\Microsoft.CodeAnalysis.dll</HintPath>
       <Private>True</Private>
@@ -227,6 +230,7 @@
     <Compile Include="IndexExtractors\Roslyn\RoslynParserTests.cs" />
     <Compile Include="IndexExtractors\Roslyn\RoslynParser_APIFlag_extracted_from_methods_and_properties.cs" />
     <Compile Include="IndexExtractors\Roslyn\RoslynParser_DefinedTypes_Tests.cs" />
+    <Compile Include="Lucene\CodeIndexTests.cs" />
     <Compile Include="Processors\DocumentFolderProcessorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <None Include="app.config" />

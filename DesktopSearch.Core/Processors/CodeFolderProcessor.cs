@@ -3,6 +3,7 @@ using DesktopSearch.Core.DataModel.Code;
 using DesktopSearch.Core.DataModel.Documents;
 using DesktopSearch.Core.Extractors.Roslyn;
 using DesktopSearch.Core.FileSystem;
+using DesktopSearch.Core.Lucene;
 using Nest;
 using System;
 using System.Collections.Concurrent;
@@ -16,11 +17,11 @@ namespace DesktopSearch.Core.Processors
 {
     public class CodeFolderProcessor : IFolderProcessor
     {
-        private IElasticClient _elasticClient;
+        private ICodeIndexer _codeIndexer;
 
-        public CodeFolderProcessor(IElasticClient elasticClient)
+        public CodeFolderProcessor(ICodeIndexer codeIndexer)
         {
-            _elasticClient = elasticClient;
+            _codeIndexer = codeIndexer;
         }
 
         public Task ProcessAsync(IFolder folder)
@@ -74,19 +75,12 @@ namespace DesktopSearch.Core.Processors
                 {
                     extractedTypes = parser.ExtractTypes(sourceFile.Content, sourceFile.Path);
 
-                    //TODO: add indexing here
-                    var index = await _elasticClient.IndexManyAsync(extractedTypes);
-
-                    if (!index.IsValid)
-                    {
-                        //TODO: Log errors
-                    }
+                    await _codeIndexer.IndexAsync(extractedTypes);
 
                     typesExtracted += extractedTypes.Count();
                 }
-                catch (AggregateException ex)
+                catch (Exception ex)
                 {
-                    foreach (var innerException in ex.InnerExceptions)
                     {
                         //WriteError(new ErrorRecord(innerException, "idx", ErrorCategory.NotSpecified, this));
                         //TODO: Log errors

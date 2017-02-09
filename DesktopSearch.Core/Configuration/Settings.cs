@@ -35,6 +35,9 @@ namespace DesktopSearch.Core.Configuration
             }
         }
 
+        [JsonProperty]
+        public string IndexDirectory { get; set; }
+
         //public FoldersToIndex FoldersToIndex { get; set; }
     }
 

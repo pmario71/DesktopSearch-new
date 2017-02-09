@@ -70,32 +70,21 @@ namespace DesktopSearch.Core
 
             container.Register<Core.ElasticSearch.ManagementService>(Lifestyle.Singleton);
 
-            container.Register<
-                Core.Services.IDocumentCollectionPersistence,
-                Core.Services.DocumentCollectionElasticStore>(Lifestyle.Singleton);
-            container.Register<
-                Core.Services.IDocumentCollectionRepository,
-                Core.Services.DocumentCollectionRepository>(Lifestyle.Singleton);
+            container.Register<Core.Services.IDocumentCollectionPersistence, Core.Services.DocumentCollectionElasticStore>(Lifestyle.Singleton);
+            container.Register<Core.Services.IDocumentCollectionRepository, Core.Services.DocumentCollectionRepository>(Lifestyle.Singleton);
 
-            container.Register<
-                Core.Services.ISearchService,
-                Core.Services.SearchService>(Lifestyle.Singleton);
+            container.Register<Core.Services.ISearchService, Core.Services.SearchService>(Lifestyle.Singleton);
 
-            container.Register<
-                Core.Services.IDocumentIndexingService,
-                Core.Services.DocumentIndexingService>(Lifestyle.Singleton);
+            container.Register<Core.Services.IIndexingService, Core.Services.IndexingService>(Lifestyle.Singleton);
 
-            container.Register<
-                Core.Processors.CodeFolderProcessor>(Lifestyle.Singleton);
+            container.Register<Core.Processors.CodeFolderProcessor>(Lifestyle.Singleton);
+            container.Register<Lucene.ICodeIndexer, Lucene.CodeIndex>(Lifestyle.Singleton);
 
-            container.Register<
-                Core.Processors.DocumentFolderProcessor>(Lifestyle.Singleton);
+            container.Register<Core.Processors.DocumentFolderProcessor>(Lifestyle.Singleton);
 
-            container.Register<
-                Core.Configuration.IStreamFactory,
-                Core.Configuration.FileStreamFactory>(Lifestyle.Singleton);
-            container.Register<
-                Core.Configuration.ConfigAccess>(Lifestyle.Singleton);
+            container.Register<Core.Configuration.IStreamFactory, Core.Configuration.FileStreamFactory>(Lifestyle.Singleton);
+
+            container.Register<Core.Configuration.IConfigAccess, Core.Configuration.ConfigAccess>(Lifestyle.Singleton);
 
             //var ca = new ContainerAccess(container);
             //container.ComposeExportedValue<IContainer>(ca);

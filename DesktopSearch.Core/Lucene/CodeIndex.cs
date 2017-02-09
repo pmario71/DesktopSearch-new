@@ -12,15 +12,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DesktopSearch.Core.DataModel.Code;
+using Lucene.Net.Documents;
+using DesktopSearch.Core.Configuration;
 
 namespace DesktopSearch.Core.Lucene
 {
-    public class CodeIndex : IDisposable
+    public interface ICodeIndexer
+    {
+        Task IndexAsync(IEnumerable<TypeDescriptor> extractedTypes);
+    }
+
+
+    public class CodeIndex : ICodeIndexer, IDisposable
     {
         private readonly PerFieldAnalyzerWrapper _analyzer;
         private readonly IndexWriter _indexWriter;
         private readonly SearcherManager _searcherManager;
         private readonly QueryParser _queryParser;
+
+        public CodeIndex(IConfigAccess configuration)
+            : this(FromConfig(configuration))
+        { }
 
         public CodeIndex(Directory indexDirectory)
         {
@@ -43,5 +56,34 @@ namespace DesktopSearch.Core.Lucene
             _indexWriter?.Dispose();
             _searcherManager?.Dispose();
         }
+
+        public Task IndexAsync(IEnumerable<TypeDescriptor> extractedTypes)
+        {
+            return Task.Run(() =>
+            {
+                foreach (var item in extractedTypes)
+                {
+                    var doc = new Document
+                {
+                    new StringField("name", item.Name, Field.Store.YES),
+                    new StringField("namespace", item.Namespace, Field.Store.YES),
+                    new StringField("filepath", item.FilePath, Field.Store.YES),
+                    new StringField("elementtype", Enum.GetName(typeof(ElementType), item.ElementType), Field.Store.YES),
+                    new IntField("linenr", item.LineNr, Field.Store.YES),
+                    new TextField("comment", item.Comment, Field.Store.YES),
+                    new StringField("apidefinition", Enum.GetName(typeof(API), item.APIDefinition), Field.Store.YES),
+                };
+                    _indexWriter.AddDocument(doc);
+                }
+            });
+        }
+
+        private static Directory FromConfig(IConfigAccess configuration)
+        {
+            var cfg = configuration.Get();
+            return FSDirectory.Open(new System.IO.DirectoryInfo(cfg.IndexDirectory));
+        }
     }
+
+
 }

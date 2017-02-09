@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 namespace DesktopSearch.Core.Services
 {
 
-    public interface IDocumentIndexingService
+    public interface IIndexingService
     {
         Task IndexRepositoryAsync(IDocumentCollection documentCollection, IProgress<int> progress = null);
 
