@@ -46,7 +46,7 @@ namespace DesktopSearch.Core.Lucene
             _queryParser = new MultiFieldQueryParser(LuceneVersion.LUCENE_48,
                 new[] { "name", "elementtype", "comment" }, _analyzer);
 
-            _indexWriter = new IndexWriter(indexDirectory, new IndexWriterConfig(LuceneVersion.LUCENE_48, _analyzer));
+            _indexWriter = new IndexWriter(indexDirectory, new IndexWriterConfig(LuceneVersion.LUCENE_48, new StandardAnalyzer(LuceneVersion.LUCENE_48)));
             _searcherManager = new SearcherManager(_indexWriter, applyAllDeletes:true);
         }
 
@@ -64,18 +64,55 @@ namespace DesktopSearch.Core.Lucene
                 foreach (var item in extractedTypes)
                 {
                     var doc = new Document
-                {
-                    new StringField("name", item.Name, Field.Store.YES),
-                    new StringField("namespace", item.Namespace, Field.Store.YES),
-                    new StringField("filepath", item.FilePath, Field.Store.YES),
-                    new StringField("elementtype", Enum.GetName(typeof(ElementType), item.ElementType), Field.Store.YES),
-                    new IntField("linenr", item.LineNr, Field.Store.YES),
-                    new TextField("comment", item.Comment, Field.Store.YES),
-                    new StringField("apidefinition", Enum.GetName(typeof(API), item.APIDefinition), Field.Store.YES),
-                };
-                    _indexWriter.AddDocument(doc);
+                    {
+                        new StringField("name", item.Name, Field.Store.YES),
+                        new StringField("namespace", item.Namespace, Field.Store.YES),
+                        new StringField("filepath", item.FilePath, Field.Store.YES),
+                        new IntField("elementtype", (int)item.ElementType, Field.Store.YES),
+                        new IntField("visibility", (int)item.Visibility, Field.Store.YES),
+                        new IntField("linenr", item.LineNr, Field.Store.YES),
+                        new TextField("comment", item.Comment, Field.Store.YES),
+                        new IntField("apidefinition", (int)item.APIDefinition, Field.Store.YES),
+                    };
+                    _indexWriter.UpdateDocument(new Term("filepath", item.FilePath), doc);
                 }
+
+                _indexWriter.Flush(true, true);
+                _indexWriter.Commit();
             });
+        }
+
+        public IEnumerable<TypeDescriptor> Search(string queryString)
+        {
+            Console.WriteLine($"Number of docs stored: {_indexWriter.NumDocs()}");
+
+            var query = _queryParser.Parse(queryString);
+            //var query = new TermQuery(new Term(queryString));
+
+            var totalHits = 0;
+            var l = new List<TypeDescriptor>();
+
+            // Execute the search with a fresh indexSearcher
+            _searcherManager.MaybeRefreshBlocking();
+            _searcherManager.ExecuteSearch(searcher =>
+            {
+                var topDocs = searcher.Search(query, 10);
+                totalHits = topDocs.TotalHits;
+                foreach (var result in topDocs.ScoreDocs)
+                {
+                    var doc = searcher.Doc(result.Doc);
+                    l.Add(new TypeDescriptor(
+                        (ElementType)doc.GetField("elementtype").NumericValue,
+                        doc.GetField("name")?.StringValue,
+                        (Visibility)doc.GetField("visibility").NumericValue,
+                        doc.GetField("namespace").StringValue,
+                        doc.GetField("filepath").StringValue,
+                        (int)doc.GetField("linenr").NumericValue,
+                        doc.GetField("comment")?.StringValue));
+                }
+            }, exception => { Console.WriteLine(exception.ToString()); });
+                        
+            return l;
         }
 
         private static Directory FromConfig(IConfigAccess configuration)

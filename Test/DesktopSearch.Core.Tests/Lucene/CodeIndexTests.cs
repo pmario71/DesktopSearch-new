@@ -24,6 +24,16 @@ namespace DesktopSearch.Core.Tests.Lucene
 
             var td = new TypeDescriptor(ElementType.Class, "TestClass", Visibility.Public, "syngo.Common.Test", "c:\\temp\\filename.cs", 123, "Some commend");
             await sut.IndexAsync(new[] { td});
+
+
+            var results = sut.Search("name:test");
+
+            Console.WriteLine("Results");
+            Console.WriteLine("-------");
+            foreach (var result in results)
+            {
+                Console.WriteLine($"{result.Name}");
+            }
         }
 
     }
