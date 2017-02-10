@@ -63,18 +63,8 @@ namespace DesktopSearch.Core.Lucene
             {
                 foreach (var item in extractedTypes)
                 {
-                    var doc = new Document
-                    {
-                        new StringField("name", item.Name, Field.Store.YES),
-                        new StringField("namespace", item.Namespace, Field.Store.YES),
-                        new StringField("filepath", item.FilePath, Field.Store.YES),
-                        new IntField("elementtype", (int)item.ElementType, Field.Store.YES),
-                        new IntField("visibility", (int)item.Visibility, Field.Store.YES),
-                        new IntField("linenr", item.LineNr, Field.Store.YES),
-                        new TextField("comment", item.Comment, Field.Store.YES),
-                        new IntField("apidefinition", (int)item.APIDefinition, Field.Store.YES),
-                    };
-                    _indexWriter.UpdateDocument(new Term("filepath", item.FilePath), doc);
+                    var doc = DocumentConverter.From(item);
+                    _indexWriter.UpdateDocument(new Term("id", DocumentConverter.GetTypeID(item)), doc);
                 }
 
                 _indexWriter.Flush(true, true);

@@ -1,6 +1,7 @@
 ﻿using DesktopSearch.Core.Configuration;
 using DesktopSearch.Core.ElasticSearch;
 using DesktopSearch.Core.Utils.Async;
+using DesktopSearch.PS.Utils;
 using PowershellExtensions;
 using System;
 using System.Collections.Generic;

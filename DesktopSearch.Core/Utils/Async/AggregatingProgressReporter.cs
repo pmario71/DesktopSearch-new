@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Nito.AsyncEx;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -21,8 +22,8 @@ namespace DesktopSearch.Core.Utils.Async
         /// <summary>
         /// The last reported progress value for each client.
         /// </summary>
-        private readonly List<int> _progress = new List<int>();
-        private readonly Action<int> _progressReportCallback;
+        private readonly List<int>              _progress = new List<int>();
+        private readonly Action<int>            _progressReportCallback;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyProgress&lt;T&gt;"/> class.
@@ -62,8 +63,8 @@ namespace DesktopSearch.Core.Utils.Async
         /// </summary>
         private sealed class AggregatingProgress : IProgress<int>
         {
-            private int _id;
-            private AggregatingProgressReporter _aggregator;
+            private readonly int _id;
+            private readonly AggregatingProgressReporter _aggregator;
 
 
             public AggregatingProgress(AggregatingProgressReporter aggregator, int id)
