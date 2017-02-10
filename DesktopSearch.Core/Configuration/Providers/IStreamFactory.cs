@@ -24,7 +24,7 @@ namespace DesktopSearch.Core.Configuration
 
         public Stream GetReadableStream()
         {
-            return new FileStream(Path.Combine(_directory, _settingsFile), FileMode.Open, FileAccess.Read);
+            return new FileStream(Path.Combine(_directory, _settingsFile), FileMode.OpenOrCreate, FileAccess.Read);
         }
 
         public Stream GetWritableStream()

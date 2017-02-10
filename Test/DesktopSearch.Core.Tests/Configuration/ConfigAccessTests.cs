@@ -11,44 +11,47 @@ using System.Threading.Tasks;
 
 namespace DesktopSearch.PS.Tests.Configuration
 {
-    [TestFixture, Ignore("To be removed!")]
+    [TestFixture]
     public class ConfigAccessTests
     {
 
         [Test]
         public void NullValueHandling_for_ElasticSearchURI_Test()
         {
-            throw new NotImplementedException("Refactor!");
+            Settings settings = new Settings
+            {
+                IndexDirectory = "c:\\test"
+            };
 
-            //Settings settings = new Settings
-            //{
-            //    FoldersToIndex = new FoldersToIndex
-            //    {
-            //        Folders = new[]
-            //        {
-            //            Folder.Create(Path.GetTempPath(), indexingType:"Code")
-            //        }.ToList()
-            //    }
-            //};
+            var strm = new MemoryStreamEx();
+            var sut = new ConfigAccess(new TestFactory(strm));
 
-            //var strm = new MemoryStreamEx();
-            //var sut = new ConfigAccess(new TestFactory(strm));
+            sut.SaveChanges(settings);
 
-            //sut.SaveChanges(settings);
+            strm.Position = 0;
 
-            //strm.Position = 0;
+            var sr = new StreamReader(strm);
+            var s = sr.ReadToEnd();
 
-            //var sr = new StreamReader(strm);
-            //var s = sr.ReadToEnd();
+            // check that stream does not contain serialized 
+            CollectionAssert.DoesNotContain(s, "localhost");
 
-            //// check that stream does not contain serialized 
-            //CollectionAssert.DoesNotContain(s, "localhost");
+            strm.Position = 0;
 
-            //strm.Position = 0;
+            var result = sut.Get();
 
-            //var result = sut.Get();
+            Assert.AreEqual(settings.IndexDirectory, result.IndexDirectory);
+        }
 
-            //Assert.AreEqual(settings.FoldersToIndex.Folders[0].Path, result.FoldersToIndex.Folders[0].Path);
+        [Test]
+        public void Return_default_configuration_if_no_config_file_is_found_Test()
+        {
+            var strm = new MemoryStreamEx();
+            var sut = new ConfigAccess(new TestFactory(strm));
+
+            var result = sut.Get();
+
+            Assert.NotNull(result);
         }
 
         [Test]

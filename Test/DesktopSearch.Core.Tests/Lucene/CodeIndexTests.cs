@@ -2,6 +2,7 @@
 using DesktopSearch.Core.DataModel.Code;
 using DesktopSearch.Core.Lucene;
 using Lucene.Net.Store;
+using Moq;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -18,9 +19,13 @@ namespace DesktopSearch.Core.Tests.Lucene
         [Test]
         public async Task Index_Type_Descriptor()
         {
-            var dir = new RAMDirectory();
+            var indexProviderMock = new Mock<IIndexProvider>();
 
-            var sut = new CodeIndex(dir);
+            indexProviderMock.Setup(m => m.GetIndexDirectory())
+                             .Returns(new RAMDirectory());
+            
+
+            var sut = new CodeIndex(indexProviderMock.Object);
 
             var td = new TypeDescriptor(ElementType.Class, "TestClass", Visibility.Public, "syngo.Common.Test", "c:\\temp\\filename.cs", 123, "Some commend");
             await sut.IndexAsync(new[] { td});

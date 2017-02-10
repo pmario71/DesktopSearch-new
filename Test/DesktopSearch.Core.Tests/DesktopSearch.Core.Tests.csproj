@@ -128,6 +128,9 @@
       <HintPath>..\..\packages\NUnit.3.5.0\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="SimpleInjector, Version=3.3.2.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SimpleInjector.3.3.2\lib\net45\SimpleInjector.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.AppContext.4.3.0\lib\net46\System.AppContext.dll</HintPath>
@@ -270,6 +273,7 @@
     <Compile Include="Lucene\LucenePrototypingTests.cs" />
     <Compile Include="Processors\DocumentFolderProcessorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\TestDirectoryProvider.cs" />
     <None Include="app.config" />
     <None Include="Lucene\Lucene Prototyping.md" />
     <None Include="packages.config" />
@@ -279,6 +283,7 @@
     <None Include="TestData\IndexExtractors\Roslyn\APIClass.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <Compile Include="Services\CodeIndexing_IntegrationTests.cs" />
     <Compile Include="Services\DocumentCollectionElasticStoreTests.cs" />
     <Compile Include="Services\DocumentCollectionRepository_AddDocumentCollection_Tests.cs" />
     <Compile Include="Services\DocumentCollectionRepository_AddFolderToDocumentCollection_Tests.cs" />

@@ -31,12 +31,11 @@ namespace DesktopSearch.Core.Lucene
         private readonly SearcherManager _searcherManager;
         private readonly QueryParser _queryParser;
 
-        public CodeIndex(IConfigAccess configuration)
-            : this(FromConfig(configuration))
-        { }
 
-        public CodeIndex(Directory indexDirectory)
+        public CodeIndex(IIndexProvider indexProvider)
         {
+            var indexDirectory = indexProvider.GetIndexDirectory();
+
             _analyzer = new PerFieldAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48),
                 new Dictionary<string, Analyzer>
                 {

@@ -1,4 +1,5 @@
 ﻿using DesktopSearch.Core.Configuration;
+using DesktopSearch.Core.Tests.Utils;
 using DesktopSearch.PS.Composition;
 using NUnit.Framework;
 using System;
@@ -19,18 +20,9 @@ namespace DesktopSearch.PS.Tests.Composition
             var sut = new CustomizedBootstrapper();
             sut.AddTestOverrides = c => 
             {
-                c.Register<ICurrentDirectoryProvider, TestProvider>();
+                c.Register<ICurrentDirectoryProvider, TestDirectoryProvider>();
             };
             sut.Initialize();
-        }
-
-
-        public class TestProvider : ICurrentDirectoryProvider
-        {
-            public string GetCurrentDirectory()
-            {
-                return TestContext.CurrentContext.WorkDirectory;
-            }
         }
     }
 }

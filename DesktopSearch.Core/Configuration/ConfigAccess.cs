@@ -41,7 +41,7 @@ namespace DesktopSearch.Core.Configuration
 
             var foldersToIndex = JsonConvert.DeserializeObject<Settings>(content, _formatSettings);
 
-            return foldersToIndex;
+            return foldersToIndex ?? new Settings();
         }
 
         public static string GetJSONExample()

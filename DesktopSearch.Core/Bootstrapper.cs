@@ -20,11 +20,15 @@ namespace DesktopSearch.Core
         public IContainer Initialize()
         {
             var container = new Container();
+            container.Options.AllowOverridingRegistrations = true;
             container.Options.AutoWirePropertiesImplicitly();
+
             var convention = container.RegisterConstructorSelectorConvention();
 
             RegisterBaseServices(container);
             RegisterServices(new ContainerWrapper(container));
+            RegisterServicesFinal?.Invoke(container);
+
             container.Verify();
 
             return new ContainerWrapper(container);
@@ -37,6 +41,8 @@ namespace DesktopSearch.Core
         protected virtual void Configure(ConfigurationBuilder builder)
         {
         }
+
+        public Action<Container> RegisterServicesFinal { get; set; }
 
         private void Configure(Container container)
         {
@@ -82,9 +88,11 @@ namespace DesktopSearch.Core
 
             container.Register<Core.Processors.DocumentFolderProcessor>(Lifestyle.Singleton);
 
+            container.Register<ICurrentDirectoryProvider, DefaultDirectoryProvider>();
             container.Register<Core.Configuration.IStreamFactory, Core.Configuration.FileStreamFactory>(Lifestyle.Singleton);
 
             container.Register<Core.Configuration.IConfigAccess, Core.Configuration.ConfigAccess>(Lifestyle.Singleton);
+            container.Register<Lucene.IIndexProvider, Lucene.IndexProvider>(Lifestyle.Singleton);
 
             //var ca = new ContainerAccess(container);
             //container.ComposeExportedValue<IContainer>(ca);

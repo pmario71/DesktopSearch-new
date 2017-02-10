@@ -230,6 +230,10 @@
       <Project>{17e0af0f-ea0f-459c-8f91-a50622ec380a}</Project>
       <Name>DesktopSearch.PS</Name>
     </ProjectReference>
+    <ProjectReference Include="..\DesktopSearch.Core.Tests\DesktopSearch.Core.Tests.csproj">
+      <Project>{96754954-4A78-47A7-BE8A-7F68C49CD784}</Project>
+      <Name>DesktopSearch.Core.Tests</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />

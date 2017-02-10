@@ -280,6 +280,7 @@
     <Compile Include="Lucene\Analyzers\RepositoryNamesAnalyzer.cs" />
     <Compile Include="Lucene\CodeIndex.cs" />
     <Compile Include="Lucene\DocumentConverter.cs" />
+    <Compile Include="Lucene\IndexProvider.cs" />
     <Compile Include="Services\DocumentCollectionElasticStore.cs" />
     <Compile Include="Services\DocumentCollectionRepository.cs" />
     <Compile Include="Services\FolderRootPathException.cs" />
