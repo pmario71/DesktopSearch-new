@@ -40,21 +40,27 @@ namespace DesktopSearch.Core.Utils.Async
 
         public IProgress<int> CreateClient()
         {
-            _progress.Add(0);
-            return new AggregatingProgress(this, _progress.Count - 1);
+            lock (_progress)
+            {
+                _progress.Add(0);
+                return new AggregatingProgress(this, _progress.Count - 1);
+            }
         }
 
         void Report(int id, int value)
         {
             _context.Post(_ =>
             {
-                _progress[id] = value;
+                lock (_progress)
+                {
+                    _progress[id] = value;
 
-                // calc aggregated progress value
-                double sum = (double)_progress.Sum();
-                int aggregatedValue = (int)(sum/_progress.Count);
+                    // calc aggregated progress value
+                    double sum = (double)_progress.Sum();
+                    int aggregatedValue = (int)(sum / _progress.Count);
 
-                _progressReportCallback(aggregatedValue);
+                    _progressReportCallback(aggregatedValue);
+                }
             }, null);
         }
 

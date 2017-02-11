@@ -18,7 +18,7 @@ namespace DesktopSearch.PS
     {
         #region Dependencies
         [Import]
-        internal ConfigAccess ConfigAccess { set; get; }
+        internal IConfigAccess<LuceneConfig> ConfigAccess { set; get; }
         #endregion
 
         protected override void ProcessRecord()
