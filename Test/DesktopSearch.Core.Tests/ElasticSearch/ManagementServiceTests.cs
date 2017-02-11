@@ -4,7 +4,6 @@ using DesktopSearch.Core.ElasticSearch;
 using DesktopSearch.Core.Processors;
 using DesktopSearch.Core.Services;
 using DesktopSearch.Core.Tests.Utils;
-using Moq;
 using Nest;
 using NUnit.Framework;
 using System;
@@ -13,7 +12,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using static DesktopSearch.Core.Configuration.DocumentSearch;
-using Microsoft.Extensions.Options;
 using DesktopSearch.Core.Extractors.Tika;
 
 namespace DesktopSearch.Core.Tests.ElasticSearch
@@ -26,12 +24,14 @@ namespace DesktopSearch.Core.Tests.ElasticSearch
         [Test, Explicit(TestDefinitions.Requires_running_ES_service_instance)]
         public async Task Setup_and_populate_Index()
         {
-            var docColRepo = new Mock<IDocumentCollectionRepository>();
+            var docColRepo = new Moq.Mock<IDocumentCollectionRepository>();
             var esClient = ElasticTestClientFactory.Create();
 
-            var options = OptionsProvider<ElasticSearchConfig>.Get(ElasticTestClientFactory.Config);
+            var elasticMock = CfgMocks.GetElasticSearchConfigMock();
+            var tikaMock = CfgMocks.GetTikaConfigMock();
+            
 
-            var sut = new Core.ElasticSearch.ManagementService(esClient, options);
+            var sut = new Core.ElasticSearch.ManagementService(esClient, elasticMock);
 
             await sut.EnsureIndicesCreated();
 
@@ -39,8 +39,8 @@ namespace DesktopSearch.Core.Tests.ElasticSearch
             var docFolderProcessoer = new DocumentFolderProcessor(
                                                     docColRepo.Object,
                                                     esClient,
-                                                    options,
-                                                    new TikaServerExtractor(OptionsProvider<TikaConfig>.Get()));
+                                                    elasticMock,
+                                                    new TikaServerExtractor(tikaMock));
 
             await docFolderProcessoer.ProcessAsync(testDataPath + "zen-of-results.pdf", Core.Configuration.DocumentSearch.ContentType.Artikel);
 
@@ -157,19 +157,23 @@ and Member (the innermost set of parentheses). This involves comparing all the r
 
         private static IndexingService CreateIndexingService(out IElasticClient esClient, out SearchService searchSvc)
         {
-            var config = OptionsProvider<ElasticSearchConfig>.Get(ElasticTestClientFactory.Config);
-
             esClient = ElasticTestClientFactory.Create();
-            var mgtmSvc = new Core.ElasticSearch.ManagementService(esClient, config);
+            //var mgtmSvc = new Core.ElasticSearch.ManagementService(esClient, config);
 
             var mock = new Services.NullMockStore();
             var dcr = new DocumentCollectionRepository(mock);
 
-            var docProc = new DocumentFolderProcessor(dcr, esClient, config, new TikaServerExtractor(OptionsProvider<TikaConfig>.Get()));
+            var docProc = new DocumentFolderProcessor(dcr, 
+                                                      esClient, 
+                                                      CfgMocks.GetElasticSearchConfigMock(), 
+                                                      new TikaServerExtractor(CfgMocks.GetTikaConfigMock()));
 
-            var indexingSvc = new IndexingService(dcr, mgtmSvc, docProc, null);
+            var indexingSvc = new IndexingService(dcr, docProc, null);
 
-            searchSvc = new SearchService(esClient, ElasticTestClientFactory.Config, mgtmSvc, docProc);
+            var elasticMock = new Moq.Mock<IConfigAccess<ElasticSearchConfig>>();
+            elasticMock.Setup(m => m.Get()).Returns(ElasticTestClientFactory.Config);
+
+            searchSvc = new SearchService(esClient, elasticMock.Object, docProc);
 
             return indexingSvc;
         }

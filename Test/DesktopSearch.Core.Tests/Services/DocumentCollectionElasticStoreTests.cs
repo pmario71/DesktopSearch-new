@@ -25,11 +25,11 @@ namespace DesktopSearch.Core.Tests.Services
 
             var mgmSvc = new ManagementService(
                 client, 
-                OptionsProvider<ElasticSearchConfig>.Get(ElasticTestClientFactory.Config));
+                CfgMocks.GetElasticSearchConfigMock());
 
             await mgmSvc.EnsureIndicesCreated();
 
-            var sut = new DocumentCollectionElasticStore(client, ElasticTestClientFactory.Config);
+            var sut = new DocumentCollectionElasticStore(client, CfgMocks.GetElasticSearchConfigMock());
 
             var documentCollection = DocumentCollection.Create("Buecher", IndexingStrategy.Code);
             var folder = Folder.Create(Path.GetTempPath());

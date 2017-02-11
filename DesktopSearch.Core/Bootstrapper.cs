@@ -25,6 +25,7 @@ namespace DesktopSearch.Core
 
             var convention = container.RegisterConstructorSelectorConvention();
 
+            Configure(container);
             RegisterBaseServices(container);
             RegisterServices(new ContainerWrapper(container));
             RegisterServicesFinal?.Invoke(container);
@@ -46,24 +47,9 @@ namespace DesktopSearch.Core
 
         private void Configure(Container container)
         {
-            // .net core configuration
-            ConfigurationBuilder _builder = new ConfigurationBuilder();
-            IEnumerable<KeyValuePair<string, string>> initial = new[]
-            {
-                new KeyValuePair<string,string>("Test","Value")
-            };
-
-            _builder.AddInMemoryCollection(initial);
-            _config = _builder.Build();
-
-            container.AddOptions();
-
-            // Binds config.json to the options and setups the change tracking.
-            container.Configure<ElasticSearchConfig>(_config.GetSection("ElastcSearch"));
-            container.Configure<TikaConfig>(_config.GetSection("Tika"));
-
-            //var elasticSearchConfig = new Core.Configuration.ElasticSearchConfig();
-            //_config.Bind(elasticSearchConfig);
+            container.Register(typeof(IConfigAccess<TikaConfig>), typeof(ConfigAccess<TikaConfig>), Lifestyle.Singleton);
+            container.Register(typeof(IConfigAccess<ElasticSearchConfig>), typeof(ConfigAccess<ElasticSearchConfig>), Lifestyle.Singleton);
+            container.Register(typeof(IConfigAccess<LuceneConfig>), typeof(ConfigAccess<LuceneConfig>), Lifestyle.Singleton);
         }
 
         private void RegisterBaseServices(Container container)
@@ -74,7 +60,11 @@ namespace DesktopSearch.Core
             //Func<Nest.IElasticClient> f = () => container.GetInstance<ElasticSearch.ClientFactory>().SearchClient;
             //container.Register<Nest.IElasticClient, Nest.ElasticClient>(Lifestyle.Singleton);
 
-            container.Register<Core.ElasticSearch.ManagementService>(Lifestyle.Singleton);
+            // removed
+            //container.Register<Core.ElasticSearch.ManagementService>(Lifestyle.Singleton);
+
+            container.Register<Extractors.Tika.ITikaServerExtractor,Extractors.Tika.TikaServerExtractor>(Lifestyle.Singleton);
+
 
             container.Register<Core.Services.IDocumentCollectionPersistence, Core.Services.DocumentCollectionElasticStore>(Lifestyle.Singleton);
             container.Register<Core.Services.IDocumentCollectionRepository, Core.Services.DocumentCollectionRepository>(Lifestyle.Singleton);

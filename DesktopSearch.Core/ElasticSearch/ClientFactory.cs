@@ -9,10 +9,10 @@ namespace DesktopSearch.Core.ElasticSearch
 {
     public class ClientFactory
     {
-        private Settings _cfg;
+        private LuceneConfig _cfg;
         private ConnectionSettings _settings;
 
-        public ClientFactory(ConfigAccess configAccess)
+        public ClientFactory(IConfigAccess<LuceneConfig> configAccess)
         {
             _cfg = configAccess.Get();
             _settings = new ConnectionSettings(_cfg.ElasticSearchUri);

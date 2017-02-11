@@ -21,11 +21,11 @@ namespace DesktopSearch.Core.ElasticSearch
 
         //private readonly ILogger _logger;
 
-        public ManagementService(IElasticClient client, IOptions<ElasticSearchConfig> config/*, ILogger logger*/)
+        public ManagementService(IElasticClient client, IConfigAccess<ElasticSearchConfig> config/*, ILogger logger*/)
         {
             //_logger = logger;
             _client = client;
-            _configuration = config.Value;
+            _configuration = config.Get();
         }
 
         public async Task EnsureIndicesCreated()

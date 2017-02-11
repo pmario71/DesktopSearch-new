@@ -20,6 +20,7 @@ namespace DesktopSearch.PS.Tests.Composition
             var sut = new CustomizedBootstrapper();
             sut.AddTestOverrides = c => 
             {
+                c.Register<Core.Lucene.IIndexProvider, Core.Lucene.InMemoryIndexProvider>();
                 c.Register<ICurrentDirectoryProvider, TestDirectoryProvider>();
             };
             sut.Initialize();

@@ -27,12 +27,12 @@ namespace DesktopSearch.Core.Processors
         public DocumentFolderProcessor(
             IDocumentCollectionRepository documentCollectionRepository,
             IElasticClient client, 
-            IOptions<ElasticSearchConfig> config,
+            IConfigAccess<ElasticSearchConfig> config,
             ITikaServerExtractor extractor/*, ILogger logging*/)
         {
             _documentCollectionRepository = documentCollectionRepository;
             _client                       = client;
-            _configuration                = config.Value;
+            _configuration                = config.Get();
             _extractor                    = extractor;
             //_logging                    = logging;
         }

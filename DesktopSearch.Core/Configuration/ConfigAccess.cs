@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using DesktopSearch.Core.DataModel.Documents;
 using System.Reflection;
 using Newtonsoft.Json.Serialization;
+using static DesktopSearch.Core.Configuration.ConfigAccess;
 
 namespace DesktopSearch.Core.Configuration
 {
@@ -29,19 +30,19 @@ namespace DesktopSearch.Core.Configuration
             _factory = factory;
         }
 
-        public Settings Get()
+        public LuceneConfig Get()
         {
             string content = null;
 
             
-            using (var rd = new StreamReader(_factory.GetReadableStream()))
+            using (var rd = new StreamReader(_factory.GetReadableStream(nameof(LuceneConfig))))
             {
                 content = rd.ReadToEnd();
             }
 
-            var foldersToIndex = JsonConvert.DeserializeObject<Settings>(content, _formatSettings);
+            var foldersToIndex = JsonConvert.DeserializeObject<LuceneConfig>(content, _formatSettings);
 
-            return foldersToIndex ?? new Settings();
+            return foldersToIndex ?? new LuceneConfig();
         }
 
         public static string GetJSONExample()
@@ -64,7 +65,7 @@ namespace DesktopSearch.Core.Configuration
             //return serialized;
         }
 
-        public void SaveChanges(Settings settings)
+        public void SaveChanges(LuceneConfig settings)
         {
             if (settings == null)
                 throw new ArgumentNullException(nameof(settings));
@@ -74,7 +75,7 @@ namespace DesktopSearch.Core.Configuration
                 settings,
                 _formatSettings);
 
-            using (var sw = new StreamWriter(_factory.GetWritableStream()))
+            using (var sw = new StreamWriter(_factory.GetWritableStream(nameof(LuceneConfig))))
             {
                 sw.Write(serialized);
             }
@@ -95,5 +96,48 @@ namespace DesktopSearch.Core.Configuration
         }
     }
 
-    
+    internal class ConfigAccess<T> : IConfigAccess<T>
+        where T : class, new()
+    {
+        private static JsonSerializerSettings _formatSettings = new JsonSerializerSettings
+        {
+            NullValueHandling = NullValueHandling.Ignore,
+            Formatting = Formatting.Indented,
+            PreserveReferencesHandling = PreserveReferencesHandling.Objects,
+            ContractResolver = new PrivateFieldResolver()
+        };
+
+        private IStreamFactory _factory;
+
+        public ConfigAccess(IStreamFactory factory)
+        {
+            _factory = factory;
+        }
+
+        public T Get()
+        {
+            string content = null;
+
+            using (var rd = new StreamReader(_factory.GetReadableStream(nameof(T))))
+            {
+                content = rd.ReadToEnd();
+            }
+
+            var foldersToIndex = JsonConvert.DeserializeObject<T>(content, _formatSettings);
+
+            return foldersToIndex ?? new T();
+        }
+
+        public void Save(T config)
+        {
+            var serialized = JsonConvert.SerializeObject(config,
+                                                         _formatSettings);
+
+            using (var sw = new StreamWriter(_factory.GetWritableStream(nameof(T))))
+            {
+                sw.Write(serialized);
+            }
+        }
+    }
+
 }

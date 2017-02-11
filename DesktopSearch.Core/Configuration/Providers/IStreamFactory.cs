@@ -8,13 +8,13 @@ namespace DesktopSearch.Core.Configuration
     /// </summary>
     public interface IStreamFactory
     {
-        Stream GetWritableStream();
-        Stream GetReadableStream();
+        Stream GetWritableStream(string id);
+        Stream GetReadableStream(string id);
     }
 
     public class FileStreamFactory : IStreamFactory
     {
-        private const string _settingsFile = "appsettings.json";
+        private const string _settingsFile = ".json";
         private readonly string _directory;
 
         public FileStreamFactory(ICurrentDirectoryProvider currentDirectory)
@@ -22,19 +22,29 @@ namespace DesktopSearch.Core.Configuration
             _directory = currentDirectory.GetCurrentDirectory(); //Directory.GetCurrentDirectory();
         }
 
-        public Stream GetReadableStream()
+        public Stream GetReadableStream(string id)
         {
-            return new FileStream(Path.Combine(_directory, _settingsFile), FileMode.OpenOrCreate, FileAccess.Read);
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentNullException(nameof(id));
+
+            return new FileStream(Path.Combine(_directory, $"{id}.json"), FileMode.OpenOrCreate, FileAccess.Read);
         }
 
-        public Stream GetWritableStream()
+        public Stream GetWritableStream(string id)
         {
-            return new FileStream(Path.Combine(_directory, _settingsFile), FileMode.Truncate, FileAccess.Write);
+            if (string.IsNullOrEmpty(id))
+                throw new ArgumentNullException(nameof(id));
+
+            return new FileStream(Path.Combine(_directory, $"{id}.json"), FileMode.Truncate, FileAccess.Write);
         }
     }
 
     public class MemoryStreamEx : MemoryStream
     {
+        public MemoryStreamEx() : base() {}
+
+        public MemoryStreamEx(byte[] content) : base(content) { }
+
         /// <summary>
         /// Do not dispose
         /// </summary>

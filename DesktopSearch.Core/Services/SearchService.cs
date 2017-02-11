@@ -22,22 +22,22 @@ namespace DesktopSearch.Core.Services
         private readonly RoslynParser            _roslynParser = new RoslynParser();
         private readonly DocumentFolderProcessor _docFolderProcessor;
 
-        Task EnsureInitialized = null;
+        Task EnsureInitialized = Task.CompletedTask;
 
         #region CTOR
         public SearchService(IElasticClient elastic,
-                             ElasticSearchConfig config,
-                             ManagementService mgtSvc,
+                             IConfigAccess<ElasticSearchConfig> config,
+                             //ManagementService mgtSvc,
                              DocumentFolderProcessor docFolderProcessor)
         {
             //TODO: replace ElasticSearchConfig with original ConnectionSettings
             //var settings = new ConnectionSettings(new Uri(_eleasticSearchConfig.Uri));
             //var elastic = new ElasticClient(settings);
 
-            EnsureInitialized = mgtSvc.EnsureIndicesCreated();
+            //EnsureInitialized = mgtSvc.EnsureIndicesCreated();
 
             _elastic = elastic;
-            _config = config;
+            _config = config.Get();
             _docFolderProcessor = docFolderProcessor;
         }
         #endregion

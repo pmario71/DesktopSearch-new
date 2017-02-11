@@ -17,7 +17,7 @@ namespace DesktopSearch.PS
     public class SaveDSSettingCmdlet : PSCmdlet
     {
         [Parameter(Mandatory = true)]
-        public Settings Setting { get; set; }
+        public LuceneConfig Setting { get; set; }
 
         #region Dependencies
         [Import]

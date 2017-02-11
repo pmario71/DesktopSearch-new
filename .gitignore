@@ -61,3 +61,4 @@ Temporary Items
 *.suo
 *.~vsdx
 *.user
+ServiceFabric/bin/Debug/nunit_random_seed.tmp

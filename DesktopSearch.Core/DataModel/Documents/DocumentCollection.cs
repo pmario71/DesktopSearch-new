@@ -92,6 +92,12 @@ namespace DesktopSearch.Core.DataModel.Documents
             }
             return false;
         }
+
+        public void AddFolder(Folder folder)
+        {
+            folder.DocumentCollection = this;
+            _folders.Add(folder);
+        }
     }
 
     public interface IFolder
@@ -124,6 +130,8 @@ namespace DesktopSearch.Core.DataModel.Documents
         /// File extensions to be included when indexing
         /// </summary>
         string[] IncludedExtensions { get; set; }
+
+        void AddFolder(Folder folder);
     }
 
     public enum IndexingStrategy

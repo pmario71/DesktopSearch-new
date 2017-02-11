@@ -75,7 +75,7 @@ namespace DesktopSearch.Core.Tests.Utils.Async
             {
                 reportedValue = t;
 
-                if ((--timesToCall) <= 0)
+                if ((Interlocked.Decrement(ref timesToCall)) <= 0)
                     release.Dispose();
             };
 

@@ -21,6 +21,8 @@ namespace DesktopSearch.Core.Lucene
     public interface ICodeIndexer
     {
         Task IndexAsync(IEnumerable<TypeDescriptor> extractedTypes);
+
+        IEnumerable<TypeDescriptor> GetIndexedTypes();
     }
 
 
@@ -108,6 +110,32 @@ namespace DesktopSearch.Core.Lucene
         {
             var cfg = configuration.Get();
             return FSDirectory.Open(new System.IO.DirectoryInfo(cfg.IndexDirectory));
+        }
+
+        public IEnumerable<TypeDescriptor> GetIndexedTypes()
+        {
+            var l = new List<TypeDescriptor>();
+
+            _searcherManager.MaybeRefreshBlocking();
+            _searcherManager.ExecuteSearch(searcher =>
+            {
+                var topDocs = searcher.Search(new MatchAllDocsQuery(), 1000);
+
+                foreach (var result in topDocs.ScoreDocs)
+                {
+                    var doc = searcher.Doc(result.Doc);
+                    l.Add(new TypeDescriptor(
+                        (ElementType)doc.GetField("elementtype").NumericValue,
+                        doc.GetField("name")?.StringValue,
+                        (Visibility)doc.GetField("visibility").NumericValue,
+                        doc.GetField("namespace").StringValue,
+                        doc.GetField("filepath").StringValue,
+                        (int)doc.GetField("linenr").NumericValue,
+                        doc.GetField("comment")?.StringValue));
+                }
+            }, exception => { Console.WriteLine(exception.ToString()); });
+
+            return l;
         }
     }
 

@@ -31,11 +31,11 @@ namespace DesktopSearch.Core.Extractors.Tika
         /// Make extractor use a Tika Server on different uri.
         /// </summary>
         /// <param name="uri"></param>
-        public TikaServerExtractor(IOptions<TikaConfig> config)
+        public TikaServerExtractor(IConfigAccess<TikaConfig> config)
         {
             _client = new HttpClient()
             {
-                BaseAddress = new Uri(config.Value.Uri)
+                BaseAddress = new Uri(config.Get().Uri)
             };
             _client.DefaultRequestHeaders.Accept.Clear();
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));

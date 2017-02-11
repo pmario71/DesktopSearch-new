@@ -55,7 +55,7 @@ namespace DesktopSearch.Core.Processors
             var maxFiles = filesToParse.Count();
 
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
-            Task.Run(() =>
+            var reader = Task.Run(() =>
             {
                 Parallel.ForEach(filesToParse, file =>
                 {
@@ -93,6 +93,7 @@ namespace DesktopSearch.Core.Processors
                     progress.Report((int)(current * 100 / (double)maxFiles));
                 }
             }
+            System.Diagnostics.Debug.Assert(reader.IsCompleted);
         }
         internal struct SourceFile
         {

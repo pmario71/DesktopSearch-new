@@ -8,10 +8,15 @@ using System.Threading.Tasks;
 
 namespace DesktopSearch.Core.Configuration
 {
-    public class Settings
+    public class LuceneConfig
     {
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private Uri _elasticSearchUri;
+
+        public LuceneConfig()
+        {
+            this.IndexDirectory = "Indices\\";
+        }
 
         [JsonIgnore]
         public Uri ElasticSearchUri
@@ -37,12 +42,5 @@ namespace DesktopSearch.Core.Configuration
 
         [JsonProperty]
         public string IndexDirectory { get; set; }
-
-        //public FoldersToIndex FoldersToIndex { get; set; }
     }
-
-    //public class FoldersToIndex
-    //{
-    //    public List<Folder> Folders { get; set; }
-    //}
 }

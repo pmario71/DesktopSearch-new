@@ -25,10 +25,10 @@ namespace DesktopSearch.Core.Services
             ContractResolver = new PrivateFieldResolver()
         };
 
-        public DocumentCollectionElasticStore(IElasticClient elasticClient, ElasticSearchConfig config)
+        public DocumentCollectionElasticStore(IElasticClient elasticClient, IConfigAccess<ElasticSearchConfig> config)
         {
             _client = elasticClient;
-            _cfg = config;
+            _cfg = config.Get();
         }
 
         public async Task<IEnumerable<IDocumentCollection>> LoadAsync()

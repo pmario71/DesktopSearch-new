@@ -1,5 +1,6 @@
 ﻿using DesktopSearch.Core.DataModel.Documents;
 using System;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DesktopSearch.Core.Services

@@ -36,10 +36,9 @@ namespace DesktopSearch.Core.Tests.Processors
         [Test]
         public void Run_on_empty_folder()
         {
-            var docColRepo = new Mock<IDocumentCollectionRepository>();
+            var docColRepo = new Moq.Mock<IDocumentCollectionRepository>();
             var client = new Moq.Mock<IElasticClient>();
-            var cfg = OptionsProvider<ElasticSearchConfig>.Get(ElasticTestClientFactory.Config);
-            var tikaExtractor = new Mock<ITikaServerExtractor>();
+            var tikaExtractor = new Moq.Mock<ITikaServerExtractor>();
             var logging = new Moq.Mock<ILogger<DocumentFolderProcessor>>();
 
             string folder = CreateTestFolder();
@@ -48,13 +47,13 @@ namespace DesktopSearch.Core.Tests.Processors
             var sut = new DocumentFolderProcessor(
                 docColRepo.Object, 
                 client.Object, 
-                cfg,
+                CfgMocks.GetElasticSearchConfigMock(),
                 tikaExtractor.Object
                 /*, logging.Object*/);
 
             var cfgFolder = Folder.Create(folder);
 
-            var dcMock = new Mock<IDocumentCollection>();
+            var dcMock = new Moq.Mock<IDocumentCollection>();
             dcMock.Setup(m => m.Name).Returns("Some name");
             cfgFolder.DocumentCollection = dcMock.Object;
             
@@ -67,7 +66,7 @@ namespace DesktopSearch.Core.Tests.Processors
         {
             var docColRepo = new Mock<IDocumentCollectionRepository>();
             var client = new Moq.Mock<IElasticClient>();
-            var cfg = OptionsProvider<ElasticSearchConfig>.Get(ElasticTestClientFactory.Config);
+            
             var logging = new Moq.Mock<ILogger<DocumentFolderProcessor>>();
             var tika = new Moq.Mock<ITikaServerExtractor>();
 
@@ -94,7 +93,7 @@ namespace DesktopSearch.Core.Tests.Processors
             var sut = new DocumentFolderProcessor(
                 docColRepo.Object, 
                 client.Object, 
-                cfg,
+                CfgMocks.GetElasticSearchConfigMock(),
                 tika.Object
                 /*, logging.Object*/);
 

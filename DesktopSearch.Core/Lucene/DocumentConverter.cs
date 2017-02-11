@@ -21,7 +21,7 @@ namespace DesktopSearch.Core.Lucene
                         new IntField("elementtype", (int)descriptor.ElementType, Field.Store.YES),
                         new IntField("visibility", (int)descriptor.Visibility, Field.Store.YES),
                         new IntField("linenr", descriptor.LineNr, Field.Store.YES),
-                        new TextField("comment", descriptor.Comment, Field.Store.YES),
+                        new TextField("comment", descriptor.Comment ?? string.Empty, Field.Store.YES),
                         new IntField("apidefinition", (int)descriptor.APIDefinition, Field.Store.YES),
                     };
 

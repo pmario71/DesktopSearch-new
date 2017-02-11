@@ -250,6 +250,7 @@
     <Compile Include="Configuration\ConfigAccess.cs" />
     <Compile Include="Configuration\ConfigBootstrapping.cs" />
     <Compile Include="Configuration\IConfigAccess.cs" />
+    <Compile Include="Configuration\IConfigAccess1.cs" />
     <Compile Include="Configuration\Providers\ICurrentDirectoryProvider.cs" />
     <Compile Include="Configuration\TikaConfig.cs" />
     <Compile Include="DataModel\Code\Visibility.cs" />

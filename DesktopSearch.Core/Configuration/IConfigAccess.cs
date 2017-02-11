@@ -2,6 +2,6 @@
 {
     public interface IConfigAccess
     {
-        Settings Get();
+        LuceneConfig Get();
     }
 }
