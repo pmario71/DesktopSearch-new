@@ -1,5 +1,5 @@
 ﻿using DesktopSearch.Core.Configuration;
-using PowershellExtensions;
+using DesktopSearch.PS.Composition;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -25,7 +25,7 @@ namespace DesktopSearch.PS
         {
             this.Compose();
 
-            WriteObject(ConfigAccess.Get());
+            WriteObject(this.ConfigAccess);
         }
     }
 }

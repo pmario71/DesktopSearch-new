@@ -24,6 +24,7 @@ namespace DesktopSearch.Core
             container.Options.AutoWirePropertiesImplicitly();
 
             var convention = container.RegisterConstructorSelectorConvention();
+            container.Options.PropertySelectionBehavior = new ImportPropertySelectionBehavior();
 
             Configure(container);
             RegisterBaseServices(container);
@@ -78,7 +79,7 @@ namespace DesktopSearch.Core
 
             container.Register<Core.Processors.DocumentFolderProcessor>(Lifestyle.Singleton);
 
-            container.Register<ICurrentDirectoryProvider, DefaultDirectoryProvider>();
+            container.Register<ICurrentDirectoryProvider, DefaultDirectoryProvider>(Lifestyle.Singleton);
             container.Register<Core.Configuration.IStreamFactory, Core.Configuration.FileStreamFactory>(Lifestyle.Singleton);
 
             container.Register<Core.Configuration.IConfigAccess, Core.Configuration.ConfigAccess>(Lifestyle.Singleton);

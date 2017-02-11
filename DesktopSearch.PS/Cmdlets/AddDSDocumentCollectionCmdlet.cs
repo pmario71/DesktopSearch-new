@@ -1,9 +1,9 @@
-﻿using DesktopSearch.Core.FileSystem;
+﻿using DesktopSearch.PS.Composition;
+using DesktopSearch.Core.FileSystem;
 using DesktopSearch.Core.Configuration;
 using DesktopSearch.PS.Utils;
 using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json;
-using PowershellExtensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;

@@ -24,5 +24,7 @@ namespace DesktopSearch.Core
         TInstance GetService<TInstance>() where TInstance : class;
 
         IFace GetService<IFace, TInstance>() where IFace : class;
+
+        void Inject(object instance);
     }
 }

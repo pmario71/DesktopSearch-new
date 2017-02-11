@@ -1,5 +1,13 @@
 # Requirements Specification
 
+## Todo List
+
+* Roslyn Parser swallows generics type Specification\
+  => IFoo and IFoo<T> have the same id and therefore override eachother in the index
+
+* Disposal of services is critical, because they do have a lock on Lucene index
+
+
 ## Document Processing Pipeline
 
 ![Flow of operations](./Images/Flow_of_operations.png)

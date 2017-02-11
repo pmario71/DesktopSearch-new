@@ -47,6 +47,11 @@ namespace DesktopSearch.Core.Lucene
             _queryParser = new MultiFieldQueryParser(LuceneVersion.LUCENE_48,
                 new[] { "name", "elementtype", "comment" }, _analyzer);
 
+            if (IndexWriter.IsLocked(indexDirectory))
+            {
+                IndexWriter.Unlock(indexDirectory);
+            }
+
             _indexWriter = new IndexWriter(indexDirectory, new IndexWriterConfig(LuceneVersion.LUCENE_48, new StandardAnalyzer(LuceneVersion.LUCENE_48)));
             _searcherManager = new SearcherManager(_indexWriter, applyAllDeletes:true);
         }

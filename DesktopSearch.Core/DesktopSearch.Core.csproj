@@ -270,6 +270,7 @@
     <Compile Include="DependencyInjection\ConstructorSelectorConvention.cs" />
     <Compile Include="DependencyInjection\ContainerWrapper.cs" />
     <Compile Include="DependencyInjection\ImplicitPropertyInjectionBehavior.cs" />
+    <Compile Include="DependencyInjection\ImportPropertySelectionBehavior.cs" />
     <Compile Include="ElasticSearch\ClientFactory.cs" />
     <Compile Include="ElasticSearch\ConnectionSettingsFactory.cs" />
     <Compile Include="ElasticSearch\CustomIDescriptorConverter.cs" />

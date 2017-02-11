@@ -4,7 +4,7 @@ using System;
 namespace DesktopSearch.Core.DependencyInjection
 {
 
-    internal class ContainerWrapper : IContainer, IContainerInitializer
+    internal class ContainerWrapper : IContainer, IContainerInitializer, IDisposable
     {
         private Container _container;
 
@@ -30,6 +30,18 @@ namespace DesktopSearch.Core.DependencyInjection
             return _container.GetInstance<IFace>();
         }
 
+        public void Inject(object instance)
+        {
+            BuildUp(instance);
+        }
+
+        private void BuildUp(object obj)
+        {
+            InstanceProducer producer = _container.GetRegistration(obj.GetType(), throwOnFailure: true);
+            Registration registration = producer.Registration;
+            registration.InitializeInstance(obj);
+        }
+
         public void Register(Type service, Type implementation, bool isSingleton)
         {
             Lifestyle ls = (isSingleton) ? Lifestyle.Singleton : Lifestyle.Transient;
@@ -44,11 +56,23 @@ namespace DesktopSearch.Core.DependencyInjection
 
             _container.Register<TService, TImplementation>(ls);
         }
+
+        void IDisposable.Dispose()
+        {
+            _container.Dispose();
+        }
+
+        public void Register(Type type1, bool isSingleton = true)
+        {
+            _container.Register(type1);
+        }
     }
 
     public interface IContainerInitializer
     {
         void Register(Type type1, Type type2, bool isSingleton = true);
+
+        void Register(Type type1, bool isSingleton = true);
 
         void Register<TService, TImplementation>(bool isSingleton=true)
             where TService : class

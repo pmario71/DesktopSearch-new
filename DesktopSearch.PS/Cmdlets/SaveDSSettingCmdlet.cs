@@ -1,5 +1,5 @@
-﻿using DesktopSearch.Core.Configuration;
-using PowershellExtensions;
+﻿using DesktopSearch.PS.Composition;
+using DesktopSearch.Core.Configuration;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;

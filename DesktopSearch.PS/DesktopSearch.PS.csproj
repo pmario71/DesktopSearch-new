@@ -294,10 +294,14 @@
     <Compile Include="Cmdlets\SaveDSSettingCmdlet.cs" />
     <Compile Include="Cmdlets\SearchDSCmdlet.cs" />
     <Compile Include="Cmdlets\SyncDSIndexCmdlet.cs" />
+    <Compile Include="Composition\BlacklistComparer.cs" />
+    <Compile Include="Composition\CmdletEx.cs" />
     <Compile Include="Composition\CustomizedBootstrapper.cs" />
+    <Compile Include="Composition\DefaultFactory.cs" />
     <Compile Include="Composition\Host.cs" />
     <Compile Include="Cmdlets\GetDSSettingJSONCmdlet.cs" />
     <Compile Include="Cmdlets\GetDSSettingCmdlet.cs" />
+    <Compile Include="Composition\IHost.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UI\Behaviors\CloseWindowBehavior.cs" />
     <Compile Include="UI\DialogFactory.cs" />
