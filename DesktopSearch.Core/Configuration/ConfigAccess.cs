@@ -10,6 +10,7 @@ using DesktopSearch.Core.DataModel.Documents;
 using System.Reflection;
 using Newtonsoft.Json.Serialization;
 using static DesktopSearch.Core.Configuration.ConfigAccess;
+using Microsoft.Extensions.Logging;
 
 namespace DesktopSearch.Core.Configuration
 {
@@ -119,12 +120,21 @@ namespace DesktopSearch.Core.Configuration
         {
             string content = null;
 
-            using (var rd = new StreamReader(_factory.GetReadableStream(nameof(T))))
+            using (var rd = new StreamReader(_factory.GetReadableStream(typeof(T).Name)))
             {
                 content = rd.ReadToEnd();
             }
 
-            var foldersToIndex = JsonConvert.DeserializeObject<T>(content, _formatSettings);
+            T foldersToIndex = null;
+
+            try
+            {
+                foldersToIndex = JsonConvert.DeserializeObject<T>(content, _formatSettings);
+            }
+            catch(JsonSerializationException ex)
+            {
+                System.Diagnostics.Trace.TraceWarning("Failed to deserialize");
+            }
 
             return foldersToIndex ?? new T();
         }
@@ -134,7 +144,7 @@ namespace DesktopSearch.Core.Configuration
             var serialized = JsonConvert.SerializeObject(config,
                                                          _formatSettings);
 
-            using (var sw = new StreamWriter(_factory.GetWritableStream(nameof(T))))
+            using (var sw = new StreamWriter(_factory.GetWritableStream(typeof(T).Name)))
             {
                 sw.Write(serialized);
             }
