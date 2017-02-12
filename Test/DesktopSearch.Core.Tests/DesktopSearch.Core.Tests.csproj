@@ -277,6 +277,7 @@
     <Compile Include="Lucene\LucenePrototypingTests.cs" />
     <Compile Include="Processors\DocumentFolderProcessorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\DocumentCollectionConfigStoreTests.cs" />
     <Compile Include="Utils\CfgMocks.cs" />
     <Compile Include="Utils\TestDirectoryProvider.cs" />
     <None Include="app.config" />

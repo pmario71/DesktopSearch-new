@@ -1,5 +1,4 @@
-﻿using DesktopSearch.Core.Configuration;
-using DesktopSearch.Core.DataModel.Documents;
+﻿using DesktopSearch.Core.DataModel.Documents;
 using DesktopSearch.Core.ElasticSearch;
 using DesktopSearch.Core.Services;
 using DesktopSearch.Core.Tests.ElasticSearch;

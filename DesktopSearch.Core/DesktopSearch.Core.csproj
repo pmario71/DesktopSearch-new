@@ -251,6 +251,7 @@
     <Compile Include="Configuration\ConfigBootstrapping.cs" />
     <Compile Include="Configuration\IConfigAccess.cs" />
     <Compile Include="Configuration\IConfigAccess1.cs" />
+    <Compile Include="Configuration\LuceneConfig.cs" />
     <Compile Include="Configuration\Providers\ICurrentDirectoryProvider.cs" />
     <Compile Include="Configuration\TikaConfig.cs" />
     <Compile Include="DataModel\Code\Visibility.cs" />
@@ -259,7 +260,6 @@
     <Compile Include="Configuration\DocumentSearch.cs" />
     <Compile Include="Configuration\ElasticSearchConfig.cs" />
     <Compile Include="Configuration\Providers\IStreamFactory.cs" />
-    <Compile Include="Configuration\Settings.cs" />
     <Compile Include="Contracts\MetaTypes.cs" />
     <Compile Include="DataModel\Code\FieldDescriptor.cs" />
     <Compile Include="DataModel\Code\Interefaces.cs" />
@@ -283,6 +283,7 @@
     <Compile Include="Lucene\CodeIndex.cs" />
     <Compile Include="Lucene\DocumentConverter.cs" />
     <Compile Include="Lucene\IndexProvider.cs" />
+    <Compile Include="Services\DocumentCollectionConfigStore.cs" />
     <Compile Include="Services\DocumentCollectionElasticStore.cs" />
     <Compile Include="Services\DocumentCollectionRepository.cs" />
     <Compile Include="Services\FolderRootPathException.cs" />

@@ -15,8 +15,6 @@ namespace DesktopSearch.Core
 {
     public class Bootstrapper
     {
-        private IConfigurationRoot _config;
-
         public IContainer Initialize()
         {
             var container = new Container();
@@ -67,7 +65,8 @@ namespace DesktopSearch.Core
             container.Register<Extractors.Tika.ITikaServerExtractor,Extractors.Tika.TikaServerExtractor>(Lifestyle.Singleton);
 
 
-            container.Register<Core.Services.IDocumentCollectionPersistence, Core.Services.DocumentCollectionElasticStore>(Lifestyle.Singleton);
+            //container.Register<Core.Services.IDocumentCollectionPersistence, Core.Services.DocumentCollectionElasticStore>(Lifestyle.Singleton);
+            container.Register<Core.Services.IDocumentCollectionPersistence, Core.Services.DocumentCollectionConfigStore>(Lifestyle.Singleton);
             container.Register<Core.Services.IDocumentCollectionRepository, Core.Services.DocumentCollectionRepository>(Lifestyle.Singleton);
 
             container.Register<Core.Services.ISearchService, Core.Services.SearchService>(Lifestyle.Singleton);
