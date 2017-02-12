@@ -32,7 +32,7 @@ namespace DesktopSearch.Core.Services
             {
                 collections.RemoveAt(idx);
             }
-            collections.Add(documentCollection);
+            collections.Add((DocumentCollection)documentCollection);
 
             cfg.DocumentCollections = collections.ToArray();
             _config.Save(cfg);

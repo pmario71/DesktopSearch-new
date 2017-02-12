@@ -36,7 +36,7 @@ namespace DesktopSearch.Core.Tests.Services
             var cfg = new LuceneConfig();
             cfg.DocumentCollections = new[] 
             {
-                DocumentCollection.Create("Test", IndexingStrategy.Code)
+                (DocumentCollection)DocumentCollection.Create("Test", IndexingStrategy.Code)
             };
 
             var mock = new Moq.Mock<IConfigAccess<LuceneConfig>>();

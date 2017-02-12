@@ -16,7 +16,7 @@ namespace DesktopSearch.Core.Configuration
         public LuceneConfig()
         {
             this.IndexDirectory = "Indices\\";
-            this.DocumentCollections = new IDocumentCollection[] { };
+            this.DocumentCollections = new DocumentCollection[] { };
         }
 
         [JsonIgnore]
@@ -45,6 +45,6 @@ namespace DesktopSearch.Core.Configuration
         public string IndexDirectory { get; set; }
 
         [JsonProperty]
-        public IDocumentCollection[] DocumentCollections { get; set; }
+        public DocumentCollection[] DocumentCollections { get; set; }
     }
 }

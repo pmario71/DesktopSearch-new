@@ -55,6 +55,37 @@ namespace DesktopSearch.PS.Tests.Configuration
 
             Assert.NotNull(result);
         }
+
+        [Test]
+        public void Serializing_deserializing_of_DocumentCollections()
+        {
+            var dc = (DocumentCollection)DocumentCollection.Create("Test", IndexingStrategy.Code);
+            dc.AddFolder(new Folder() { Path=Path.GetTempPath() });
+
+            LuceneConfig settings = new LuceneConfig
+            {
+                IndexDirectory = "c:\\test",
+                DocumentCollections = new[] { dc },
+            };
+
+            TestFactory testFactory = new TestFactory();
+            var sut = new ConfigAccess(testFactory);
+
+            sut.SaveChanges(settings);
+
+            var result = sut.Get();
+
+            Assert.AreEqual(settings.IndexDirectory, result.IndexDirectory);
+            Assert.AreEqual(1, result.DocumentCollections.Length);
+
+            var cl = new CompareLogic();
+            var compareResult = cl.Compare(settings, result);
+
+            if (!compareResult.AreEqual)
+            {
+                Assert.Fail(compareResult.DifferencesString);
+            }
+        }
     }
 
     [TestFixture]

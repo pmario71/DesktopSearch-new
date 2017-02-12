@@ -104,7 +104,8 @@ namespace DesktopSearch.Core.Configuration
             NullValueHandling = NullValueHandling.Ignore,
             Formatting = Formatting.Indented,
             PreserveReferencesHandling = PreserveReferencesHandling.Objects,
-            ContractResolver = new PrivateFieldResolver()
+            ContractResolver = new PrivateFieldResolver(),
+            TypeNameHandling = TypeNameHandling.All
         };
 
         private IStreamFactory _factory;
