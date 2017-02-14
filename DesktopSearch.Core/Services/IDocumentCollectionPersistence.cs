@@ -9,5 +9,6 @@ namespace DesktopSearch.Core.Services
         Task<IEnumerable<IDocumentCollection>> LoadAsync();
 
         Task StoreOrUpdateAsync(IDocumentCollection documentCollection);
+        void Remove(IEnumerable<string> enumerable);
     }
 }

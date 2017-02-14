@@ -53,5 +53,52 @@ namespace DesktopSearch.Core.Tests.Services
             Assert.AreEqual(1, storedCollections.Count());
             Assert.AreEqual(IndexingStrategy.Documents, cfg.DocumentCollections[0].IndexingStrategy);
         }
+
+        [Test]
+        public async Task RemoveCollectionTest()
+        {
+            var cfg = new LuceneConfig();
+            cfg.DocumentCollections = new[]
+            {
+                (DocumentCollection)DocumentCollection.Create("Test", IndexingStrategy.Code),
+                (DocumentCollection)DocumentCollection.Create("Test2", IndexingStrategy.Code),
+            };
+
+            var mock = new Moq.Mock<IConfigAccess<LuceneConfig>>();
+            mock.Setup(m => m.Get()).Returns(cfg);
+
+            var sut = new DocumentCollectionConfigStore(mock.Object);
+
+            sut.Remove(new[] { "Test" });
+                        
+
+            var storedCollections = await sut.LoadAsync();
+
+            Assert.AreEqual(1, storedCollections.Count());
+            Assert.AreEqual("Test2", cfg.DocumentCollections[0].Name);
+        }
+
+        [Test]
+        public async Task RemoveCollection_multiple_items_Test()
+        {
+            var cfg = new LuceneConfig();
+            cfg.DocumentCollections = new[]
+            {
+                (DocumentCollection)DocumentCollection.Create("Test", IndexingStrategy.Code),
+                (DocumentCollection)DocumentCollection.Create("Test2", IndexingStrategy.Code),
+            };
+
+            var mock = new Moq.Mock<IConfigAccess<LuceneConfig>>();
+            mock.Setup(m => m.Get()).Returns(cfg);
+
+            var sut = new DocumentCollectionConfigStore(mock.Object);
+
+            sut.Remove(new[] { "Test", "Test2" });
+
+
+            var storedCollections = await sut.LoadAsync();
+
+            Assert.AreEqual(0, storedCollections.Count());
+        }
     }
 }

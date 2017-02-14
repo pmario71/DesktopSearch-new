@@ -61,6 +61,11 @@ namespace DesktopSearch.Core.Services
                 throw new Exception($"Error storing/updating: {docCollection.Name}\r\n{result.DebugInformation}");
             }
         }
+
+        public void Remove(IEnumerable<string> enumerable)
+        {
+            throw new NotImplementedException();
+        }
     }
 
     [ElasticsearchType(Name = "documentcollectionconfigurationelement", IdProperty ="Id")]

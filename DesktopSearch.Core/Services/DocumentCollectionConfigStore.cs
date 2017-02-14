@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DesktopSearch.Core.DataModel.Documents;
 using DesktopSearch.Core.Configuration;
+using DesktopSearch.Core.Utils;
 
 namespace DesktopSearch.Core.Services
 {
@@ -20,6 +21,16 @@ namespace DesktopSearch.Core.Services
         {
             var cfg = _config.Get();
             return Task.FromResult<IEnumerable<IDocumentCollection>>(cfg.DocumentCollections);
+        }
+
+        public void Remove(IEnumerable<string> documentCollectionNamesToRemove)
+        {
+            var cfg = _config.Get();
+
+            var collections = cfg.DocumentCollections.Where(dc => !documentCollectionNamesToRemove.Contains(dc.Name));
+            cfg.DocumentCollections = collections.ToArray();
+
+            _config.Save(cfg);
         }
 
         public Task StoreOrUpdateAsync(IDocumentCollection documentCollection)

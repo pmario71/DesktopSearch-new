@@ -79,8 +79,7 @@ namespace DesktopSearch.Core.Extractors.Tika
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex);
-                throw;
+                throw new IndexExtractionException($"Sending file '{filePath}' to Tika failed!", ex);
             }
         }
 

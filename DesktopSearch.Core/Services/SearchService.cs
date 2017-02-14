@@ -71,24 +71,24 @@ namespace DesktopSearch.Core.Services
         //    await _docFolderProcessor.ProcessAsync(document);
         //}
 
-        public async Task IndexCodeFileAsync(string codefilePath)
-        {
-            await EnsureInitialized;
+        //public async Task IndexCodeFileAsync(string codefilePath)
+        //{
+        //    await EnsureInitialized;
 
-            using (StreamReader sr = new StreamReader(new FileStream(codefilePath, FileMode.Open, FileAccess.Read)))
-            {
-                String fileContent = await sr.ReadToEndAsync();
-                var extractedTypes = _roslynParser.ExtractTypes(fileContent);
+        //    using (StreamReader sr = new StreamReader(new FileStream(codefilePath, FileMode.Open, FileAccess.Read)))
+        //    {
+        //        String fileContent = await sr.ReadToEndAsync();
+        //        var extractedTypes = _roslynParser.ExtractTypes(fileContent);
 
-                var elastic = _elastic;
-                var response = await elastic.IndexManyAsync(extractedTypes, CodeSearch.IndexName);
+        //        var elastic = _elastic;
+        //        var response = await elastic.IndexManyAsync(extractedTypes, CodeSearch.IndexName);
 
-                if (!response.IsValid)
-                {
-                    throw new Exception($"Failed to index code file: '{codefilePath}'", response.OriginalException);
-                }
-            }
-        }
+        //        if (!response.IsValid)
+        //        {
+        //            throw new Exception($"Failed to index code file: '{codefilePath}'", response.OriginalException);
+        //        }
+        //    }
+        //}
 
         public async Task<IEnumerable<string>> GetKeywordSuggestionsAsync(string filter=null)
         {
@@ -121,23 +121,23 @@ namespace DesktopSearch.Core.Services
         }
         #endregion
 
-        private void xx(ElasticClient elastic)
-        {
-            var indexSettings = new IndexSettings();
+        //private void xx(ElasticClient elastic)
+        //{
+        //    var indexSettings = new IndexSettings();
 
-            var customAnalyzer = new CustomAnalyzer()
-            {
-                Tokenizer = "keyword",
-                Filter = new[] { "lowercase" }
-            };
+        //    var customAnalyzer = new CustomAnalyzer()
+        //    {
+        //        Tokenizer = "keyword",
+        //        Filter = new[] { "lowercase" }
+        //    };
 
-            indexSettings.Analysis.Analyzers.Add("custom_lowercase_analyzer", customAnalyzer);
+        //    indexSettings.Analysis.Analyzers.Add("custom_lowercase_analyzer", customAnalyzer);
 
-            //var analyzerRes = elastic.CreateIndex("", ci => ci
-            //   .Index("my_third_index")
-            //   //.InitializeUsing(indexSettings)
-            //   .AddMapping<TypeDescriptor>(m => m.MapFromAttributes())
-            //   .AddMapping<MethodDescriptor>(m => m.MapFromAttributes()));
-        }
+        //    //var analyzerRes = elastic.CreateIndex("", ci => ci
+        //    //   .Index("my_third_index")
+        //    //   //.InitializeUsing(indexSettings)
+        //    //   .AddMapping<TypeDescriptor>(m => m.MapFromAttributes())
+        //    //   .AddMapping<MethodDescriptor>(m => m.MapFromAttributes()));
+        //}
     }
 }

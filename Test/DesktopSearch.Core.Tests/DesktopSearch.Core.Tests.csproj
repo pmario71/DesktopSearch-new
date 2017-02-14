@@ -280,6 +280,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\DocumentCollectionConfigStoreTests.cs" />
     <Compile Include="Utils\CfgMocks.cs" />
+    <Compile Include="Utils\CollectionExtensionsTests.cs" />
     <Compile Include="Utils\TestDirectoryProvider.cs" />
     <None Include="app.config" />
     <None Include="AppReadme\Compare-NET-Objects-Help.chm" />

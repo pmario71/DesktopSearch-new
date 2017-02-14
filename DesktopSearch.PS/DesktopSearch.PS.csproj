@@ -292,6 +292,7 @@
     <Compile Include="Cmdlets\GetTikaExtractRawCmdlet.cs" />
     <Compile Include="Cmdlets\ImportDSContentCmdlet.cs" />
     <Compile Include="Cmdlets\InitializeDSIndexCmdlet.cs" />
+    <Compile Include="Cmdlets\RemoveDSDocumentCollectionCmdlet.cs" />
     <Compile Include="Cmdlets\SaveDSSettingCmdlet.cs" />
     <Compile Include="Cmdlets\SearchDSCmdlet.cs" />
     <Compile Include="Cmdlets\SyncDSIndexCmdlet.cs" />

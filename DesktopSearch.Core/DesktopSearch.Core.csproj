@@ -324,6 +324,7 @@
     <Compile Include="Tagging\TagDescriptor.cs" />
     <Compile Include="Tagging\Tagger.cs" />
     <Compile Include="Utils\Async\AggregatingProgressReporter.cs" />
+    <Compile Include="Utils\CollectionExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
