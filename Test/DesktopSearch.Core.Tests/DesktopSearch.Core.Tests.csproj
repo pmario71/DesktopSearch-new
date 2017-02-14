@@ -260,6 +260,7 @@
     <Compile Include="Configuration\ConfigBootstrappingTests.cs" />
     <Compile Include="DataModel\Documents\DocumentCollectionTests.cs" />
     <Compile Include="DependencyInjection\SimpleInjector_using_PropertyInjection.cs" />
+    <Compile Include="DependencyInjection\Using_SimpleInjector_to_inject_Logger.cs" />
     <Compile Include="ElasticSearch\ManagementServiceTests.cs" />
     <Compile Include="ElasticSearch\Parser\KeywordParserTests.cs" />
     <Compile Include="FileSystem\ExcludeFileByExtensionFilterTests.cs" />
