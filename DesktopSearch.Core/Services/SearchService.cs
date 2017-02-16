@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace DesktopSearch.Core.Services
 {
-    public class SearchService : ISearchService
+    public class SearchService //: ISearchService
     {
         private readonly IElasticClient          _elastic;
         private readonly ElasticSearchConfig     _config;

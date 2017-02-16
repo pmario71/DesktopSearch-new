@@ -1,6 +1,7 @@
 ﻿using DesktopSearch.Core.Configuration;
 using DesktopSearch.Core.DataModel.Code;
 using DesktopSearch.Core.Lucene;
+using DesktopSearch.Core.Services;
 using Lucene.Net.Store;
 using Moq;
 using NUnit.Framework;
@@ -26,12 +27,14 @@ namespace DesktopSearch.Core.Tests.Lucene
             
 
             var sut = new CodeIndex(indexProviderMock.Object);
+            var sut2 = new LuceneSearchService(sut);
 
+            // index
             var td = new TypeDescriptor(ElementType.Class, "TestClass", Visibility.Public, "syngo.Common.Test", "c:\\temp\\filename.cs", 123, "Some commend");
             await sut.IndexAsync(new[] { td});
 
-
-            var results = sut.Search("name:test");
+            // search
+            var results = await sut2.SearchCodeAsync("name:test*");
 
             Console.WriteLine("Results");
             Console.WriteLine("-------");
@@ -39,6 +42,9 @@ namespace DesktopSearch.Core.Tests.Lucene
             {
                 Console.WriteLine($"{result.Name}");
             }
+
+            // Assert
+            Assert.AreEqual(1, results.Count());
         }
 
     }

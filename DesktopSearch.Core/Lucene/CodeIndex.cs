@@ -25,14 +25,19 @@ namespace DesktopSearch.Core.Lucene
         IEnumerable<TypeDescriptor> GetIndexedTypes();
     }
 
+    public interface ICodeSearch
+    {
+        QueryParser Parser { get; }
+        SearcherManager SearchManager { get; }
+    }
 
-    public class CodeIndex : ICodeIndexer, IDisposable
+
+    public class CodeIndex : ICodeIndexer, ICodeSearch, IDisposable
     {
         private readonly PerFieldAnalyzerWrapper _analyzer;
         private readonly IndexWriter _indexWriter;
         private readonly SearcherManager _searcherManager;
         private readonly QueryParser _queryParser;
-
 
         public CodeIndex(IIndexProvider indexProvider)
         {
@@ -63,6 +68,14 @@ namespace DesktopSearch.Core.Lucene
             _searcherManager?.Dispose();
         }
 
+        #region ICodeSearch implementation
+
+        public QueryParser Parser => _queryParser;
+
+        public SearcherManager SearchManager => _searcherManager;
+
+        #endregion
+
         public Task IndexAsync(IEnumerable<TypeDescriptor> extractedTypes)
         {
             return Task.Run(() =>
@@ -76,39 +89,6 @@ namespace DesktopSearch.Core.Lucene
                 _indexWriter.Flush(true, true);
                 _indexWriter.Commit();
             });
-        }
-
-        public IEnumerable<TypeDescriptor> Search(string queryString)
-        {
-            Console.WriteLine($"Number of docs stored: {_indexWriter.NumDocs()}");
-
-            var query = _queryParser.Parse(queryString);
-            //var query = new TermQuery(new Term(queryString));
-
-            var totalHits = 0;
-            var l = new List<TypeDescriptor>();
-
-            // Execute the search with a fresh indexSearcher
-            _searcherManager.MaybeRefreshBlocking();
-            _searcherManager.ExecuteSearch(searcher =>
-            {
-                var topDocs = searcher.Search(query, 10);
-                totalHits = topDocs.TotalHits;
-                foreach (var result in topDocs.ScoreDocs)
-                {
-                    var doc = searcher.Doc(result.Doc);
-                    l.Add(new TypeDescriptor(
-                        (ElementType)doc.GetField("elementtype").NumericValue,
-                        doc.GetField("name")?.StringValue,
-                        (Visibility)doc.GetField("visibility").NumericValue,
-                        doc.GetField("namespace").StringValue,
-                        doc.GetField("filepath").StringValue,
-                        (int)doc.GetField("linenr").NumericValue,
-                        doc.GetField("comment")?.StringValue));
-                }
-            }, exception => { Console.WriteLine(exception.ToString()); });
-                        
-            return l;
         }
 
         private static Directory FromConfig(IConfigAccess configuration)

@@ -9,6 +9,8 @@ using System.Linq;
 using System.Management.Automation;
 using System.Text;
 using System.Threading.Tasks;
+using DesktopSearch.Core.DataModel.Code;
+using System.Diagnostics;
 
 namespace DesktopSearch.PS.Cmdlets
 {
@@ -18,12 +20,12 @@ namespace DesktopSearch.PS.Cmdlets
     [Cmdlet(VerbsCommon.Search, "DS")]
     public class SearchDSCmdlet : PSCmdlet
     {
-        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0)]
+        [Parameter(Mandatory = true, ValueFromPipeline = true, Position = 0, ParameterSetName = "Code")]
         [ValidateNotNullOrEmpty]
-        public string SearchString { get; set; }
+        public string SearchCode { get; set; }
 
-        //[Parameter(Mandatory = true)]
-        //public string Path { get; set; }
+        [Parameter(Mandatory = false, ParameterSetName = "Code")]
+        public ElementType? ElementType { get; set; }
 
         #region Dependencies
         [Import]
@@ -32,14 +34,16 @@ namespace DesktopSearch.PS.Cmdlets
 
         protected override void BeginProcessing()
         {
+            AppConfig.EnableLocalAssemblyResolution();
             this.Compose();
         }
 
         protected override void ProcessRecord()
         {
+            var sw = Stopwatch.StartNew();
             AsyncPump.Run(async () =>
             {
-                var results = await this.SearchService.SearchDocumentAsync(this.SearchString);
+                var results = await this.SearchService.SearchCodeAsync(this.SearchCode, this.ElementType);
                     
                 if (!results.Any())
                 {
@@ -48,6 +52,7 @@ namespace DesktopSearch.PS.Cmdlets
                 else
                     WriteObject(results, enumerateCollection: true);
             });
+            WriteVerbose($"Search took: {sw.ElapsedMilliseconds} [ms]");
         }
 
         protected override void EndProcessing()

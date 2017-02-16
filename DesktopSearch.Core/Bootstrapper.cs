@@ -69,13 +69,11 @@ namespace DesktopSearch.Core
             container.Register<Core.Services.IDocumentCollectionPersistence, Core.Services.DocumentCollectionConfigStore>(Lifestyle.Singleton);
             container.Register<Core.Services.IDocumentCollectionRepository, Core.Services.DocumentCollectionRepository>(Lifestyle.Singleton);
 
-            container.Register<Core.Services.ISearchService, Core.Services.SearchService>(Lifestyle.Singleton);
+            container.Register<Core.Services.ISearchService, Services.LuceneSearchService>(Lifestyle.Singleton);  // Core.Services.SearchService
 
             container.Register<Core.Services.IIndexingService, Core.Services.IndexingService>(Lifestyle.Singleton);
 
             container.Register<Core.Processors.CodeFolderProcessor>(Lifestyle.Singleton);
-            container.Register<Lucene.ICodeIndexer, Lucene.CodeIndex>(Lifestyle.Singleton);
-
             container.Register<Core.Processors.DocumentFolderProcessor>(Lifestyle.Singleton);
 
             container.Register<ICurrentDirectoryProvider, DefaultDirectoryProvider>(Lifestyle.Singleton);
@@ -83,6 +81,11 @@ namespace DesktopSearch.Core
 
             container.Register<Core.Configuration.IConfigAccess, Core.Configuration.ConfigAccess>(Lifestyle.Singleton);
             container.Register<Lucene.IIndexProvider, Lucene.IndexProvider>(Lifestyle.Singleton);
+
+            //container.Register<Lucene.ICodeIndexer, Lucene.CodeIndex>(Lifestyle.Singleton);
+            var registration = Lifestyle.Singleton.CreateRegistration<Lucene.CodeIndex>(container);
+            container.AddRegistration(typeof(Lucene.ICodeIndexer), registration);
+            container.AddRegistration(typeof(Lucene.ICodeSearch), registration);
 
             //var ca = new ContainerAccess(container);
             //container.ComposeExportedValue<IContainer>(ca);

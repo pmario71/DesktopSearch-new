@@ -292,6 +292,7 @@
     <Compile Include="Services\IIndexingService.cs" />
     <Compile Include="Services\IndexingService.cs" />
     <Compile Include="Services\ISearchService.cs" />
+    <Compile Include="Services\LuceneSearchService.cs" />
     <Compile Include="Services\SearchService.cs" />
     <Compile Include="Extractors\CodeExtractorSelector.cs" />
     <Compile Include="Extractors\IExtractor.cs" />
@@ -325,6 +326,7 @@
     <Compile Include="Tagging\Tagger.cs" />
     <Compile Include="Utils\Async\AggregatingProgressReporter.cs" />
     <Compile Include="Utils\CollectionExtensions.cs" />
+    <Compile Include="Utils\Utils\TermHelper.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

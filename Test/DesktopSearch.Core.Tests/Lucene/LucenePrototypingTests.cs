@@ -1,4 +1,5 @@
 ﻿using DesktopSearch.Core.DataModel.Code;
+using DesktopSearch.Core.Lucene.Utils;
 using Lucene.Net.Analysis;
 using Lucene.Net.Analysis.Core;
 using Lucene.Net.Analysis.Miscellaneous;
@@ -59,10 +60,8 @@ namespace DesktopSearch.Core.Tests.Lucene
             Assert.AreEqual(1, Query(searcherManager, qp.Parse("some*")));
 
             // ----------------------------------------------------------------------
-            BytesRef bytes = new BytesRef(NumericUtils.BUF_SIZE_INT);
-            NumericUtils.IntToPrefixCoded(0, 0, bytes);
-            Term term = new Term("elementtype", bytes);
-            Assert.AreEqual(1, Query(searcherManager, new TermQuery(term)));  // not working
+            var term = TermHelper.FromInt(0);
+            Assert.AreEqual(1, Query(searcherManager, new TermQuery(term)));
 
             // ----------------------------------------------------------------------
             Assert.AreEqual(1, Query(searcherManager, NumericRangeQuery.NewIntRange("elementtype", 0, 0, true, true)));
