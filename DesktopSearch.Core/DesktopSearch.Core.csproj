@@ -280,7 +280,8 @@
     <Compile Include="Lucene\Analyzers\LowercaseKeywordAnalyzer.cs" />
     <Compile Include="Lucene\Analyzers\RepositoryNamesAnalyzer.cs" />
     <Compile Include="Lucene\CodeIndex.cs" />
-    <Compile Include="Lucene\DocumentConverter.cs" />
+    <Compile Include="Contracts\CodeStatistics.cs" />
+    <Compile Include="Lucene\DocumentExtensions.cs" />
     <Compile Include="Lucene\IndexProvider.cs" />
     <Compile Include="Services\DocumentCollectionConfigStore.cs" />
     <Compile Include="Services\DocumentCollectionElasticStore.cs" />
@@ -290,6 +291,8 @@
     <Compile Include="Services\IDocumentCollectionRepository.cs" />
     <Compile Include="Services\IIndexingService.cs" />
     <Compile Include="Services\IndexingService.cs" />
+    <Compile Include="Contracts\IndexStatistics.cs" />
+    <Compile Include="Services\IndexingStatisticsService.cs" />
     <Compile Include="Services\ISearchService.cs" />
     <Compile Include="Services\LuceneSearchService.cs" />
     <Compile Include="Services\SearchService.cs" />

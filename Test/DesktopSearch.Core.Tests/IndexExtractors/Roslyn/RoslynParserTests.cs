@@ -283,6 +283,30 @@ namespace CodeSearchTests.Indexing.Roslyn
             Assert.IsNotEmpty(extractedTypes.First().Comment);
         }
 
+        [Test]
+        public void Generics_supported()
+        {
+            const string csharp = @"   using System; using System.Collections.Generic; 
+                                       using System.Text; 
+                                       namespace HelloWorld 
+                                       { 
+                                           public class Program 
+                                           { 
+                                           }
+                                           
+                                           public class Program<T>
+                                           { 
+                                           }
+                                       }";
+
+            var parser = new RoslynParser();
+            var extractedTypes = parser.ExtractTypes(csharp);
+
+            Assert.AreEqual(2, extractedTypes.Count());
+
+            var fieldDescriptor = extractedTypes.ElementAt(1).Name == "Program<T>";
+        }
+
         //[Test(Skip="Access to drives not supported by .net core")]
         //public void PerformanceTest()
         //{
@@ -293,7 +317,7 @@ namespace CodeSearchTests.Indexing.Roslyn
         //    }
 
         //    IEnumerable<string> files = Directory.GetFiles(folderToParse, "*", SearchOption.AllDirectories).FilterByExtension();
-            
+
         //    var parser = new RoslynParser();
 
         //    var sw = Stopwatch.StartNew();
@@ -311,13 +335,13 @@ namespace CodeSearchTests.Indexing.Roslyn
         //    {
         //        Console.WriteLine("found: {0} - {1} - {2}", Enum.GetName(typeof(ElementType), typeDescriptor.ElementType), typeDescriptor.Name, typeDescriptor.FilePath);    
         //    }
-            
+
         //    Console.WriteLine("finding took: {0} [ms]", sw.ElapsedMilliseconds);
 
 
         //    Console.WriteLine("\r\nStoring types to Lucene");
         //    var luceneHost = new LuceneHost(new RAMDirectory());
-            
+
         //    sw.Start();
         //    luceneHost.IndexTypes(extractedTypes);
         //    sw.Stop();
@@ -333,7 +357,7 @@ namespace CodeSearchTests.Indexing.Roslyn
         //    {
         //        doc.Dump();
         //    }
-            
+
         //    luceneHost.Dispose();
         //}
     }

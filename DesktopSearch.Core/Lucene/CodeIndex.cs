@@ -15,12 +15,15 @@ using System.Threading.Tasks;
 using DesktopSearch.Core.DataModel.Code;
 using Lucene.Net.Documents;
 using DesktopSearch.Core.Configuration;
+using DesktopSearch.Core.Contracts;
 
 namespace DesktopSearch.Core.Lucene
 {
     public interface ICodeIndexer
     {
         Task IndexAsync(IEnumerable<TypeDescriptor> extractedTypes);
+
+        Task GetStatistics(IndexStatistics stat);
 
         IEnumerable<TypeDescriptor> GetIndexedTypes();
     }
@@ -82,8 +85,8 @@ namespace DesktopSearch.Core.Lucene
             {
                 foreach (var item in extractedTypes)
                 {
-                    var doc = DocumentConverter.From(item);
-                    _indexWriter.UpdateDocument(new Term("id", DocumentConverter.GetTypeID(item)), doc);
+                    var doc = item.From();
+                    _indexWriter.UpdateDocument(new Term("id", item.GetTypeID()), doc);
                 }
 
                 _indexWriter.Flush(true, true);
@@ -109,18 +112,43 @@ namespace DesktopSearch.Core.Lucene
                 foreach (var result in topDocs.ScoreDocs)
                 {
                     var doc = searcher.Doc(result.Doc);
-                    l.Add(new TypeDescriptor(
-                        (ElementType)doc.GetField("elementtype").NumericValue,
-                        doc.GetField("name")?.StringValue,
-                        (Visibility)doc.GetField("visibility").NumericValue,
-                        doc.GetField("namespace").StringValue,
-                        doc.GetField("filepath").StringValue,
-                        (int)doc.GetField("linenr").NumericValue,
-                        doc.GetField("comment")?.StringValue));
+                    l.Add(doc.ToTypeDescriptor());
                 }
             }, exception => { Console.WriteLine(exception.ToString()); });
 
             return l;
+        }
+
+        public Task GetStatistics(IndexStatistics stat)
+        {
+            return Task.Run(() =>
+            {
+                var cs = new CodeStatistics();
+
+                int[] typeHistogram = new int[Enum.GetNames(typeof(ElementType)).Length];
+                long apis = 0;
+
+                IndexReader reader = _indexWriter.GetReader(true);
+                for (int i = 0; i < reader.MaxDoc; i++)
+                {
+                    Document doc = reader.Document(i);
+                    var td = doc.ToTypeDescriptor();
+
+                    typeHistogram[(int)td.ElementType]++;
+
+                    if (td.APIDefinition == API.Yes)
+                        apis++;
+                }
+                cs.Classes    = typeHistogram[(int)ElementType.Class];
+                cs.Interfaces = typeHistogram[(int)ElementType.Interface];
+                cs.Enums      = typeHistogram[(int)ElementType.Enum];
+                cs.Structs    = typeHistogram[(int)ElementType.Struct];
+                cs.Activities = typeHistogram[(int)ElementType.Activity];
+
+                cs.Types = typeHistogram.Sum();
+                cs.APIs  = apis;
+                stat.Code = cs;
+            });
         }
     }
 

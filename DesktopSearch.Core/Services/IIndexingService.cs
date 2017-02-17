@@ -1,4 +1,5 @@
-﻿using DesktopSearch.Core.DataModel.Documents;
+﻿using DesktopSearch.Core.Contracts;
+using DesktopSearch.Core.DataModel.Documents;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
