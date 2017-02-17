@@ -246,7 +246,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Bootstrapper.cs" />
-    <Compile Include="Configuration\CodeSearch.cs" />
     <Compile Include="Configuration\ConfigAccess.cs" />
     <Compile Include="Configuration\ConfigBootstrapping.cs" />
     <Compile Include="Configuration\IConfigAccess.cs" />

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace DesktopSearch.PS.Cmdlets
 {
     [Cmdlet(VerbsCommon.Get, "DSDocumentCollection")]
-    public class GetDSDocumentCollection : PSCmdlet
+    public class GetDSDocumentCollectionCmdlet : PSCmdlet
     {
         #region Dependencies
         [Import]
