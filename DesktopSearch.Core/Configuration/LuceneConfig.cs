@@ -13,6 +13,9 @@ namespace DesktopSearch.Core.Configuration
         [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
         private Uri _elasticSearchUri;
 
+        [JsonProperty]
+        Tools _Tools;
+
         public LuceneConfig()
         {
             this.IndexDirectory = "Indices\\";
@@ -46,5 +49,40 @@ namespace DesktopSearch.Core.Configuration
 
         [JsonProperty]
         public DocumentCollection[] DocumentCollections { get; set; }
+
+        public Tools Tools
+        {
+            get
+            {
+                if (_Tools == null)
+                {
+                    _Tools = new Tools();
+                }
+                return _Tools;
+            }
+        }
+    }
+
+    public class Tools
+    {
+        [JsonProperty]
+        private string _luke;
+
+        public string Luke
+        {
+            get => _luke;
+            set
+            {
+                if (!File.Exists(value))
+                {
+                    throw new ArgumentException($"File does not exist: {value}!");
+                }
+                if (Path.GetExtension(value).ToLower() != ".jar" || !Path.GetFileNameWithoutExtension(value).ToLower().Contains("luke"))
+                {
+                    throw new ArgumentException($"'{Path.GetFileName(value)}' does not seem to be a valid Luke version!");
+                }
+                _luke = value;
+            }
+        }
     }
 }
