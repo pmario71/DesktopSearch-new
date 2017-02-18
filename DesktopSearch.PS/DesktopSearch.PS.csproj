@@ -286,6 +286,7 @@
   <ItemGroup>
     <Compile Include="Cmdlets\AddDSDocumentCollectionCmdlet.cs" />
     <Compile Include="Cmdlets\AddDSFolderToDocumentCollectionCmdlet.cs" />
+    <Compile Include="Cmdlets\OpenDSCodeCmdlet.cs" />
     <Compile Include="Cmdlets\ClearDSIndexCmdlet.cs" />
     <Compile Include="Cmdlets\EditTagCmdlet.cs" />
     <Compile Include="Cmdlets\GetDSDocumentCollectionCmdlet.cs" />
