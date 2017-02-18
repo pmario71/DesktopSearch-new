@@ -25,7 +25,7 @@ namespace DesktopSearch.PS
         [Parameter(Mandatory = true, HelpMessage = "Name of the DocumentCollection for which an additional folder shall be added.")]
         public string DocumentCollectionName { get; set; }
 
-        [Parameter(Mandatory = false, HelpMessage = "Name of the Document Repository for which an additional folder shall be added.")]
+        [Parameter(Mandatory = false, HelpMessage = "Name of the Document Indexer for which an additional folder shall be added.")]
         public IndexingStrategy? IndexingStrategy { get; set; }
 
         [Parameter(Mandatory = true, HelpMessage = "Folder path to add.")]

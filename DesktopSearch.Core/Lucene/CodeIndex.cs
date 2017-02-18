@@ -23,6 +23,8 @@ namespace DesktopSearch.Core.Lucene
     {
         Task IndexAsync(IEnumerable<TypeDescriptor> extractedTypes);
 
+        Task DeleteAllEntries();
+
         Task GetStatistics(IndexStatistics stat);
 
         IEnumerable<TypeDescriptor> GetIndexedTypes();
@@ -49,6 +51,7 @@ namespace DesktopSearch.Core.Lucene
             _analyzer = new PerFieldAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48),
                 new Dictionary<string, Analyzer>
                 {
+                    {"name", new Analyzers.CamelCaseAnalyzer()},
                     {"comment", new StandardAnalyzer(LuceneVersion.LUCENE_48)},
                 });
 
@@ -60,7 +63,7 @@ namespace DesktopSearch.Core.Lucene
                 IndexWriter.Unlock(indexDirectory);
             }
 
-            _indexWriter = new IndexWriter(indexDirectory, new IndexWriterConfig(LuceneVersion.LUCENE_48, new StandardAnalyzer(LuceneVersion.LUCENE_48)));
+            _indexWriter = new IndexWriter(indexDirectory, new IndexWriterConfig(LuceneVersion.LUCENE_48, _analyzer));
             _searcherManager = new SearcherManager(_indexWriter, applyAllDeletes:true);
         }
 
@@ -83,6 +86,8 @@ namespace DesktopSearch.Core.Lucene
         {
             return Task.Run(() =>
             {
+                RemoveDeletedFiles();
+
                 foreach (var item in extractedTypes)
                 {
                     var doc = item.From();
@@ -92,6 +97,30 @@ namespace DesktopSearch.Core.Lucene
                 _indexWriter.Flush(true, true);
                 _indexWriter.Commit();
             });
+        }
+
+        public Task DeleteAllEntries()
+        {
+            return Task.Run(() =>
+            {
+                _indexWriter.DeleteAll();
+                _indexWriter.Flush(true, true);
+                _indexWriter.Commit();
+            });
+        }
+
+        private void RemoveDeletedFiles()
+        {
+            IndexReader reader = _indexWriter.GetReader(true);
+            for (int i = 0; i < reader.MaxDoc; i++)
+            {
+                Document doc = reader.Document(i);
+                var file = doc.GetField("filepath").StringValue;
+                if (!System.IO.File.Exists(file))
+                {
+                    _indexWriter.DeleteDocuments(new Term("id", doc.GetField("id").StringValue));
+                }
+            }
         }
 
         private static Directory FromConfig(IConfigAccess configuration)

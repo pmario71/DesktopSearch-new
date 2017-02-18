@@ -338,6 +338,7 @@
     <None Include="Configuration\Configuration.md" />
     <None Include="CreatePackage.cmd" />
     <None Include="Designspec.md" />
+    <None Include="Lucene\Analyzers\Tokenizers.md" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

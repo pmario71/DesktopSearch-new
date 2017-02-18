@@ -20,7 +20,6 @@ namespace DesktopSearch.PS
         [Parameter(Mandatory = false, HelpMessage = "Name of the DocumentCollection(s) for which the index shall be synced, otherwise all configured repositories are used.")]
         public string DocumentCollectionName { get; set; }
 
-
         #region Dependencies
 
         [Import]
