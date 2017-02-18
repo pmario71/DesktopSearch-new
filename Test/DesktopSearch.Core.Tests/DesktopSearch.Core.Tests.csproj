@@ -274,6 +274,8 @@
     <Compile Include="IndexExtractors\Roslyn\RoslynParserTests.cs" />
     <Compile Include="IndexExtractors\Roslyn\RoslynParser_APIFlag_extracted_from_methods_and_properties.cs" />
     <Compile Include="IndexExtractors\Roslyn\RoslynParser_DefinedTypes_Tests.cs" />
+    <Compile Include="Lucene\CamelCaseTokenizingTests.cs" />
+    <None Include="Lucene\ConsecutiveCharTokenizer.cs" />
     <Compile Include="Lucene\CodeIndexTests.cs" />
     <Compile Include="Lucene\LucenePrototypingTests.cs" />
     <Compile Include="Processors\DocumentFolderProcessorTests.cs" />

@@ -32,7 +32,7 @@ namespace DesktopSearch.Core.Utils.Async
         public AggregatingProgressReporter(Action<int> progressReportCallback)
         {
             if (progressReportCallback == null)
-                throw new ArgumentNullException("progressReportCallback");
+                throw new ArgumentNullException(nameof(progressReportCallback));
 
             _context = SynchronizationContextHelpers.CurrentOrDefault;
             _progressReportCallback = progressReportCallback;
@@ -82,7 +82,7 @@ namespace DesktopSearch.Core.Utils.Async
             void IProgress<int>.Report(int value)
             {
                 if (value < 0 || value > 100)
-                    throw new ArgumentOutOfRangeException("Reported value must be between [0-100]!");
+                    throw new ArgumentOutOfRangeException(nameof(value), "Reported value must be between [0-100]!");
 
                 _aggregator.Report(_id, value);
             }

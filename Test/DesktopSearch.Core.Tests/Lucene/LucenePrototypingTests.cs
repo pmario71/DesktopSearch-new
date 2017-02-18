@@ -12,7 +12,6 @@ using Lucene.Net.Store;
 using Lucene.Net.Util;
 using NUnit.Framework;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,7 +19,7 @@ using System.Threading.Tasks;
 namespace DesktopSearch.Core.Tests.Lucene
 {
     [TestFixture]
-    public class LucenePrototypingTests
+    public partial class LucenePrototypingTests
     {
         Analyzer _analyzer = new StandardAnalyzer(LuceneVersion.LUCENE_48);
 
@@ -36,18 +35,19 @@ namespace DesktopSearch.Core.Tests.Lucene
 
             string name = "SomeTestClass";
             var doc = new Document
-                    {
-                        new TextField("name", name, Field.Store.YES),
-                        new IntField("elementtype", (int)ElementType.Class, Field.Store.YES),
-                        new TextField("comment", comment, Field.Store.YES),
-                    };
+            {
+                new TextField("name", name, Field.Store.YES),
+                new IntField("elementtype", (int) ElementType.Class, Field.Store.YES),
+                new TextField("comment", comment, Field.Store.YES),
+            };
             indexWriter.UpdateDocument(new Term("name", name), doc);
 
             indexWriter.Flush(true, true);
             indexWriter.Commit();
 
 
-            var qp = new MultiFieldQueryParser(LuceneVersion.LUCENE_48, new[] { "name", "elementtype", "comment" }, _analyzer);
+            var qp = new MultiFieldQueryParser(LuceneVersion.LUCENE_48, new[] {"name", "elementtype", "comment"},
+                _analyzer);
 
 
             // ----------------------------------------------------------------------
@@ -67,11 +67,13 @@ namespace DesktopSearch.Core.Tests.Lucene
             Assert.AreEqual(1, Query(searcherManager, NumericRangeQuery.NewIntRange("elementtype", 0, 0, true, true)));
         }
 
-        private int Query(SearcherManager _searcherManager, Query query)
+        
+
+        public static int Query(SearcherManager searcherManager, Query query)
         {
             int nResults = 0;
-            _searcherManager.MaybeRefreshBlocking();
-            _searcherManager.ExecuteSearch(searcher =>
+            searcherManager.MaybeRefreshBlocking();
+            searcherManager.ExecuteSearch(searcher =>
             {
                 var topDocs = searcher.Search(query, 10);
                 nResults = topDocs.TotalHits;
