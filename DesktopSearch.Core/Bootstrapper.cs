@@ -8,6 +8,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DesktopSearch.Core.Utils;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -87,6 +88,9 @@ namespace DesktopSearch.Core
             container.AddRegistration(typeof(Lucene.ICodeSearch), registration);
 
             container.Register<Services.IIndexingStatistics, Services.IndexingStatisticsService>(Lifestyle.Singleton);
+
+            container.Register<IPerformance, Performance>(Lifestyle.Singleton);
+            
             //var ca = new ContainerAccess(container);
             //container.ComposeExportedValue<IContainer>(ca);
         }

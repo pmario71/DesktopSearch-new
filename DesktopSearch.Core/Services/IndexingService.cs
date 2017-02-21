@@ -11,7 +11,7 @@ using DesktopSearch.Core.Contracts;
 
 namespace DesktopSearch.Core.Services
 {
-    public class IndexingService : IIndexingService
+    internal class IndexingService : IIndexingService
     {
         private Dictionary<IndexingStrategy, IFolderProcessor> _map;
         private IDocumentCollectionRepository _documentCollectionRepository;

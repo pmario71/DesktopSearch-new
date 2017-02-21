@@ -32,6 +32,7 @@ namespace DesktopSearch.PS
 
         protected override void BeginProcessing()
         {
+            AppConfig.EnableLocalAssemblyResolution();
             this.Compose();
         }
 

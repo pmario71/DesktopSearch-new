@@ -70,6 +70,13 @@ Settings settings = ConfigAccess.Get();
 
 ## Performance
 
+### File IO
+
+* reading file using File.ReadAllText() outperforms async IO by far
+* parallelizing file IO works great (10 seems to be optimal)
+
+### Tika
+
 Measuring over standalone Tika container and version running together with ElasticSearch shows that memory is critical
 
 |   | Doc1  | Doc2| Doc1  | Doc2  |

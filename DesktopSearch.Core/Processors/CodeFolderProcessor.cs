@@ -11,17 +11,21 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using DesktopSearch.Core.Utils;
 
 namespace DesktopSearch.Core.Processors
 {
-    public class CodeFolderProcessor : IFolderProcessor
+    internal class CodeFolderProcessor : IFolderProcessor
     {
-        private ICodeIndexer _codeIndexer;
+        private readonly ICodeIndexer _codeIndexer;
+        private readonly IPerformance _performance;
 
-        public CodeFolderProcessor(ICodeIndexer codeIndexer)
+        public CodeFolderProcessor(ICodeIndexer codeIndexer, Utils.IPerformance performance)
         {
             _codeIndexer = codeIndexer;
+            _performance = performance;
         }
 
         public Task ProcessAsync(IFolder folder)
@@ -48,7 +52,7 @@ namespace DesktopSearch.Core.Processors
         {
             var parser = new RoslynParser();
             var stopWatch = Stopwatch.StartNew();
-            var sourceFiles = new BlockingCollection<SourceFile>(100);
+            var sourceFiles = new BlockingCollection<SourceFile>(10);
 
             int current = 0;
             long typesExtracted = 0;
@@ -57,15 +61,27 @@ namespace DesktopSearch.Core.Processors
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             var reader = Task.Run(() =>
             {
-                Parallel.ForEach(filesToParse, file =>
+                var filesReadCounter = _performance.GetCounter(IndexingCounters.FilesRead);
+                filesReadCounter.ReadOnly = false;
+
+                Parallel.ForEach(filesToParse,
+                                 new ParallelOptions { MaxDegreeOfParallelism = 10 },
+                                 file =>
                 {
-                    //TODO: async io goes here
-                    var sourceFile = new SourceFile(file, File.ReadAllText(file));
+                    var readAllText = File.ReadAllText(file);
+                    var sourceFile = new SourceFile(file, readAllText);
                     sourceFiles.Add(sourceFile);
+                    filesReadCounter.Increment();
                 });
+                filesReadCounter.Dispose();
                 sourceFiles.CompleteAdding();
             });
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+
+            var filesParsedCounter = _performance.GetCounter(IndexingCounters.FilesParsed);
+            filesParsedCounter.ReadOnly = false;
+            var filesIndexedCounter = _performance.GetCounter(IndexingCounters.FilesIndexed);
+            filesIndexedCounter.ReadOnly = false;
 
             foreach (var sourceFile in sourceFiles.GetConsumingEnumerable())
             {
@@ -74,17 +90,18 @@ namespace DesktopSearch.Core.Processors
                 try
                 {
                     extractedTypes = parser.ExtractTypes(sourceFile.Content, sourceFile.Path);
+                    filesParsedCounter.Increment();
 
                     await _codeIndexer.IndexAsync(extractedTypes);
+                    filesIndexedCounter.Increment();
 
                     typesExtracted += extractedTypes.Count();
                 }
                 catch (Exception ex)
                 {
-                    {
-                        //WriteError(new ErrorRecord(innerException, "idx", ErrorCategory.NotSpecified, this));
-                        //TODO: Log errors
-                    }
+                    Console.WriteLine($"Error parsing file: {sourceFile.Path}");
+                    //WriteError(new ErrorRecord(innerException, "idx", ErrorCategory.NotSpecified, this));
+                    //TODO: Log errors
                 }
 
                 ++current;
@@ -93,8 +110,13 @@ namespace DesktopSearch.Core.Processors
                     progress.Report((int)(current * 100 / (double)maxFiles));
                 }
             }
+
+            filesIndexedCounter.Dispose();
+            filesParsedCounter.Dispose();
+
             System.Diagnostics.Debug.Assert(reader.IsCompleted);
         }
+
         internal struct SourceFile
         {
             public readonly string Path;
@@ -105,6 +127,18 @@ namespace DesktopSearch.Core.Processors
                 Path = path;
                 Content = content;
             }
+        }
+
+        static async Task<string> ReadAllFileAsync(string filename)
+        {
+            using (var file = new FileStream(filename, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, true))
+            {
+                byte[] buff = new byte[file.Length];
+                await file.ReadAsync(buff, 0, (int)file.Length);
+
+                return Encoding.UTF8.GetString(buff);
+            }
+            
         }
     }
 }

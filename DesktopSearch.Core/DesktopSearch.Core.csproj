@@ -331,6 +331,8 @@
     <Compile Include="Tagging\Tagger.cs" />
     <Compile Include="Utils\Async\AggregatingProgressReporter.cs" />
     <Compile Include="Utils\CollectionExtensions.cs" />
+    <Compile Include="Utils\EnumExt.cs" />
+    <Compile Include="Utils\Performance.cs" />
     <Compile Include="Utils\Utils\TermHelper.cs" />
   </ItemGroup>
   <ItemGroup>
