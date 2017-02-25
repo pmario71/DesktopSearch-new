@@ -87,6 +87,8 @@ namespace DesktopSearch.Core
             container.AddRegistration(typeof(Lucene.ICodeIndexer), registration);
             container.AddRegistration(typeof(Lucene.ICodeSearch), registration);
 
+            container.Register<Lucene.IDocumentIndexer, Lucene.DocumentIndexer>(Lifestyle.Singleton);
+
             container.Register<Services.IIndexingStatistics, Services.IndexingStatisticsService>(Lifestyle.Singleton);
 
             container.Register<IPerformance, Performance>(Lifestyle.Singleton);
