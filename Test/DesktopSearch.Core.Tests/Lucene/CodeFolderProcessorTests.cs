@@ -72,7 +72,7 @@ namespace DesktopSearch.Core.Tests.Lucene
             //TODO: add files as Content
             var fname = @"c:\Projects\Scratch\WPFToolkit\WpfToolkit\DataVisualization";
 
-            var sut = new CodeFolderProcessor(new CodeIndex(new InMemoryIndexProvider()), new Performance());
+            var sut = new CodeFolderProcessor(new CodeIndexer(new InMemoryIndexProvider()), new Performance());
 
             var logger = new LoggingInterceptor<CodeFolderProcessor>(ignoreInfoLevel:true);
             sut.OverrideLogger = logger;
@@ -92,7 +92,7 @@ namespace DesktopSearch.Core.Tests.Lucene
         [Test,Explicit]
         public async Task PerformanceTests()
         {
-            var sut = new CodeFolderProcessor(new CodeIndex(new InMemoryIndexProvider()), new Performance());
+            var sut = new CodeFolderProcessor(new CodeIndexer(new InMemoryIndexProvider()), new Performance());
 
             var logger = new LoggingInterceptor<CodeFolderProcessor>();
             sut.OverrideLogger = logger;

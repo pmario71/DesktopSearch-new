@@ -83,7 +83,7 @@ namespace DesktopSearch.Core
             container.Register<Core.Configuration.IConfigAccess, Core.Configuration.ConfigAccess>(Lifestyle.Singleton);
             container.Register<Lucene.IIndexProvider, Lucene.IndexProvider>(Lifestyle.Singleton);
 
-            var registration = Lifestyle.Singleton.CreateRegistration<Lucene.CodeIndex>(container);
+            var registration = Lifestyle.Singleton.CreateRegistration<Lucene.CodeIndexer>(container);
             container.AddRegistration(typeof(Lucene.ICodeIndexer), registration);
             container.AddRegistration(typeof(Lucene.ICodeSearch), registration);
 

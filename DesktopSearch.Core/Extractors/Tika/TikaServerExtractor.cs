@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
 using Newtonsoft.Json;
@@ -51,10 +52,19 @@ namespace DesktopSearch.Core.Extractors.Tika
         {
             var ts = Stopwatch.StartNew();
 
-            var content = await SendToTikaAsync(filePath);
-            var doc = await ConvertToDocumentAsync(filePath, content);
+            var tikaResult = await SendToTikaAsync(filePath);
 
-            doc.ExtractionDuration = ts.Elapsed;
+            //TODO: switch to DocumentExtensions
+            DocDescriptor doc;
+            if (tikaResult.Error == ErrorState.UnsupportedFileType)
+            {
+                doc = DocDescriptor.UnsupportedFileType(filePath.FullName);
+            }
+            else
+            {
+                doc = await ConvertToDocumentAsync(filePath, tikaResult);
+                doc.ExtractionDuration = ts.Elapsed;
+            }
 
             return doc;
         }
@@ -69,13 +79,23 @@ namespace DesktopSearch.Core.Extractors.Tika
             try
             {
                 var msg = await this.SendFileAsync(filePath);
+
+                if (msg.StatusCode == HttpStatusCode.UnsupportedMediaType)
+                {
+                    return TikaRawResult.FromError(ErrorState.UnsupportedFileType);
+                }
+                if (msg.StatusCode != HttpStatusCode.OK)
+                {
+                    throw new IndexExtractionException("No valid response from Tika Service!", filePath.FullName, ExtractionFailureType.TikaReturnedNoResults);
+                }
+
                 var content = await msg.Content.ReadAsStringAsync();
 
                 if (string.IsNullOrEmpty(content))
                 {
                     throw new IndexExtractionException("No valid response from Tika Service!", filePath.FullName, ExtractionFailureType.TikaReturnedNoResults);
                 }
-                return new TikaRawResult(content);
+                return TikaRawResult.FromContent(content);
             }
             catch(Exception ex)
             {

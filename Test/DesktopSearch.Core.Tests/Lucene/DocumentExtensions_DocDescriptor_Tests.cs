@@ -57,6 +57,21 @@ namespace DesktopSearch.Core.Tests.Lucene
             Assert.AreEqual(DocumentExtensions.EmptyArray, descriptor.Keywords);
         }
 
+        [Test]
+        public void Ensure_that_author_is_optional()
+        {
+            //Arrange
+            DocDescriptor docDescriptor = GetFilledDocDescriptor();
+            docDescriptor.Author = string.Empty;
+
+            //Act
+            var document = DocumentExtensions.FromDocDescriptor(docDescriptor);
+            var descriptor = DocumentExtensions.ToDocDescriptor(document);
+
+            //Assert
+            Assert.AreEqual(string.Empty, descriptor.Author);
+        }
+
         private static DocDescriptor GetFilledDocDescriptor()
         {
             return new DocDescriptor

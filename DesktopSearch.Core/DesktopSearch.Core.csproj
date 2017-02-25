@@ -282,7 +282,7 @@
     <Compile Include="Lucene\Analyzers\ConsecutiveCharTokenizer.cs" />
     <Compile Include="Lucene\Analyzers\LowercaseKeywordAnalyzer.cs" />
     <Compile Include="Lucene\Analyzers\RepositoryNamesAnalyzer.cs" />
-    <Compile Include="Lucene\CodeIndex.cs" />
+    <Compile Include="Lucene\CodeIndexer.cs" />
     <Compile Include="Contracts\CodeStatistics.cs" />
     <Compile Include="Lucene\DocumentExtensions.cs" />
     <Compile Include="Lucene\DocumentIndexer.cs" />

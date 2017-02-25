@@ -26,7 +26,7 @@ namespace DesktopSearch.Core.Tests.Lucene
                              .Returns(new RAMDirectory());
             
 
-            var sut = new CodeIndex(indexProviderMock.Object);
+            var sut = new CodeIndexer(indexProviderMock.Object);
             var sut2 = new LuceneSearchService(sut);
 
             // index

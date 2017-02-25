@@ -37,14 +37,14 @@ namespace DesktopSearch.Core.Lucene
     }
 
 
-    public class CodeIndex : ICodeIndexer, ICodeSearch, IDisposable
+    public class CodeIndexer : ICodeIndexer, ICodeSearch, IDisposable
     {
         private readonly PerFieldAnalyzerWrapper _analyzer;
         private readonly IndexWriter             _indexWriter;
         private readonly SearcherManager         _searcherManager;
         private readonly QueryParser             _queryParser;
 
-        public CodeIndex(IIndexProvider indexProvider)
+        public CodeIndexer(IIndexProvider indexProvider)
         {
             var indexDirectory = indexProvider.GetIndexDirectory(IndexType.Code);
 

@@ -1,6 +1,7 @@
 ﻿using Nest;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -44,9 +45,25 @@ namespace DesktopSearch.Core.DataModel.Documents
 
         public TimeSpan ExtractionDuration { get; set; }
 
+        public ErrorState Error { get; private set; }
+
         public override string ToString()
         {
             return $"{Path} -- {LastModified} --  {Keywords}";
         }
+
+        public static DocDescriptor UnsupportedFileType(string filePath)
+        {
+            var doc = new DocDescriptor();
+            doc.Path = filePath;
+            doc.Error = ErrorState.UnsupportedFileType;
+            return doc;
+        }
+    }
+
+    public enum ErrorState
+    {
+        None,
+        UnsupportedFileType,
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -24,6 +25,7 @@ namespace DesktopSearch.Core.Lucene
         //Task GetStatistics(IndexStatistics stat);
 
         //IEnumerable<TypeDescriptor> GetIndexedTypes();
+        IEnumerable<string> GetIndexedDocuments();
     }
 
     internal sealed class DocumentIndexer : IDocumentIndexer, IDisposable
@@ -41,8 +43,8 @@ namespace DesktopSearch.Core.Lucene
             _analyzer = new PerFieldAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48),
                 new Dictionary<string, Analyzer>
                 {
-                    {"name", new Analyzers.CamelCaseAnalyzer()},
-                    {"comment", new StandardAnalyzer(LuceneVersion.LUCENE_48)},
+                    //{"name", new Analyzers.CamelCaseAnalyzer()},
+                    //{"comment", new StandardAnalyzer(LuceneVersion.LUCENE_48)},
                 });
 
             _queryParser = new MultiFieldQueryParser(LuceneVersion.LUCENE_48,
@@ -88,12 +90,31 @@ namespace DesktopSearch.Core.Lucene
             {
                 Document doc = reader.Document(i);
 
-                var file = doc.GetField("path").StringValue;
+                var file = doc.GetField("filepath").StringValue;
                 if (!System.IO.File.Exists(file))
                 {
                     _indexWriter.DeleteDocuments(new Term("path", doc.GetField("path").StringValue));
                 }
             }
+        }
+
+        public IEnumerable<string> GetIndexedDocuments()
+        {
+            var resultDocs = new List<string>();
+
+            _searcherManager.MaybeRefreshBlocking();
+            _searcherManager.ExecuteSearch(searcher =>
+            {
+                var topDocs = searcher.Search(new MatchAllDocsQuery(), 1000);
+
+                foreach (var result in topDocs.ScoreDocs)
+                {
+                    var doc = searcher.Doc(result.Doc);
+                    resultDocs.Add(doc.GetField("title").StringValue);
+                }
+            }, exception => { Console.WriteLine(exception.ToString()); });
+
+            return resultDocs;
         }
     }
 }

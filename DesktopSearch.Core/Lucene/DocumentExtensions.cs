@@ -2,6 +2,7 @@
 using Lucene.Net.Documents;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -56,17 +57,25 @@ namespace DesktopSearch.Core.Lucene
             if (descriptor == null)
                 throw new ArgumentNullException(nameof(descriptor));
 
+            // ensure that there always a title set
+            if (descriptor.Title == null)
+                descriptor.Title = Path.GetFileNameWithoutExtension(descriptor.Path);
+
             var doc = new Document
             {
                 new TextField("title", descriptor.Title, Field.Store.YES),
                 new TextField("keywords", (descriptor.Keywords != null) ? string.Join(";", descriptor.Keywords) : string.Empty, Field.Store.YES),
                 new TextField("filepath", descriptor.Path, Field.Store.YES),
                 new IntField("rating", (int)descriptor.Rating, Field.Store.YES),
-                new TextField("author", descriptor.Author, Field.Store.YES),
                 new TextField("content", descriptor.Content ?? string.Empty, Field.Store.NO),
                 new TextField("lastmodified", DateTools.DateToString(descriptor.LastModified, DateTools.Resolution.SECOND), Field.Store.YES),
                 new TextField("contenttype", descriptor.ContentType, Field.Store.YES),
             };
+            if (!string.IsNullOrEmpty(descriptor.Author))
+            {
+                doc.Add(new TextField("author", descriptor.Author, Field.Store.YES));
+            }
+
             return doc;
         }
 
@@ -89,7 +98,9 @@ namespace DesktopSearch.Core.Lucene
 
             descriptor.Path = doc.GetField("filepath").StringValue;
             descriptor.Rating = (int)doc.GetField("rating").NumericValue;
-            descriptor.Author = doc.GetField("author")?.StringValue;
+
+            var docField = doc.GetField("author")?.StringValue;
+            descriptor.Author = (docField ?? string.Empty);
             descriptor.LastModified = (DateTime)DateTools.StringToDate(doc.GetField("lastmodified").StringValue);
             descriptor.ContentType = doc.GetField("contenttype")?.StringValue;
 

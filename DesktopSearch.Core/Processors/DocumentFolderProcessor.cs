@@ -11,6 +11,7 @@ using Microsoft.Extensions.Logging;
 using DesktopSearch.Core.Extractors.Tika;
 using DesktopSearch.Core.Lucene;
 using DesktopSearch.Core.Services;
+using DesktopSearch.Core.Utils;
 using Microsoft.Extensions.Options;
 
 namespace DesktopSearch.Core.Processors
@@ -22,7 +23,7 @@ namespace DesktopSearch.Core.Processors
         private readonly ITikaServerExtractor          _extractor;
         private IDocumentCollectionRepository          _documentCollectionRepository;
 
-        private ILogger<DocumentFolderProcessor> _logger;
+        private ILogger<DocumentFolderProcessor> _logger = Logging.Factory.CreateLogger<DocumentFolderProcessor>();
 
         public DocumentFolderProcessor(
             IDocumentCollectionRepository documentCollectionRepository,
@@ -85,17 +86,29 @@ namespace DesktopSearch.Core.Processors
                 Extractors.ParserContext context = new Extractors.ParserContext();
                 var docDesc = await _extractor.ExtractAsync(context, new FileInfo(filePath));
 
-                try
+                if (docDesc.Error == ErrorState.None)
                 {
-                    await ProcessAsyncInt(docDesc, documentCollectionName);
+                    try
+                    {
+                        await ProcessAsyncInt(docDesc, documentCollectionName);
 
-                    stopWatch.Stop();
-                    _logger.LogInformation($"Added '{Path.GetFileName(filePath)}' to index  took: {stopWatch.Elapsed.TotalSeconds} [s]");
+                        stopWatch.Stop();
+                        _logger.LogInformation(
+                            $"Added '{Path.GetFileName(filePath)}' to index  took: {stopWatch.Elapsed.TotalSeconds} [s]");
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogWarning($"Failed to index document: {filePath}!", ex);
+
+                    }
                 }
-                catch (Exception ex)
+                else
                 {
-                    _logger.LogWarning($"Failed to index document: {filePath}!", ex);
-
+                    // we do not log unsupported file types
+                    if (docDesc.Error > ErrorState.UnsupportedFileType)
+                    {
+                        _logger.LogWarning($"Failed to extract information from document: {filePath}!");
+                    }
                 }
 
                 ++current;
