@@ -17,10 +17,10 @@ namespace DesktopSearch.Core.Processors
 {
     public class DocumentFolderProcessor : IFolderProcessor
     {
-        private readonly IElasticClient       _client;
-        private readonly ElasticSearchConfig  _configuration;
-        private ITikaServerExtractor          _extractor;
-        private IDocumentCollectionRepository _documentCollectionRepository;
+        private readonly IElasticClient                _client;
+        private readonly ElasticSearchConfig           _configuration;
+        private readonly ITikaServerExtractor          _extractor;
+        private IDocumentCollectionRepository          _documentCollectionRepository;
 
         //private readonly ILogger<DocumentFolderProcessor> _logging;
 

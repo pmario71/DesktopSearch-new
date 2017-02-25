@@ -22,7 +22,7 @@ namespace DesktopSearch.Core.Tests.Lucene
         {
             var indexProviderMock = new Mock<IIndexProvider>();
 
-            indexProviderMock.Setup(m => m.GetIndexDirectory())
+            indexProviderMock.Setup(m => m.GetIndexDirectory(IndexType.Code))
                              .Returns(new RAMDirectory());
             
 

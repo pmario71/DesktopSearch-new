@@ -40,13 +40,13 @@ namespace DesktopSearch.Core.Lucene
     public class CodeIndex : ICodeIndexer, ICodeSearch, IDisposable
     {
         private readonly PerFieldAnalyzerWrapper _analyzer;
-        private readonly IndexWriter _indexWriter;
-        private readonly SearcherManager _searcherManager;
-        private readonly QueryParser _queryParser;
+        private readonly IndexWriter             _indexWriter;
+        private readonly SearcherManager         _searcherManager;
+        private readonly QueryParser             _queryParser;
 
         public CodeIndex(IIndexProvider indexProvider)
         {
-            var indexDirectory = indexProvider.GetIndexDirectory();
+            var indexDirectory = indexProvider.GetIndexDirectory(IndexType.Code);
 
             _analyzer = new PerFieldAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48),
                 new Dictionary<string, Analyzer>
@@ -90,7 +90,7 @@ namespace DesktopSearch.Core.Lucene
 
                 foreach (var item in extractedTypes)
                 {
-                    var doc = item.From();
+                    var doc = item.FromTypeDescriptor();
                     _indexWriter.UpdateDocument(new Term("id", item.GetTypeID()), doc);
                 }
 

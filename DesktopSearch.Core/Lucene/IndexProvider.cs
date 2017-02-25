@@ -2,9 +2,11 @@
 using Lucene.Net.Store;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Directory = Lucene.Net.Store.Directory;
 
 namespace DesktopSearch.Core.Lucene
 {
@@ -17,16 +19,18 @@ namespace DesktopSearch.Core.Lucene
             _configuration = configuration;
         }
 
-        public Directory GetIndexDirectory()
+        public Directory GetIndexDirectory(IndexType indexType)
         {
             var cfg = _configuration.Get();
-            return FSDirectory.Open(new System.IO.DirectoryInfo(cfg.IndexDirectory));
+
+            string folder = Path.Combine(cfg.IndexDirectory, indexType.ToString());
+            return FSDirectory.Open(new System.IO.DirectoryInfo(folder));
         }
     }
 
     public class InMemoryIndexProvider : IIndexProvider
     {
-        public Directory GetIndexDirectory()
+        public Directory GetIndexDirectory(IndexType indexType)
         {
             return new RAMDirectory();
         }
@@ -34,6 +38,12 @@ namespace DesktopSearch.Core.Lucene
 
     public interface IIndexProvider
     {
-        Directory GetIndexDirectory();
+        Directory GetIndexDirectory(IndexType indexType);
+    }
+
+    public enum IndexType
+    {
+        Document=0,
+        Code=1,
     }
 }

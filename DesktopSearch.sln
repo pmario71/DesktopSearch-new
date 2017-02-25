@@ -9,11 +9,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopSearch.Core.Tests", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{E7ADD651-7D8B-4661-9767-9E37AA8AB610}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		Documents\AddImage.ps1 = Documents\AddImage.ps1
 		Documents\docker-compose.yml = Documents\docker-compose.yml
 		Documents\Drawings.vsdx = Documents\Drawings.vsdx
 		Documents\Extractors.dgml = Documents\Extractors.dgml
 		Documents\Operations.md = Documents\Operations.md
+		readme.md = readme.md
 		Documents\References.md = Documents\References.md
 		Documents\RequirementsSpec.md = Documents\RequirementsSpec.md
 		Documents\StartServices.ps1 = Documents\StartServices.ps1
@@ -34,7 +36,9 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopSearch.PS.Tests", "T
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceFabric", "ServiceFabric\ServiceFabric.csproj", "{3C322863-943D-4CD6-A8C4-FF7DE627F85F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegisterPerformanceCounters", "RegisterPerformanceCounters.exe\RegisterPerformanceCounters.csproj", "{96F1C808-1098-4E1F-B9C8-AF928A0366D7}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tooling", "Tooling", "{B5C0538B-8FFA-48A5-A13F-0E8FB5A3F1D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegisterPerformanceCounters", "RegisterPerformanceCounters\RegisterPerformanceCounters.csproj", "{96F1C808-1098-4E1F-B9C8-AF928A0366D7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,5 +76,7 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B71F3397-F878-456D-876F-B5EF4119E3BF} = {E7ADD651-7D8B-4661-9767-9E37AA8AB610}
+		{3C322863-943D-4CD6-A8C4-FF7DE627F85F} = {B5C0538B-8FFA-48A5-A13F-0E8FB5A3F1D0}
+		{96F1C808-1098-4E1F-B9C8-AF928A0366D7} = {B5C0538B-8FFA-48A5-A13F-0E8FB5A3F1D0}
 	EndGlobalSection
 EndGlobal

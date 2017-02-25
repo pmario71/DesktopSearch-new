@@ -5,11 +5,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DesktopSearch.Core.DataModel.Documents;
 
 namespace DesktopSearch.Core.Lucene
 {
     static class DocumentExtensions
     {
+        public static string[] EmptyArray = new string[0];
+
         public static TypeDescriptor ToTypeDescriptor(this Document doc)
         {
             if (doc == null)
@@ -28,7 +31,7 @@ namespace DesktopSearch.Core.Lucene
             };
         }
 
-        public static Document From(this TypeDescriptor descriptor)
+        public static Document FromTypeDescriptor(this TypeDescriptor descriptor)
         {
             if (descriptor == null)
                 throw new ArgumentNullException(nameof(descriptor));
@@ -46,6 +49,51 @@ namespace DesktopSearch.Core.Lucene
                     };
 
             return doc;
+        }
+
+        public static Document FromDocDescriptor(this DocDescriptor descriptor)
+        {
+            if (descriptor == null)
+                throw new ArgumentNullException(nameof(descriptor));
+
+            var doc = new Document
+            {
+                new TextField("title", descriptor.Title, Field.Store.YES),
+                new TextField("keywords", (descriptor.Keywords != null) ? string.Join(";", descriptor.Keywords) : string.Empty, Field.Store.YES),
+                new TextField("filepath", descriptor.Path, Field.Store.YES),
+                new IntField("rating", (int)descriptor.Rating, Field.Store.YES),
+                new TextField("author", descriptor.Author, Field.Store.YES),
+                new TextField("content", descriptor.Content ?? string.Empty, Field.Store.NO),
+                new TextField("lastmodified", DateTools.DateToString(descriptor.LastModified, DateTools.Resolution.SECOND), Field.Store.YES),
+                new TextField("contenttype", descriptor.ContentType, Field.Store.YES),
+            };
+            return doc;
+        }
+
+        public static DocDescriptor ToDocDescriptor(this Document doc)
+        {
+            if (doc == null)
+                throw new ArgumentNullException(nameof(doc));
+
+            var descriptor = new DocDescriptor();
+            descriptor.Title = doc.GetField("title")?.StringValue;
+
+            var keywords = doc.GetField("keywords")?.StringValue;
+            
+            string[] keywordsArray = EmptyArray;
+            if (!string.IsNullOrEmpty(keywords))
+            {
+                keywordsArray = keywords.Split(new[] { ';' });
+            }
+            descriptor.Keywords = keywordsArray;
+
+            descriptor.Path = doc.GetField("filepath").StringValue;
+            descriptor.Rating = (int)doc.GetField("rating").NumericValue;
+            descriptor.Author = doc.GetField("author")?.StringValue;
+            descriptor.LastModified = (DateTime)DateTools.StringToDate(doc.GetField("lastmodified").StringValue);
+            descriptor.ContentType = doc.GetField("contenttype")?.StringValue;
+
+            return descriptor;
         }
 
         public static string GetTypeID(this TypeDescriptor descriptor)

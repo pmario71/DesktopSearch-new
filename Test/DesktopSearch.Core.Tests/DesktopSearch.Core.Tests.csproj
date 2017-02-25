@@ -278,6 +278,7 @@
     <None Include="Lucene\ConsecutiveCharTokenizer.cs" />
     <Compile Include="Lucene\CodeFolderProcessorTests.cs" />
     <Compile Include="Lucene\CodeIndexTests.cs" />
+    <Compile Include="Lucene\DocumentExtensionsTests.cs" />
     <Compile Include="Lucene\LucenePrototypingTests.cs" />
     <Compile Include="Processors\DocumentFolderProcessorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

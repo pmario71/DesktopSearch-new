@@ -285,6 +285,7 @@
     <Compile Include="Lucene\CodeIndex.cs" />
     <Compile Include="Contracts\CodeStatistics.cs" />
     <Compile Include="Lucene\DocumentExtensions.cs" />
+    <Compile Include="Lucene\DocumentIndexer.cs" />
     <Compile Include="Lucene\IndexProvider.cs" />
     <Compile Include="Services\DocumentCollectionConfigStore.cs" />
     <Compile Include="Services\DocumentCollectionElasticStore.cs" />
