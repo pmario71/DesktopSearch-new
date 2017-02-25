@@ -14,6 +14,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using DesktopSearch.Core.Utils;
+using Microsoft.Extensions.Logging;
 
 namespace DesktopSearch.Core.Processors
 {
@@ -21,11 +22,25 @@ namespace DesktopSearch.Core.Processors
     {
         private readonly ICodeIndexer _codeIndexer;
         private readonly IPerformance _performance;
+        private ILogger<CodeFolderProcessor> _logger;
 
         public CodeFolderProcessor(ICodeIndexer codeIndexer, Utils.IPerformance performance)
         {
             _codeIndexer = codeIndexer;
             _performance = performance;
+            _logger = Logging.GetLogger<CodeFolderProcessor>();
+        }
+
+        public ILogger<CodeFolderProcessor> OverrideLogger
+        {
+            get { return _logger; }
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value));
+
+                _logger = value;
+            }
         }
 
         public Task ProcessAsync(IFolder folder)
@@ -99,9 +114,8 @@ namespace DesktopSearch.Core.Processors
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"Error parsing file: {sourceFile.Path}");
-                    //WriteError(new ErrorRecord(innerException, "idx", ErrorCategory.NotSpecified, this));
-                    //TODO: Log errors
+                    string msg = $"Error parsing file: {sourceFile.Path}";
+                    _logger.LogWarning(new EventId(LoggedIds.ErrorParsingFile), ex, msg);
                 }
 
                 ++current;

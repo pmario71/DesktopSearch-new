@@ -15,10 +15,10 @@ using NUnit.Framework.Internal;
 namespace DesktopSearch.Core.Tests.Lucene
 {
     [TestFixture()]
-    public class DocumentExtensionsTests
+    public class DocumentExtensions_DocDescriptor_Tests
     {
         [Test]
-        public void DocTypeToDocumentConversion()
+        public void DocDescriptorToDocumentConversion()
         {
             //Arrange
             DocDescriptor docDescriptor = GetFilledDocDescriptor();

@@ -10,6 +10,8 @@ using DesktopSearch.Core.DataModel.Documents;
 using DesktopSearch.Core.FileSystem;
 using DesktopSearch.Core.Lucene;
 using DesktopSearch.Core.Processors;
+using DesktopSearch.Core.Tests.DependencyInjection;
+using DesktopSearch.Core.Tests.Utils;
 using DesktopSearch.Core.Utils;
 using NUnit.Framework;
 
@@ -64,20 +66,41 @@ namespace DesktopSearch.Core.Tests.Lucene
             }
         }
 
+        [Test]
+        public async Task Parsing_files_shall_result_in_no_errors()
+        {
+            //TODO: add files as Content
+            var fname = @"c:\Projects\Scratch\WPFToolkit\WpfToolkit\DataVisualization";
+
+            var sut = new CodeFolderProcessor(new CodeIndex(new InMemoryIndexProvider()), new Performance());
+
+            var logger = new LoggingInterceptor<CodeFolderProcessor>();
+            sut.OverrideLogger = logger;
+
+            IFolder folder = new FolderMock() { Path = fname };
+            await sut.ProcessAsync(folder);
+
+            Assert.IsFalse(logger.LoggedEvents.Any());
+        }
+
         struct Result
         {
             public long Size;
             public TimeSpan TimeToRead;
         }
 
-        [Test]
+        [Test,Explicit]
         public async Task PerformanceTests()
         {
             var sut = new CodeFolderProcessor(new CodeIndex(new InMemoryIndexProvider()), new Performance());
 
+            var logger = new LoggingInterceptor<CodeFolderProcessor>();
+            sut.OverrideLogger = logger;
 
             IFolder folder = new FolderMock(){ Path = "c:\\Projects"};
             await sut.ProcessAsync(folder);
+
+            Assert.IsFalse(logger.LoggedEvents.Any());
         }
 
         class FolderMock : IFolder

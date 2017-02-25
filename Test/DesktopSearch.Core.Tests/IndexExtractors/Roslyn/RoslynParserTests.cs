@@ -250,13 +250,16 @@ namespace CodeSearchTests.Indexing.Roslyn
         [Test]
         public void Interface_comments_are_extracted()
         {
-            const string csharp = @"   /// <apiflag>No</apiflag>
-                                       /// <summary> API:NO
-                                       /// Interface for accessing the IsPatientMixUp property of Requests
-                                       /// </summary>
-                                       internal interface IRequestWithPatientMixup
-                                       {
-                                           bool IsPatientMixUp { get; set; }
+            const string csharp = @"   namespace HelloWorld 
+                                       { 
+                                           /// <apiflag>No</apiflag>
+                                           /// <summary> API:NO
+                                           /// Interface for accessing the IsPatientMixUp property of Requests
+                                           /// </summary>
+                                           internal interface IRequestWithPatientMixup
+                                           {
+                                               bool IsPatientMixUp { get; set; }
+                                           }
                                        }";
 
             var parser = new RoslynParser();
@@ -268,14 +271,17 @@ namespace CodeSearchTests.Indexing.Roslyn
         [Test]
         public void Enum_comments_are_extracted()
         {
-            const string csharp = @"   /// <apiflag>No</apiflag>
-                                       /// <summary> API:NO
-                                       /// Interface for accessing the IsPatientMixUp property of Requests
-                                       /// </summary>
-                                       public enum IRequestWithPatientMixup
-                                       {
-                                           Test,
-                                       }";
+            const string csharp = @"   namespace HelloWorld 
+                                       { 
+                                           /// <apiflag>No</apiflag>
+                                           /// <summary> API:NO
+                                           /// Interface for accessing the IsPatientMixUp property of Requests
+                                           /// </summary>
+                                           public enum IRequestWithPatientMixup
+                                           {
+                                               Test,
+                                           }
+                                        }";
 
             var parser = new RoslynParser();
             var extractedTypes = parser.ExtractTypes(csharp);

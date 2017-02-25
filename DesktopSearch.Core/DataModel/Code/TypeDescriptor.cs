@@ -7,7 +7,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-//using System.Diagnostics.Contracts;
 
 namespace DesktopSearch.Core.DataModel.Code
 {
@@ -24,10 +23,27 @@ namespace DesktopSearch.Core.DataModel.Code
         /// <param name="filePath"></param>
         /// <param name="lineNR"></param>
         public TypeDescriptor(ElementType elementType, string name, Visibility visibility,
-            string @namespace, string filePath, int lineNR, string comment = null)
+            string @namespace, string filePath, int lineNR) : this(elementType, name, visibility, @namespace, filePath, lineNR, null)
         {
-            //Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(name));
-            //Contract.Requires<ArgumentOutOfRangeException>(lineNR >= 0);
+        }
+
+        /// <summary>
+        /// Name shall not be null, @namespace can return null.
+        /// </summary>
+        /// <param name="elementType"></param>
+        /// <param name="name"></param>
+        /// <param name="namespace"></param>
+        /// <param name="filePath"></param>
+        /// <param name="lineNR"></param>
+        /// <param name="comment"></param>
+        public TypeDescriptor(ElementType elementType, string name, Visibility visibility,
+            string @namespace, string filePath, int lineNR, string comment)
+        {
+            if (string.IsNullOrEmpty(name))       throw new ArgumentException(nameof(name));
+            if (string.IsNullOrEmpty(@namespace)) throw new ArgumentNullException(nameof(@namespace));
+            if (comment == null)                  throw new ArgumentNullException(nameof(comment));
+            if (lineNR <= 0)                      throw new ArgumentOutOfRangeException(nameof(lineNR));
+
 
             Name = name;
             Namespace = @namespace;
@@ -61,7 +77,7 @@ namespace DesktopSearch.Core.DataModel.Code
         /// </summary>
         public int LineNr { get; set; }
 
-        public string Comment { get; private set; }
+        public string Comment { get; set; }
 
         public API APIDefinition { get; set; }
 

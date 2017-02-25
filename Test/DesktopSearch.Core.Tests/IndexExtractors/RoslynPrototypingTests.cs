@@ -14,7 +14,7 @@ using NUnit.Framework;
 namespace CodeSearchTests.Indexing
 {
     [TestFixture]
-    public class RoslynPrototyping
+    public class RoslynPrototypingTests
     {
         [Test]
         public void SingleLineComment()
@@ -42,6 +42,19 @@ class C
             var extractComment = APIWalker.ExtractComment(classDecl);
 
             Assert.AreEqual("<summary>This is an xml doc comment.\r\nthe second line.</summary>", extractComment);
+        }
+
+        [Test]
+        public void No_comment_results_in_string_empty()
+        {
+            var classDecl = Walker.Create(@"
+class C
+{
+}");
+
+            var extractComment = APIWalker.ExtractComment(classDecl);
+
+            Assert.AreEqual(string.Empty, extractComment);
         }
 
         class Walker : SyntaxWalker

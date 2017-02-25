@@ -225,6 +225,7 @@
       <HintPath>..\..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Text.Encoding.CodePages, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Text.Encoding.CodePages.4.3.0\lib\net46\System.Text.Encoding.CodePages.dll</HintPath>
       <Private>True</Private>
@@ -268,7 +269,7 @@
     <Compile Include="Helper\DockerControlClient.cs" />
     <Compile Include="IndexExtractors\CommentCleanerTests.cs" />
     <Compile Include="IndexExtractors\FileIOPerformanceTests.cs" />
-    <Compile Include="IndexExtractors\RoslynPrototyping.cs" />
+    <Compile Include="IndexExtractors\RoslynPrototypingTests.cs" />
     <Compile Include="IndexExtractors\Roslyn\APIDefinitionExtractorTests.cs" />
     <Compile Include="IndexExtractors\Roslyn\APIWalkerTests.cs" />
     <Compile Include="IndexExtractors\Roslyn\RoslynParserTests.cs" />
@@ -278,7 +279,8 @@
     <None Include="Lucene\ConsecutiveCharTokenizer.cs" />
     <Compile Include="Lucene\CodeFolderProcessorTests.cs" />
     <Compile Include="Lucene\CodeIndexTests.cs" />
-    <Compile Include="Lucene\DocumentExtensionsTests.cs" />
+    <Compile Include="Lucene\DocumentExtensions_DocDescriptor_Tests.cs" />
+    <Compile Include="Lucene\DocumentExtensions_TypeDescriptor_Tests.cs" />
     <Compile Include="Lucene\LucenePrototypingTests.cs" />
     <Compile Include="Processors\DocumentFolderProcessorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -286,6 +288,7 @@
     <Compile Include="Utils\CfgMocks.cs" />
     <Compile Include="Utils\EnumExtTests.cs" />
     <Compile Include="Utils\CollectionExtensionsTests.cs" />
+    <Compile Include="Utils\LoggingInterceptor.cs" />
     <Compile Include="Utils\TestDirectoryProvider.cs" />
     <None Include="app.config" />
     <None Include="AppReadme\Compare-NET-Objects-Help.chm" />
