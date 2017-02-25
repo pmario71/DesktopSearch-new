@@ -2,7 +2,6 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -14,7 +13,10 @@ namespace DesktopSearch.Core.Configuration
         private Uri _elasticSearchUri;
 
         [JsonProperty]
-        Tools _Tools;
+        Tools _tools;
+
+        [JsonProperty]
+        private DocumentIndexing _documentIndexing;
 
         public LuceneConfig()
         {
@@ -54,60 +56,23 @@ namespace DesktopSearch.Core.Configuration
         {
             get
             {
-                if (_Tools == null)
+                if (_tools == null)
                 {
-                    _Tools = new Tools();
+                    _tools = new Tools();
                 }
-                return _Tools;
-            }
-        }
-    }
-
-    public class Tools
-    {
-        [JsonProperty]
-        private string _luke;
-
-        [JsonProperty]
-        private string _vsCode;
-
-        /// <summary>
-        /// Path to Luke installation.
-        /// </summary>
-        public string Luke
-        {
-            get { return _luke; }
-            set
-            {
-                if (!File.Exists(value))
-                {
-                    throw new ArgumentException($"File does not exist: {value}!");
-                }
-                if (Path.GetExtension(value).ToLower() != ".jar" || !Path.GetFileNameWithoutExtension(value).ToLower().Contains("luke"))
-                {
-                    throw new ArgumentException($"'{Path.GetFileName(value)}' does not seem to be a valid Luke version!");
-                }
-                _luke = value;
+                return _tools;
             }
         }
 
-        /// <summary>
-        /// Path to VS Code installation
-        /// </summary>
-        public string VSCode
+        public DocumentIndexing DocumentIndexing
         {
-            get { return _vsCode; }
-            set
+            get
             {
-                if (!File.Exists(value))
+                if (_documentIndexing==null)
                 {
-                    throw new ArgumentException($"File does not exist: {value}!");
+                    _documentIndexing=new DocumentIndexing();
                 }
-                if (Path.GetFileName(value).ToLower() != "code.cmd")
-                {
-                    throw new ArgumentException($"'{Path.GetFileName(value)}' does not seem to be a valid VS Code version!");
-                }
-                _vsCode = value;
+                return _documentIndexing;
             }
         }
     }

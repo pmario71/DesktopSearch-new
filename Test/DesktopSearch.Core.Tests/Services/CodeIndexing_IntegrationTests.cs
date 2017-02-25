@@ -79,9 +79,10 @@ namespace DesktopSearch.Core.Tests.Services
             var indexer = container.GetService<IDocumentIndexer>();
             var docs = indexer.GetIndexedDocuments();
 
+            Console.WriteLine();
             foreach (var t in docs)
             {
-                Console.WriteLine(t);
+                Console.WriteLine($" - {t}");
             }
         }
 

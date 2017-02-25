@@ -27,7 +27,7 @@ namespace DesktopSearch.Core.Tests.ElasticSearch
             var docColRepo = new Moq.Mock<IDocumentCollectionRepository>();
             //var esClient = ElasticTestClientFactory.Create();
 
-            var elasticMock = CfgMocks.GetElasticSearchConfigMock();
+            var luceneConfigMock = CfgMocks.GetLuceneConfigMock();
             var tikaMock = CfgMocks.GetTikaConfigMock();
             
 
@@ -39,7 +39,7 @@ namespace DesktopSearch.Core.Tests.ElasticSearch
             var docFolderProcessoer = new DocumentFolderProcessor(
                                                     docColRepo.Object,
                                                     null,
-                                                    elasticMock,
+                                                    luceneConfigMock,
                                                     new TikaServerExtractor(tikaMock));
 
             await docFolderProcessoer.ProcessAsync(testDataPath + "zen-of-results.pdf", Core.Configuration.DocumentSearch.ContentType.Artikel);
@@ -165,7 +165,7 @@ and Member (the innermost set of parentheses). This involves comparing all the r
 
             var docProc = new DocumentFolderProcessor(dcr, 
                                                       null, 
-                                                      CfgMocks.GetElasticSearchConfigMock(), 
+                                                      CfgMocks.GetLuceneConfigMock(), 
                                                       new TikaServerExtractor(CfgMocks.GetTikaConfigMock()));
 
             var indexingSvc = new IndexingService(dcr, docProc, null);

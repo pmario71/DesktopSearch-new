@@ -19,7 +19,7 @@ namespace DesktopSearch.Core.Processors
     public class DocumentFolderProcessor : IFolderProcessor
     {
         private readonly IDocumentIndexer              _client;
-        private readonly ElasticSearchConfig           _configuration;
+        private readonly LuceneConfig                  _configuration;
         private readonly ITikaServerExtractor          _extractor;
         private IDocumentCollectionRepository          _documentCollectionRepository;
 
@@ -28,7 +28,7 @@ namespace DesktopSearch.Core.Processors
         public DocumentFolderProcessor(
             IDocumentCollectionRepository documentCollectionRepository,
             IDocumentIndexer client, 
-            IConfigAccess<ElasticSearchConfig> config,
+            IConfigAccess<LuceneConfig> config,
             ITikaServerExtractor extractor)
         {
             _documentCollectionRepository = documentCollectionRepository;
@@ -56,10 +56,10 @@ namespace DesktopSearch.Core.Processors
 
         public Task ProcessAsync(IFolder folder, IProgress<int> progress)
         {
-            var extensionFilter = new ExcludeFileByExtensionFilter(".bin", ".lnk");
+            var extsToFilter = _configuration.DocumentIndexing.FileExtensionToIgnore.Split(new []{';'});
+            var extensionFilter = new ExcludeFileByExtensionFilter(extsToFilter);
 
-            var filesToProcess = Directory.GetFiles(folder.Path, "*", SearchOption.AllDirectories)
-                                          .Where(f => extensionFilter.FilterByExtension(f));
+            var filesToProcess = extensionFilter.FilterByExtension(Directory.GetFiles(folder.Path, "*", SearchOption.AllDirectories));
 
             return ExtractFilesAsync(filesToProcess, folder.DocumentCollection.Name, progress);
         }

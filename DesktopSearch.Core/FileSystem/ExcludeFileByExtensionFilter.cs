@@ -20,7 +20,7 @@ namespace DesktopSearch.Core.FileSystem
 
             if (extensions.Any(e => e[0] != '.'))
             {
-                throw new ArgumentException("Extensions are expected to start with '.' (e.g. '.pdf')!");
+                throw new ArgumentException("Extensions are expected to start with '.' (e.g. '.pdf')!", nameof(extensions));
             }
 
             _map = new HashSet<string>(extensions, StringComparer.OrdinalIgnoreCase);

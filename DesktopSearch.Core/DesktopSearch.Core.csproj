@@ -248,11 +248,13 @@
     <Compile Include="Bootstrapper.cs" />
     <Compile Include="Configuration\ConfigAccess.cs" />
     <Compile Include="Configuration\ConfigBootstrapping.cs" />
+    <Compile Include="Configuration\DocumentIndexing.cs" />
     <Compile Include="Configuration\IConfigAccess.cs" />
     <Compile Include="Configuration\IConfigAccess1.cs" />
     <Compile Include="Configuration\LuceneConfig.cs" />
     <Compile Include="Configuration\Providers\ICurrentDirectoryProvider.cs" />
     <Compile Include="Configuration\TikaConfig.cs" />
+    <Compile Include="Configuration\Tools.cs" />
     <Compile Include="DataModel\Code\Visibility.cs" />
     <Compile Include="DataModel\Documents\DocumentCollection.cs" />
     <Compile Include="DataModel\Documents\Folder.cs" />

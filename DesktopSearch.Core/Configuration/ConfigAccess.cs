@@ -16,7 +16,7 @@ namespace DesktopSearch.Core.Configuration
 {
     public class ConfigAccess : IConfigAccess
     {
-        private static JsonSerializerSettings _formatSettings = new JsonSerializerSettings
+        private static readonly JsonSerializerSettings _formatSettings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore,
             Formatting = Formatting.Indented,
@@ -24,7 +24,7 @@ namespace DesktopSearch.Core.Configuration
             ContractResolver = new PrivateFieldResolver()
         };
 
-        private IStreamFactory _factory;
+        private readonly IStreamFactory _factory;
 
         public ConfigAccess(IStreamFactory factory)
         {

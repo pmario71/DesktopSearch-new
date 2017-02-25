@@ -46,7 +46,7 @@ namespace DesktopSearch.Core.Tests.Processors
             var sut = new DocumentFolderProcessor(
                 docColRepo.Object, 
                 null, 
-                CfgMocks.GetElasticSearchConfigMock(),
+                CfgMocks.GetLuceneConfigMock(),
                 tikaExtractor.Object);
 
             var cfgFolder = Folder.Create(folder);
@@ -93,7 +93,7 @@ namespace DesktopSearch.Core.Tests.Processors
             var sut = new DocumentFolderProcessor(
                 docColRepo.Object, 
                 null, 
-                CfgMocks.GetElasticSearchConfigMock(),
+                CfgMocks.GetLuceneConfigMock(),
                 tika.Object
                 /*, logging.Object*/);
 

@@ -27,5 +27,13 @@ namespace DesktopSearch.Core.Tests.Utils
 
             return tikaMock.Object;
         }
+
+        public static IConfigAccess<LuceneConfig> GetLuceneConfigMock()
+        {
+            var luceneMock = new Mock<IConfigAccess<LuceneConfig>>();
+            luceneMock.Setup(m => m.Get()).Returns(new LuceneConfig());
+
+            return luceneMock.Object;
+        }
     }
 }
