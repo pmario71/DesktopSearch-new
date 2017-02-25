@@ -74,7 +74,7 @@ namespace DesktopSearch.Core.Tests.Lucene
 
             var sut = new CodeFolderProcessor(new CodeIndex(new InMemoryIndexProvider()), new Performance());
 
-            var logger = new LoggingInterceptor<CodeFolderProcessor>();
+            var logger = new LoggingInterceptor<CodeFolderProcessor>(ignoreInfoLevel:true);
             sut.OverrideLogger = logger;
 
             IFolder folder = new FolderMock() { Path = fname };

@@ -1,7 +1,6 @@
 ﻿using DesktopSearch.Core.Configuration;
 using DesktopSearch.Core.DataModel.Documents;
 using DesktopSearch.Core.FileSystem;
-using Nest;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -10,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using DesktopSearch.Core.Extractors.Tika;
+using DesktopSearch.Core.Lucene;
 using DesktopSearch.Core.Services;
 using Microsoft.Extensions.Options;
 
@@ -17,24 +17,35 @@ namespace DesktopSearch.Core.Processors
 {
     public class DocumentFolderProcessor : IFolderProcessor
     {
-        private readonly IElasticClient                _client;
+        private readonly IDocumentIndexer              _client;
         private readonly ElasticSearchConfig           _configuration;
         private readonly ITikaServerExtractor          _extractor;
         private IDocumentCollectionRepository          _documentCollectionRepository;
 
-        //private readonly ILogger<DocumentFolderProcessor> _logging;
+        private ILogger<DocumentFolderProcessor> _logger;
 
         public DocumentFolderProcessor(
             IDocumentCollectionRepository documentCollectionRepository,
-            IElasticClient client, 
+            IDocumentIndexer client, 
             IConfigAccess<ElasticSearchConfig> config,
-            ITikaServerExtractor extractor/*, ILogger logging*/)
+            ITikaServerExtractor extractor)
         {
             _documentCollectionRepository = documentCollectionRepository;
             _client                       = client;
             _configuration                = config.Get();
             _extractor                    = extractor;
-            //_logging                    = logging;
+        }
+
+        public ILogger<DocumentFolderProcessor> OverrideLogger
+        {
+            get { return _logger; }
+            set
+            {
+                if (value == null)
+                    throw new ArgumentNullException(nameof(value));
+
+                _logger = value;
+            }
         }
 
         public Task ProcessAsync(IFolder folder)
@@ -57,13 +68,9 @@ namespace DesktopSearch.Core.Processors
             return ExtractFilesAsync(new[] { file }, documentCollectionName, null);
         }
 
-        public async Task ProcessAsync(DocDescriptor document, string documentCollectionName)
+        public Task ProcessAsync(DocDescriptor document, string documentCollectionName)
         {
-            var result = await ProcessAsyncInt(document, documentCollectionName);
-            if (!result.IsValid)
-            {
-                throw new Exception(result.DebugInformation);
-            }
+            return ProcessAsyncInt(document, documentCollectionName);
         }
 
         private async Task ExtractFilesAsync(IEnumerable<string> filesToParse, string documentCollectionName, IProgress<int> progress=null)
@@ -78,16 +85,17 @@ namespace DesktopSearch.Core.Processors
                 Extractors.ParserContext context = new Extractors.ParserContext();
                 var docDesc = await _extractor.ExtractAsync(context, new FileInfo(filePath));
 
-                var result = await ProcessAsyncInt(docDesc, documentCollectionName);
-                if (!result.IsValid)
+                try
                 {
-                    //_logging.LogWarning($"Failed to index document: {filePath}!", result.OriginalException);
-                    Console.WriteLine($"Failed to index document: {filePath}!\r\n{result.OriginalException}");
-                }
-                else
-                {
+                    await ProcessAsyncInt(docDesc, documentCollectionName);
+
                     stopWatch.Stop();
-                    //_logging.LogInformation($"Added '{Path.GetFileName(filePath)}' to index  took: {stopWatch.Elapsed.TotalSeconds} [s]");
+                    _logger.LogInformation($"Added '{Path.GetFileName(filePath)}' to index  took: {stopWatch.Elapsed.TotalSeconds} [s]");
+                }
+                catch (Exception ex)
+                {
+                    _logger.LogWarning($"Failed to index document: {filePath}!", ex);
+
                 }
 
                 ++current;
@@ -98,13 +106,14 @@ namespace DesktopSearch.Core.Processors
             }
         }
 
-        private async Task<IIndexResponse> ProcessAsyncInt(DocDescriptor docDesc, string documentCollectionName)
+        private async Task ProcessAsyncInt(DocDescriptor docDesc, string documentCollectionName)
         {
             docDesc.DocumentCollection = documentCollectionName;
 
-            var result = await _client.IndexAsync(docDesc, 
-                                  (indexSelector) => indexSelector.Index(_configuration.DocumentSearchIndexName));
-            return result;
+            //var result = await _client.IndexAsync(docDesc, 
+            //                      (indexSelector) => indexSelector.Index(_configuration.DocumentSearchIndexName));
+
+            await _client.IndexAsync(new[] {docDesc});
         }
     }
 }

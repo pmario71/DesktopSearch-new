@@ -289,6 +289,7 @@
     <Compile Include="Utils\EnumExtTests.cs" />
     <Compile Include="Utils\CollectionExtensionsTests.cs" />
     <Compile Include="Utils\LoggingInterceptor.cs" />
+    <Compile Include="Utils\LoggingInterceptorTests.cs" />
     <Compile Include="Utils\TestDirectoryProvider.cs" />
     <None Include="app.config" />
     <None Include="AppReadme\Compare-NET-Objects-Help.chm" />

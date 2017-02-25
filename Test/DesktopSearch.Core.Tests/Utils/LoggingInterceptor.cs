@@ -7,14 +7,23 @@ using Microsoft.Extensions.Logging;
 
 namespace DesktopSearch.Core.Tests.Utils
 {
-    class LoggingInterceptor<T> : ILogger<T>
+    public class LoggingInterceptor<T> : ILogger<T>
     {
+        private readonly bool _ignoreInfoLevel;
         private readonly ICollection<LogEvent> _loggedEvents = new SynchronizedCollection<LogEvent>();
+
+        public LoggingInterceptor(bool ignoreInfoLevel=false)
+        {
+            _ignoreInfoLevel = ignoreInfoLevel;
+        }
 
         public IEnumerable<LogEvent> LoggedEvents => _loggedEvents;
 
         public void Log<TState>(LogLevel logLevel, EventId eventId, TState state, Exception exception, Func<TState, Exception, string> formatter)
         {
+            if (_ignoreInfoLevel && logLevel > LogLevel.Information)
+                return;
+
             Console.WriteLine(formatter(state, exception));
             _loggedEvents.Add(new LogEvent(logLevel, eventId.Id));
         }
@@ -45,7 +54,7 @@ namespace DesktopSearch.Core.Tests.Utils
         }
     }
 
-    internal class LogEvent
+    public class LogEvent
     {
         public LogLevel LogLevel { get; }
         public EventId EventId { get; }

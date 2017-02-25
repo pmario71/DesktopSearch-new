@@ -25,20 +25,20 @@ namespace DesktopSearch.Core.Tests.ElasticSearch
         public async Task Setup_and_populate_Index()
         {
             var docColRepo = new Moq.Mock<IDocumentCollectionRepository>();
-            var esClient = ElasticTestClientFactory.Create();
+            //var esClient = ElasticTestClientFactory.Create();
 
             var elasticMock = CfgMocks.GetElasticSearchConfigMock();
             var tikaMock = CfgMocks.GetTikaConfigMock();
             
 
-            var sut = new Core.ElasticSearch.ManagementService(esClient, elasticMock);
+            //var sut = new Core.ElasticSearch.ManagementService(esClient, elasticMock);
 
-            await sut.EnsureIndicesCreated();
+            //await sut.EnsureIndicesCreated();
 
-            
+            //TODO: fix
             var docFolderProcessoer = new DocumentFolderProcessor(
                                                     docColRepo.Object,
-                                                    esClient,
+                                                    null,
                                                     elasticMock,
                                                     new TikaServerExtractor(tikaMock));
 
@@ -157,14 +157,14 @@ and Member (the innermost set of parentheses). This involves comparing all the r
 
         private static IndexingService CreateIndexingService(out IElasticClient esClient, out SearchService searchSvc)
         {
-            esClient = ElasticTestClientFactory.Create();
+            esClient = null; //ElasticTestClientFactory.Create();
             //var mgtmSvc = new Core.ElasticSearch.ManagementService(esClient, config);
 
             var mock = new Services.NullMockStore();
             var dcr = new DocumentCollectionRepository(mock);
 
             var docProc = new DocumentFolderProcessor(dcr, 
-                                                      esClient, 
+                                                      null, 
                                                       CfgMocks.GetElasticSearchConfigMock(), 
                                                       new TikaServerExtractor(CfgMocks.GetTikaConfigMock()));
 
@@ -173,7 +173,7 @@ and Member (the innermost set of parentheses). This involves comparing all the r
             var elasticMock = new Moq.Mock<IConfigAccess<ElasticSearchConfig>>();
             elasticMock.Setup(m => m.Get()).Returns(ElasticTestClientFactory.Config);
 
-            searchSvc = new SearchService(esClient, elasticMock.Object, docProc);
+            searchSvc = new SearchService(null, elasticMock.Object, docProc);
 
             return indexingSvc;
         }
