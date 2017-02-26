@@ -159,15 +159,10 @@ namespace DesktopSearch.PS.Tests.Configuration
     internal class TestFactory : IStreamFactory
     {
         private MemoryStream _lastUsedStream;
-        private string _content;
 
         public TestFactory()
         {
         }
-        //public TestFactory(string contentToInitialize)
-        //{
-        //    _content = contentToInitialize;            
-        //}
 
         public MemoryStream LastUsedStream { get => _lastUsedStream; }
 
@@ -178,10 +173,7 @@ namespace DesktopSearch.PS.Tests.Configuration
                 _lastUsedStream.Position = 0;
                 return _lastUsedStream;
             }
-            if (_content != null)
-                _lastUsedStream = new MemoryStreamEx(Encoding.Default.GetBytes(_content));
-            else
-                _lastUsedStream = new MemoryStreamEx();
+            _lastUsedStream = new MemoryStreamEx();
 
             return _lastUsedStream;
         }

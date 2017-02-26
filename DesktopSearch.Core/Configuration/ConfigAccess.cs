@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DesktopSearch.Core.DataModel.Documents;
 using System.Reflection;
+using DesktopSearch.Core.Utils;
 using Newtonsoft.Json.Serialization;
 using static DesktopSearch.Core.Configuration.ConfigAccess;
 using Microsoft.Extensions.Logging;
@@ -100,7 +101,7 @@ namespace DesktopSearch.Core.Configuration
     internal class ConfigAccess<T> : IConfigAccess<T>
         where T : class, new()
     {
-        private static JsonSerializerSettings _formatSettings = new JsonSerializerSettings
+        private static readonly JsonSerializerSettings FormatSettings = new JsonSerializerSettings
         {
             NullValueHandling = NullValueHandling.Ignore,
             Formatting = Formatting.Indented,
@@ -110,6 +111,7 @@ namespace DesktopSearch.Core.Configuration
         };
 
         private IStreamFactory _factory;
+        private Lazy<ILogger<ConfigAccess<T>>> _logger = new Lazy<ILogger<ConfigAccess<T>>>(Logging.GetLogger<ConfigAccess<T>>);
 
         public ConfigAccess(IStreamFactory factory)
         {
@@ -129,11 +131,13 @@ namespace DesktopSearch.Core.Configuration
 
             try
             {
-                foldersToIndex = JsonConvert.DeserializeObject<T>(content, _formatSettings);
+                foldersToIndex = JsonConvert.DeserializeObject<T>(content, FormatSettings);
             }
             catch(JsonSerializationException ex)
             {
-                System.Diagnostics.Trace.TraceWarning("Failed to deserialize");
+                _logger.Value.LogWarning(new EventId(LoggedIds.ErrorDeserializingConfiguration), 
+                                         $"Failed to deserialize type {typeof(T)} from configuration!", 
+                                         ex);
             }
 
             return foldersToIndex ?? new T();
@@ -142,7 +146,7 @@ namespace DesktopSearch.Core.Configuration
         public void Save(T config)
         {
             var serialized = JsonConvert.SerializeObject(config,
-                                                         _formatSettings);
+                                                         FormatSettings);
 
             using (var sw = new StreamWriter(_factory.GetWritableStream(typeof(T).Name)))
             {

@@ -115,7 +115,7 @@ and Member (the innermost set of parentheses). This involves comparing all the r
         }
 
         [Test, Explicit]
-        public async Task Search_Documents()
+        public void Search_Documents()
         {
             IElasticClient esClient;
             SearchService searchSvc;

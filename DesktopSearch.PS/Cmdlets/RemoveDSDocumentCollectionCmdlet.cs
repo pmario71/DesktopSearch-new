@@ -1,5 +1,4 @@
-﻿using DesktopSearch.Core.DataModel.Documents;
-using DesktopSearch.Core.Services;
+﻿using DesktopSearch.Core.Services;
 using DesktopSearch.PS.Composition;
 using DesktopSearch.PS.Utils;
 using System;
@@ -18,8 +17,6 @@ namespace DesktopSearch.PS.Cmdlets
         private const string AddFolder = "AddFolder";
         private const string psAllCollections = "AllCollections";
         private const string psSingleCollection = "SingleCollection";
-
-        private IDocumentCollection _documentCollection;
 
         [Parameter(Mandatory = true, 
             HelpMessage = "Name of the DocumentCollection for which an additional folder shall be added.",

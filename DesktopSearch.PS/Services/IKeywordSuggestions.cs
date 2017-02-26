@@ -3,6 +3,9 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Threading.Tasks;
+using DesktopSearch.Core.Utils;
+using DesktopSearch.PS.Utils;
+using Microsoft.Extensions.Logging;
 
 namespace DesktopSearch.PS.Services
 {
@@ -31,7 +34,12 @@ namespace DesktopSearch.PS.Services
             }
             catch(Exception ex)
             {
-                suggestions = new[] { "NO_CONNECTION_ELASTIC" };
+                suggestions = new string[0];
+
+                var logger = Logging.GetLogger<KeywordSuggestionService>();
+                logger.LogWarning(new EventId(PSLoggedIds.FailedToGetKeywordSuggestions), 
+                                  "Failed to get keyword suggestions!", 
+                                  ex);
             }
             return suggestions;
         }

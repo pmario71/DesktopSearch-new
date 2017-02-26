@@ -3,7 +3,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace DesktopSearch.Core.Utils.Async
 {
@@ -28,7 +27,7 @@ namespace DesktopSearch.Core.Utils.Async
         /// <summary>
         /// Initializes a new instance of the <see cref="PropertyProgress&lt;T&gt;"/> class.
         /// </summary>
-        /// <param name="initialProgress">The initial progress value.</param>
+        /// <param name="progressReportCallback"></param>
         public AggregatingProgressReporter(Action<int> progressReportCallback)
         {
             if (progressReportCallback == null)
@@ -56,7 +55,7 @@ namespace DesktopSearch.Core.Utils.Async
                     _progress[id] = value;
 
                     // calc aggregated progress value
-                    double sum = (double)_progress.Sum();
+                    double sum = _progress.Sum();
                     int aggregatedValue = (int)(sum / _progress.Count);
 
                     _progressReportCallback(aggregatedValue);
@@ -65,7 +64,7 @@ namespace DesktopSearch.Core.Utils.Async
         }
 
         /// <summary>
-        /// A progress implementation that stores progress updates in a property. If this instance is created on a UI thread, its <see cref="Progress"/> property is suitable for data binding.
+        /// A progress implementation that stores progress updates in a property. If this instance is created on a UI thread, its Progress property is suitable for data binding.
         /// </summary>
         private sealed class AggregatingProgress : IProgress<int>
         {
@@ -76,7 +75,7 @@ namespace DesktopSearch.Core.Utils.Async
             public AggregatingProgress(AggregatingProgressReporter aggregator, int id)
             {
                 _aggregator = aggregator;
-                this._id = id;
+                _id = id;
             }
 
             void IProgress<int>.Report(int value)

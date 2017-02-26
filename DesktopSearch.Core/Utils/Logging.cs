@@ -8,7 +8,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DesktopSearch.Core.Utils
 {
-    internal static class Logging
+    public static class Logging
     {
         private static readonly LoggerFactory _loggerFactory = new LoggerFactory();
 

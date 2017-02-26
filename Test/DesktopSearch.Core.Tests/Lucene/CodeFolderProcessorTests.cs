@@ -25,7 +25,7 @@ namespace DesktopSearch.Core.Tests.Lucene
         [TestCase(10)]
         [TestCase(20)]
         [TestCase(40)]
-        public async Task FileIO_Test(int degreeOfParallelism)
+        public void FileIO_Test(int degreeOfParallelism)
         {
             const string folder = "c:\\Projects";
             var extensionFilter = new IncludeFileByExtensionFilter(".cs", ".xaml");

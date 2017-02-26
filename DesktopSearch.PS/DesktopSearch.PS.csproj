@@ -317,6 +317,7 @@
     <Compile Include="UI\TagViewModel.cs" />
     <Compile Include="Utils\AppConfig.cs" />
     <Compile Include="Utils\AsyncPump.cs" />
+    <Compile Include="Utils\LoggedIds.cs" />
     <Compile Include="Utils\ValidatePath.cs" />
   </ItemGroup>
   <ItemGroup>

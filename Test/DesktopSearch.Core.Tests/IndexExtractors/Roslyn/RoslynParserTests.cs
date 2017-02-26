@@ -30,18 +30,18 @@ namespace CodeSearchTests.Indexing.Roslyn
         [Test, Ignore("Requires reflection")]
         public void GetNamespaceMembers()
         {
-            const string csharp = @"   using System; using System.Collections.Generic; 
-                                       using System.Text; 
-                                       namespace HelloWorld 
-                                       { 
-                                           class Program 
-                                           { 
-                                               static void Main(string[] args) 
-                                               { 
-                                                   Console.WriteLine(""Hello, World!""); 
-                                               } 
-                                           } 
-                                       }";
+            //const string csharp = @"   using System; using System.Collections.Generic; 
+            //                           using System.Text; 
+            //                           namespace HelloWorld 
+            //                           { 
+            //                               class Program 
+            //                               { 
+            //                                   static void Main(string[] args) 
+            //                                   { 
+            //                                       Console.WriteLine(""Hello, World!""); 
+            //                                   } 
+            //                               } 
+            //                           }";
             //RoslynParser.GetNamespaceMembers(csharp);
         }
 
