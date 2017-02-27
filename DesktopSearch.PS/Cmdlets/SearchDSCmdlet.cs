@@ -29,6 +29,11 @@ namespace DesktopSearch.PS.Cmdlets
         [Parameter(Mandatory = false, ParameterSetName = "Code")]
         public ElementType? ElementType { get; set; }
 
+        [Parameter(Mandatory = true,
+            ValueFromPipeline = true, Position = 0, ParameterSetName = "Doc")]
+        [ValidateNotNullOrEmpty]
+        public string SearchDocs { get; set; }
+
         #region Dependencies
         [Import]
         internal ISearchService SearchService { get; set; }
@@ -45,7 +50,16 @@ namespace DesktopSearch.PS.Cmdlets
             var sw = Stopwatch.StartNew();
             AsyncPump.Run(async () =>
             {
-                var results = await this.SearchService.SearchCodeAsync(this.SearchCode, this.ElementType);
+                IEnumerable<object> results;
+
+                if (base.ParameterSetName == "Code")
+                {
+                    results = await this.SearchService.SearchCodeAsync(this.SearchCode, this.ElementType);
+                }
+                else
+                {
+                    results = await this.SearchService.SearchDocumentAsync(this.SearchDocs);
+                }
 
                 if (!results.Any())
                 {
@@ -60,14 +74,26 @@ namespace DesktopSearch.PS.Cmdlets
             });
         }
 
-        private void PrintVerbose(IEnumerable<TypeDescriptor> results)
+        private void PrintVerbose(IEnumerable<object> results)
         {
-            if (MyInvocation.BoundParameters.ContainsKey("Verbose"))
+            if (!MyInvocation.BoundParameters.ContainsKey("Verbose"))
+                return;
+
+            if (ParameterSetName == "Code")
             {
                 var sb = new StringBuilder();
-                foreach (var tp in results.Take(5))
+                foreach (var tp in results.Cast<TypeDescriptor>().Take(5))
                 {
                     sb.AppendLine($"{tp.Name} - {tp.Namespace}");
+                }
+                WriteVerbose(sb.ToString());
+            }
+            else
+            {
+                var sb = new StringBuilder();
+                foreach (var tp in results.Cast<DocDescriptor>().Take(5))
+                {
+                    sb.AppendLine($"{tp.Title} - {tp.Path}");
                 }
                 WriteVerbose(sb.ToString());
             }

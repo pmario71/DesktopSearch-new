@@ -281,6 +281,7 @@
     <Compile Include="Lucene\CodeIndexTests.cs" />
     <Compile Include="Lucene\DocumentExtensions_DocDescriptor_Tests.cs" />
     <Compile Include="Lucene\DocumentExtensions_TypeDescriptor_Tests.cs" />
+    <Compile Include="Lucene\DocumentIndexTests.cs" />
     <Compile Include="Lucene\LucenePrototypingTests.cs" />
     <Compile Include="Processors\DocumentFolderProcessorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

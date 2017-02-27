@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DesktopSearch.Core.DataModel.Documents;
 using Lucene.Net.Analysis;
+using Lucene.Net.Analysis.En;
 using Lucene.Net.Analysis.Miscellaneous;
 using Lucene.Net.Analysis.Standard;
 using Lucene.Net.Documents;
@@ -28,7 +29,13 @@ namespace DesktopSearch.Core.Lucene
         IEnumerable<string> GetIndexedDocuments();
     }
 
-    internal sealed class DocumentIndexer : IDocumentIndexer, IDisposable
+    public interface IDocumentSearch
+    {
+        QueryParser Parser { get; }
+        SearcherManager SearchManager { get; }
+    }
+
+    internal sealed class DocumentIndexer : IDocumentIndexer, IDocumentSearch, IDisposable
     {
         private readonly PerFieldAnalyzerWrapper _analyzer;
         private readonly IndexWriter             _indexWriter;
@@ -43,12 +50,13 @@ namespace DesktopSearch.Core.Lucene
             _analyzer = new PerFieldAnalyzerWrapper(new StandardAnalyzer(LuceneVersion.LUCENE_48),
                 new Dictionary<string, Analyzer>
                 {
+                    {"content", new EnglishAnalyzer(LuceneVersion.LUCENE_48)},
                     //{"name", new Analyzers.CamelCaseAnalyzer()},
                     //{"comment", new StandardAnalyzer(LuceneVersion.LUCENE_48)},
                 });
 
             _queryParser = new MultiFieldQueryParser(LuceneVersion.LUCENE_48,
-                new[] { "name", "elementtype", "comment" }, _analyzer);
+                new[] { "title", "keywords", "content" }, _analyzer);
 
             if (IndexWriter.IsLocked(indexDirectory))
             {
@@ -64,6 +72,14 @@ namespace DesktopSearch.Core.Lucene
             _indexWriter?.Dispose();
             _searcherManager?.Dispose();
         }
+
+        #region IDocumentSearch implementation
+
+        public QueryParser Parser => _queryParser;
+
+        public SearcherManager SearchManager => _searcherManager;
+
+        #endregion
 
         public Task IndexAsync(IEnumerable<DocDescriptor> extractedDocuments)
         {
@@ -81,23 +97,6 @@ namespace DesktopSearch.Core.Lucene
                 _indexWriter.Commit();
             });
         }
-
-
-        private void RemoveDeletedFiles()
-        {
-            IndexReader reader = _indexWriter.GetReader(true);
-            for (int i = 0; i < reader.MaxDoc; i++)
-            {
-                Document doc = reader.Document(i);
-
-                var file = doc.GetField("filepath").StringValue;
-                if (!System.IO.File.Exists(file))
-                {
-                    _indexWriter.DeleteDocuments(new Term("path", doc.GetField("path").StringValue));
-                }
-            }
-        }
-
         public IEnumerable<string> GetIndexedDocuments()
         {
             var resultDocs = new List<string>();
@@ -116,5 +115,22 @@ namespace DesktopSearch.Core.Lucene
 
             return resultDocs;
         }
+
+        #region Internals
+        private void RemoveDeletedFiles()
+        {
+            IndexReader reader = _indexWriter.GetReader(true);
+            for (int i = 0; i < reader.MaxDoc; i++)
+            {
+                Document doc = reader.Document(i);
+
+                var file = doc.GetField("filepath").StringValue;
+                if (!System.IO.File.Exists(file))
+                {
+                    _indexWriter.DeleteDocuments(new Term("path", doc.GetField("path").StringValue));
+                }
+            }
+        } 
+        #endregion
     }
 }

@@ -14,11 +14,13 @@ namespace DesktopSearch.Core.Services
 {
     internal class LuceneSearchService : ISearchService
     {
-        private ICodeSearch _codeSearch;
+        private readonly ICodeSearch     _codeSearch;
+        private readonly IDocumentSearch _docSearch;
 
-        public LuceneSearchService(ICodeSearch codeSearch)
+        public LuceneSearchService(ICodeSearch codeSearch, IDocumentSearch docSearch)
         {
             _codeSearch = codeSearch;
+            _docSearch = docSearch;
         }
 
         public Task<IEnumerable<string>> GetKeywordSuggestionsAsync(string filter = null)
@@ -26,9 +28,29 @@ namespace DesktopSearch.Core.Services
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<DocDescriptor>> SearchDocumentAsync(string querystring)
+        public Task<IEnumerable<DocDescriptor>> SearchDocumentAsync(string queryString)
         {
-            throw new NotImplementedException();
+            return Task.Run(() =>
+            {
+                var query = _docSearch.Parser.Parse(queryString);
+                var totalHits = 0;
+                var l = new List<DocDescriptor>();
+
+                // Execute the search with a fresh indexSearcher
+                _docSearch.SearchManager.MaybeRefreshBlocking();
+                _docSearch.SearchManager.ExecuteSearch(searcher =>
+                {
+                    var topDocs = searcher.Search(query, 10);
+                    totalHits = topDocs.TotalHits;
+                    foreach (var result in topDocs.ScoreDocs)
+                    {
+                        var doc = searcher.Doc(result.Doc);
+                        l.Add(doc.ToDocDescriptor());
+                    }
+                }, exception => { throw exception; });
+
+                return (IEnumerable<DocDescriptor>)l;
+            });
         }
 
         public Task<IEnumerable<TypeDescriptor>> SearchCodeAsync(string querystring, ElementType? elementType=null)

@@ -9,7 +9,7 @@ Test/DesktopSearch.PS.Tests/Bin
 Test/DesktopSearch.PS.Tests/Obj
 RegisterPerformanceCounters/bin
 RegisterPerformanceCounters/obj
-ServiceFabric/bin
+ServiceFabric
 
 elasticsearch-*
 packages

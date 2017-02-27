@@ -25,9 +25,10 @@ namespace DesktopSearch.Core.Tests.Lucene
             indexProviderMock.Setup(m => m.GetIndexDirectory(IndexType.Code))
                              .Returns(new RAMDirectory());
             
+            var docSearchMock = new Mock<IDocumentSearch>();
 
             var sut = new CodeIndexer(indexProviderMock.Object);
-            var sut2 = new LuceneSearchService(sut);
+            var sut2 = new LuceneSearchService(sut, docSearchMock.Object);
 
             // index
             var td = new TypeDescriptor(ElementType.Class, "TestClass", Visibility.Public, "syngo.Common.Test", "c:\\temp\\filename.cs", 123, "Some commend");
@@ -46,6 +47,5 @@ namespace DesktopSearch.Core.Tests.Lucene
             // Assert
             Assert.AreEqual(1, results.Count());
         }
-
     }
 }
