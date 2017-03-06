@@ -14,7 +14,7 @@ namespace DesktopSearch.Core.Configuration
         {
             get
             {
-                return _fileExtensionToIgnore ?? ".bin;.lnk;.db;.obj;.pdp";
+                return _fileExtensionToIgnore ?? ".bin;.lnk;.db;.obj;.pdb";
             }
             set { _fileExtensionToIgnore = value; }
         }

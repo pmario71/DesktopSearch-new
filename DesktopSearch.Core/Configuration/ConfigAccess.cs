@@ -110,8 +110,8 @@ namespace DesktopSearch.Core.Configuration
             TypeNameHandling = TypeNameHandling.All
         };
 
-        private IStreamFactory _factory;
-        private Lazy<ILogger<ConfigAccess<T>>> _logger = new Lazy<ILogger<ConfigAccess<T>>>(Logging.GetLogger<ConfigAccess<T>>);
+        private readonly IStreamFactory                 _factory;
+        private readonly Lazy<ILogger<ConfigAccess<T>>> _logger = new Lazy<ILogger<ConfigAccess<T>>>(Logging.GetLogger<ConfigAccess<T>>);
 
         public ConfigAccess(IStreamFactory factory)
         {

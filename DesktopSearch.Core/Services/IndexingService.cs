@@ -13,14 +13,13 @@ namespace DesktopSearch.Core.Services
 {
     internal class IndexingService : IIndexingService
     {
-        private Dictionary<IndexingStrategy, IFolderProcessor> _map;
-        private IDocumentCollectionRepository _documentCollectionRepository;
+        private readonly Dictionary<IndexingStrategy, IFolderProcessor> _map;
+        private readonly IDocumentCollectionRepository                  _documentCollectionRepository;
 
         Task EnsureInitialized = Task.CompletedTask;
 
         public IndexingService(
             IDocumentCollectionRepository documentCollectionRepository,
-            //ManagementService mgtSvc,
             DocumentFolderProcessor docFolderProcessor,
             CodeFolderProcessor codeFolderProcessor)
         {
@@ -31,8 +30,6 @@ namespace DesktopSearch.Core.Services
             };
 
             _documentCollectionRepository = documentCollectionRepository;
-
-            //EnsureInitialized = mgtSvc.EnsureIndicesCreated();
         }
 
         public async Task IndexRepositoryAsync(IDocumentCollection documentCollection, IProgress<int> progress = null)

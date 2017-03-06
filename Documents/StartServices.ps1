@@ -12,7 +12,7 @@ switch ($serviceToStart)
     }
     'tika'
     {
-        docker run -d -p 9998:9998 logicalspark/docker-tikaserver
+        docker run -d -p 9998:9998 docker-tikaserver_mp #logicalspark/docker-tikaserver
     }
     'elastic'
     {

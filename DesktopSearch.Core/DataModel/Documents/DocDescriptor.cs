@@ -37,6 +37,8 @@ namespace DesktopSearch.Core.DataModel.Documents
         [Keyword(Name = "contenttype")]
         public string ContentType { get; set; }
 
+        public string LanguageID { get; set; }
+
         [Number(Name = "rating", Boost = 1.1)]
         public int Rating { get; set; }
 

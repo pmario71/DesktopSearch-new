@@ -19,6 +19,8 @@ namespace DesktopSearch.PS.Cmdlets
         public string[] File { get; set; }
 
         #region Dependencies
+
+        [Import]
         public ITikaServerExtractor Extractor { get; set; }
         #endregion
 

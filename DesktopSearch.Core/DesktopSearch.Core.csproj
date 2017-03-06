@@ -338,6 +338,7 @@
     <Compile Include="Utils\LoggedIds.cs" />
     <Compile Include="Utils\Logging.cs" />
     <Compile Include="Utils\Performance.cs" />
+    <Compile Include="Utils\TextUtil.cs" />
     <Compile Include="Utils\Utils\TermHelper.cs" />
   </ItemGroup>
   <ItemGroup>

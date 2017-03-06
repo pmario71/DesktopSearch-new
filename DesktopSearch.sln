@@ -40,6 +40,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tooling", "Tooling", "{B5C0
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegisterPerformanceCounters", "RegisterPerformanceCounters\RegisterPerformanceCounters.csproj", "{96F1C808-1098-4E1F-B9C8-AF928A0366D7}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{2CEA2B63-4E8C-4BB3-832B-456556449B0A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TikaServer", "TikaServer", "{ECF42BC5-957E-4937-B132-61E4D01B2654}"
+	ProjectSection(SolutionItems) = preProject
+		Docker\TikaServer\dockerfile = Docker\TikaServer\dockerfile
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -78,5 +85,6 @@ Global
 		{B71F3397-F878-456D-876F-B5EF4119E3BF} = {E7ADD651-7D8B-4661-9767-9E37AA8AB610}
 		{3C322863-943D-4CD6-A8C4-FF7DE627F85F} = {B5C0538B-8FFA-48A5-A13F-0E8FB5A3F1D0}
 		{96F1C808-1098-4E1F-B9C8-AF928A0366D7} = {B5C0538B-8FFA-48A5-A13F-0E8FB5A3F1D0}
+		{ECF42BC5-957E-4937-B132-61E4D01B2654} = {2CEA2B63-4E8C-4BB3-832B-456556449B0A}
 	EndGlobalSection
 EndGlobal
