@@ -24,28 +24,6 @@ namespace DesktopSearch.Core.Configuration
             this.DocumentCollections = new DocumentCollection[] { };
         }
 
-        [JsonIgnore]
-        public Uri ElasticSearchUri
-        {
-            get
-            {
-                if (_elasticSearchUri == null)
-                {
-                    return new Uri("http://localhost:9200");
-                }
-                return _elasticSearchUri;
-            }
-            set
-            {
-                if (value == null)
-                    throw new ArgumentException("Null value not cannot be specified as ElasticSearchUri!");
-                if (value.Port <= 0)
-                    throw new ArgumentException($"No valid port specified: {value}!");
-
-                _elasticSearchUri = value;
-            }
-        }
-
         [JsonProperty]
         public string IndexDirectory { get; set; }
 

@@ -288,7 +288,6 @@
     <Compile Include="Cmdlets\GetTikaExtractCmdlet.cs" />
     <Compile Include="Cmdlets\GetTikaExtractRawCmdlet.cs" />
     <Compile Include="Cmdlets\ImportDSContentCmdlet.cs" />
-    <Compile Include="Cmdlets\InitializeDSIndexCmdlet.cs" />
     <Compile Include="Cmdlets\OpenDSLukeCmdlet.cs" />
     <Compile Include="Cmdlets\RemoveDSDocumentCollectionCmdlet.cs" />
     <Compile Include="Cmdlets\SaveDSSettingCmdlet.cs" />
@@ -299,7 +298,6 @@
     <Compile Include="Composition\CustomizedBootstrapper.cs" />
     <Compile Include="Composition\DefaultFactory.cs" />
     <Compile Include="Composition\Host.cs" />
-    <Compile Include="Cmdlets\GetDSSettingJSONCmdlet.cs" />
     <Compile Include="Cmdlets\GetDSSettingCmdlet.cs" />
     <Compile Include="Composition\IHost.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

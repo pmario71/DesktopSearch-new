@@ -47,26 +47,6 @@ namespace DesktopSearch.Core.Configuration
             return foldersToIndex ?? new LuceneConfig();
         }
 
-        public static string GetJSONExample()
-        {
-            throw new NotImplementedException("Not necessary anymore!");
-            //var fs = new FoldersToIndex()
-            //{
-            //    Folders = new[]
-            //    {
-            //        Folder.Create("c:\\temp", indexingType:"Code"),
-            //        Folder.Create("c:\\temp", indexingType:"Documents"),
-            //    }.ToList()
-            //};
-
-            //var serialized =
-            //JsonConvert.SerializeObject(
-            //    fs,
-            //    _formatSettings);
-
-            //return serialized;
-        }
-
         public void SaveChanges(LuceneConfig settings)
         {
             if (settings == null)

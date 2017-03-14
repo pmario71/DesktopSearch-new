@@ -54,9 +54,9 @@ namespace DesktopSearch.Core
 
         private void RegisterBaseServices(Container container)
         {
-            container.Register<DesktopSearch.Core.ElasticSearch.ClientFactory>(Lifestyle.Singleton);
-            container.Register<Nest.IElasticClient>(() => container.GetInstance<ElasticSearch.ClientFactory>().SearchClient,
-                Lifestyle.Singleton);
+            //container.Register<DesktopSearch.Core.ElasticSearch.ClientFactory>(Lifestyle.Singleton);
+            //container.Register<Nest.IElasticClient>(() => container.GetInstance<ElasticSearch.ClientFactory>().SearchClient,
+            //    Lifestyle.Singleton);
             //Func<Nest.IElasticClient> f = () => container.GetInstance<ElasticSearch.ClientFactory>().SearchClient;
             //container.Register<Nest.IElasticClient, Nest.ElasticClient>(Lifestyle.Singleton);
 

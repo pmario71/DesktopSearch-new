@@ -272,11 +272,7 @@
     <Compile Include="DependencyInjection\ContainerWrapper.cs" />
     <Compile Include="DependencyInjection\ImplicitPropertyInjectionBehavior.cs" />
     <Compile Include="DependencyInjection\ImportPropertySelectionBehavior.cs" />
-    <Compile Include="ElasticSearch\ClientFactory.cs" />
-    <Compile Include="ElasticSearch\ConnectionSettingsFactory.cs" />
-    <Compile Include="ElasticSearch\CustomIDescriptorConverter.cs" />
-    <Compile Include="ElasticSearch\Documents\Processor.cs" />
-    <Compile Include="ElasticSearch\ManagementService.cs" />
+    <Compile Include="DataModel\Code\CustomIDescriptorConverter.cs" />
     <Compile Include="IFolderProcessor.cs" />
     <Compile Include="DependencyInjection\OptionsConfigurationExt.cs" />
     <Compile Include="Lucene\Analyzers\CamelCaseAnalyzer.cs" />
@@ -290,7 +286,6 @@
     <Compile Include="Lucene\DocumentIndexer.cs" />
     <Compile Include="Lucene\IndexProvider.cs" />
     <Compile Include="Services\DocumentCollectionConfigStore.cs" />
-    <Compile Include="Services\DocumentCollectionElasticStore.cs" />
     <Compile Include="Services\DocumentCollectionRepository.cs" />
     <Compile Include="Services\FolderRootPathException.cs" />
     <Compile Include="Services\IDocumentCollectionPersistence.cs" />

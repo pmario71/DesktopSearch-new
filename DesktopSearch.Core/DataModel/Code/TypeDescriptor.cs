@@ -81,9 +81,7 @@ namespace DesktopSearch.Core.DataModel.Code
 
         public API APIDefinition { get; set; }
 
-        //[JsonProperty(TypeNameHandling = TypeNameHandling.Arrays)]
         [JsonConverter(typeof(CustomIDescriptorConverter))]
-        //[ElasticProperty(Index = FieldIndexOption.NotAnalyzed, Store = true, IncludeInAll = false)]
         public IList<IDescriptor> Members
         {
             get 

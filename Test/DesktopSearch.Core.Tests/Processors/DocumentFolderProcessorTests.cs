@@ -3,7 +3,6 @@ using DesktopSearch.Core.DataModel.Documents;
 using DesktopSearch.Core.Extractors.Tika;
 using DesktopSearch.Core.Processors;
 using DesktopSearch.Core.Services;
-using DesktopSearch.Core.Tests.ElasticSearch;
 using DesktopSearch.Core.Tests.Utils;
 using Microsoft.Extensions.Logging;
 using Moq;

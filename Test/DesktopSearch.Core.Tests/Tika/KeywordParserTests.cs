@@ -1,12 +1,7 @@
 ﻿using DesktopSearch.Core.Extractors.Tika;
 using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DesktopSearch.Core.Tests.ElasticSearch.Parser
+namespace DesktopSearch.Core.Tests.Tika
 {
 
     [TestFixture]
