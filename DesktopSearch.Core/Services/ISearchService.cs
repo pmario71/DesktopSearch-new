@@ -1,6 +1,5 @@
 ﻿using DesktopSearch.Core.DataModel.Code;
 using DesktopSearch.Core.DataModel.Documents;
-using Nest;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 

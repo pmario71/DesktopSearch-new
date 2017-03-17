@@ -1,6 +1,5 @@
 using DesktopSearch.Core.DataModel;
 using DesktopSearch.Core.ElasticSearch;
-using Nest;
 using Newtonsoft.Json;
 using System;
 using System.Collections;

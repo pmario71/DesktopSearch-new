@@ -4,7 +4,6 @@ using DesktopSearch.Core.DataModel.Documents;
 using DesktopSearch.Core.Extractors.Roslyn;
 using DesktopSearch.Core.FileSystem;
 using DesktopSearch.Core.Lucene;
-using Nest;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;

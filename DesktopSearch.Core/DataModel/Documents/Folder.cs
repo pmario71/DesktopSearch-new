@@ -1,5 +1,4 @@
-﻿using Nest;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.IO;
 
@@ -9,7 +8,6 @@ namespace DesktopSearch.Core.DataModel.Documents
     /// <summary>
     /// Refers to a machine specific storage location.
     /// </summary>
-    [ElasticsearchType(Name = "folder", IdProperty = "Path")]
     public sealed class Folder : IFolder
     {
         public Folder()
@@ -38,10 +36,8 @@ namespace DesktopSearch.Core.DataModel.Documents
             return f;
         }
 
-        [Keyword(Ignore = true)]
         public string Path { get; internal set; }
 
-        [Keyword(Ignore =true)]
         public string Machinename { get; internal set; }
 
         public IDocumentCollection DocumentCollection { get; set; }

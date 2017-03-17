@@ -6,7 +6,6 @@ using DesktopSearch.Core.Services;
 using DesktopSearch.Core.Tests.Utils;
 using Microsoft.Extensions.Logging;
 using Moq;
-using Nest;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -56,56 +55,6 @@ namespace DesktopSearch.Core.Tests.Processors
             
 
             sut.ProcessAsync(cfgFolder);
-        }
-
-        [Test, Ignore("Elastic to Lucene")]
-        public async Task Run_on_file()
-        {
-            var docColRepo = new Mock<IDocumentCollectionRepository>();
-            //var client = new Moq.Mock<IElasticClient>();
-            
-            var logging = new Moq.Mock<ILogger<DocumentFolderProcessor>>();
-            var tika = new Moq.Mock<ITikaServerExtractor>();
-
-            var docDesc = new DocDescriptor();
-            tika.Setup(t => t.ExtractAsync(It.IsAny<Extractors.ParserContext>(), It.IsAny<FileInfo>())).
-                ReturnsAsync(docDesc);
-
-            string folder = CreateTestFolder();
-            var filePath = folder + "\\TestDocument.txt";
-            File.WriteAllText(filePath, "The content");
-
-            // ensure that mock return
-            var result = new Mock<IIndexResponse>();
-            result.Setup(t => t.IsValid)
-                .Returns(true);
-
-            //client.Setup(t => t.IndexAsync(It.Is<DocDescriptor>(d => d.Path == filePath), null, default(CancellationToken)))
-
-            //TODO: fix
-            //client.Setup(t => t.IndexAsync(It.IsAny<DocDescriptor>(), 
-            //                               It.IsAny<Func<IndexDescriptor<DocDescriptor>, IIndexRequest>>(), 
-            //                               It.IsAny<CancellationToken>()))
-            //                                    .Returns(Task.FromResult<IIndexResponse>(result.Object));
-
-
-            var sut = new DocumentFolderProcessor(
-                docColRepo.Object, 
-                null, 
-                CfgMocks.GetLuceneConfigMock(),
-                tika.Object
-                /*, logging.Object*/);
-
-            var cfgFolder = Folder.Create(folder);
-
-            var dcMock = new Mock<IDocumentCollection>();
-            dcMock.Setup(m => m.Name).Returns("Some name");
-            cfgFolder.DocumentCollection = dcMock.Object;
-
-
-            await sut.ProcessAsync(cfgFolder);
-
-            //client.VerifyAll();            
         }
 
         private string CreateTestFolder()

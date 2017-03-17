@@ -62,7 +62,7 @@ namespace DesktopSearch.Core
 
             // removed
             //container.Register<Core.ElasticSearch.ManagementService>(Lifestyle.Singleton);
-
+            container.Register<Services.IDocker, Services.DockerService>(Lifestyle.Singleton);
             container.Register<Extractors.Tika.ITikaServerExtractor,Extractors.Tika.TikaServerExtractor>(Lifestyle.Singleton);
 
 

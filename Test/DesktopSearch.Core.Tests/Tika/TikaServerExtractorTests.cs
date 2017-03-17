@@ -9,6 +9,7 @@ using DesktopSearch.Core.Tika;
 using System.Diagnostics;
 using DesktopSearch.Core.Tests;
 using DesktopSearch.Core.Configuration;
+using DesktopSearch.Core.Services;
 using DesktopSearch.Core.Tests.Utils;
 
 namespace DesktopSearch.Core.Extractors.Tika
@@ -17,6 +18,21 @@ namespace DesktopSearch.Core.Extractors.Tika
     public class TikaServerExtractorTests
     {
         private TikaServer _server;
+        private static DockerService _dockerService;
+
+        [OneTimeSetUp]
+        public static void SetupFixture()
+        {
+            _dockerService = new DockerService();
+            _dockerService.EnsureTikaStarted().Wait(TimeSpan.FromSeconds(5));
+        }
+
+        [OneTimeTearDown]
+        public static void Teardown()
+        {
+            _dockerService.StopTika().Wait(TimeSpan.FromSeconds(15));
+            _dockerService.CleanupTikaContainers().Wait(5);
+        }
 
         [SetUp]
         public void Setup()

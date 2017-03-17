@@ -1,7 +1,7 @@
 param
 (
     [ValidateSet('all','tika','elastic')]
-    [string]$serviceToStart='all'
+    [string]$serviceToStart='tika'
 )
 
 switch ($serviceToStart)

@@ -1,10 +1,8 @@
 using DesktopSearch.Core.DataModel;
-using Nest;
 using System;
 
 namespace DesktopSearch.Core.DataModel.Code
 {
-    [ElasticsearchType(Name = "field")]
     public class FieldDescriptor : IDescriptor, IAPIElement
     {
         public FieldDescriptor(string name, string fieldType)
@@ -13,7 +11,6 @@ namespace DesktopSearch.Core.DataModel.Code
             FieldType = fieldType;
         }
 
-        [Text()]
         public string Name { get; set; }
 
         public string FieldType { get; set; }

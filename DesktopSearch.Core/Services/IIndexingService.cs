@@ -15,6 +15,6 @@ namespace DesktopSearch.Core.Services
 
         Task IndexDocumentAsync(string documentPath);
 
-        Task IndexDocumentAsync(DocDescriptor document);
+        Task IndexDocumentAsync(DocDescriptor documentDescriptor);
     }
 }
