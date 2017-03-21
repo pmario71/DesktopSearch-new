@@ -7,6 +7,9 @@ Test/DesktopSearch.Core.Tests/Bin
 Test/DesktopSearch.Core.Tests/Obj
 Test/DesktopSearch.PS.Tests/Bin
 Test/DesktopSearch.PS.Tests/Obj
+RegisterPerformanceCounters/bin
+RegisterPerformanceCounters/obj
+ServiceFabric
 
 elasticsearch-*
 packages
@@ -61,3 +64,4 @@ Temporary Items
 *.suo
 *.~vsdx
 *.user
+ServiceFabric/bin/Debug/nunit_random_seed.tmp

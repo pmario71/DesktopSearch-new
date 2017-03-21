@@ -1,12 +1,10 @@
-﻿using Nest;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
 
 namespace DesktopSearch.Core.DataModel.Documents
 {
-    [ElasticsearchType(Name = "documentcollection", IdProperty = "Name")]
     public sealed class DocumentCollection : IDocumentCollection
     {
         [JsonIgnore]
@@ -43,7 +41,6 @@ namespace DesktopSearch.Core.DataModel.Documents
             return dt;
         }
 
-        [Keyword]
         public string Name { get; private set; }
 
         /// <summary>
@@ -63,13 +60,11 @@ namespace DesktopSearch.Core.DataModel.Documents
         /// <summary>
         /// File extensions to be ignored when indexing
         /// </summary>
-        [Keyword(Ignore =true)]
         public string[] ExcludedExtensions { get; set; }
 
         /// <summary>
         /// File extensions to be included when indexing
         /// </summary>
-        [Keyword(Ignore = true)]
         public string[] IncludedExtensions { get; set; }
 
         public IndexingStrategy IndexingStrategy
@@ -91,6 +86,12 @@ namespace DesktopSearch.Core.DataModel.Documents
                 return true;
             }
             return false;
+        }
+
+        public void AddFolder(Folder folder)
+        {
+            folder.DocumentCollection = this;
+            _folders.Add(folder);
         }
     }
 
@@ -124,6 +125,8 @@ namespace DesktopSearch.Core.DataModel.Documents
         /// File extensions to be included when indexing
         /// </summary>
         string[] IncludedExtensions { get; set; }
+
+        void AddFolder(Folder folder);
     }
 
     public enum IndexingStrategy

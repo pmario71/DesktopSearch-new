@@ -42,6 +42,25 @@ namespace DesktopSearch.Core.Services
             _store.StoreOrUpdateAsync(documentCollection).Wait();
         }
 
+        public void RemoveAll()
+        {
+            var entries =_docCollectionCache.Result.ToArray();
+            _store.Remove(entries.Select(dc => dc.Name));
+            _docCollectionCache.Result.Clear();
+        }
+
+        public void Remove(string documentCollectionName)
+        {
+            var doccol = _docCollectionCache.Result.SingleOrDefault(dc => dc.Name == documentCollectionName);
+            if (doccol == null)
+            {
+                throw new ArgumentException($"A DocumentCollection with name '{documentCollectionName}' is not known!");
+            }
+
+            _store.Remove(new[] { documentCollectionName });
+            _docCollectionCache.Result.Remove(doccol);
+        }
+
         public bool TryGetDocumentCollectionByName(string name, out IDocumentCollection documentCollection)
         {
             documentCollection = _docCollectionCache.Result.SingleOrDefault(p => StringComparer.OrdinalIgnoreCase.Compare(p.Name, name) == 0);
@@ -140,14 +159,8 @@ New folders neither can be a child or a parent of an already existing folder!
                 throw new FolderRootPathException($"A path '' already assigned to DocumentCollection!");
             }
         }
+        
         #endregion
-    }
-
-    public interface IDocumentCollectionPersistence
-    {
-        Task<IEnumerable<IDocumentCollection>> LoadAsync();
-
-        Task StoreOrUpdateAsync(IDocumentCollection documentCollection);
     }
 
     class ValidatingCollection<T> : ObservableCollection<T>

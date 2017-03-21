@@ -1,40 +1,62 @@
 ﻿using System;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
 using System.Net.Http;
 using System.Net.Http.Headers;
+using System.Text;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using DesktopSearch.Core.Tika;
 using DesktopSearch.Core.DataModel.Documents;
 using System.Threading.Tasks;
 using DesktopSearch.Core.Contracts;
+using DesktopSearch.Core.Configuration;
+using DesktopSearch.Core.Utils;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace DesktopSearch.Core.Extractors.Tika
 {
-    public class TikaServerExtractor : IDisposable
+    public interface ITikaServerExtractor
     {
+        Task<DocDescriptor> ExtractAsync(ParserContext context, FileInfo filePath);
+
+        /// <summary>
+        /// Low-level extraction. Typically <see cref="ExtractAsync"/> is what you are looking for.
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <returns></returns>
+        Task<TikaRawResult> SendToTikaAsync(FileInfo filePath);
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="text"></param>
+        /// <returns></returns>
+        Task<string> DetectLanguageAsync(string text);
+    }
+
+    public class TikaServerExtractor : ITikaServerExtractor, IDisposable
+    {
+        private readonly IConfigAccess<TikaConfig> _config;
+        private readonly Lazy<ILogger<TikaServerExtractor>> _logger = new Lazy<ILogger<TikaServerExtractor>>(Logging.GetLogger<TikaServerExtractor>);
+
         private const string ContentTag = "X-TIKA:content";
         private const string ContentTypeTag = "Content-Type";
 
         private readonly HttpClient _client;
 
         /// <summary>
-        /// Use local Tika Server listenting on default port (9998).
-        /// </summary>
-        public TikaServerExtractor() : this(new Uri("http://localhost:9998/"))
-        {
-        }
-
-        /// <summary>
         /// Make extractor use a Tika Server on different uri.
         /// </summary>
         /// <param name="uri"></param>
-        public TikaServerExtractor(Uri uri)
+        public TikaServerExtractor(IConfigAccess<TikaConfig> config)
         {
+            _config = config;
             _client = new HttpClient()
             {
-                BaseAddress = uri
+                BaseAddress = new Uri(config.Get().Uri)
             };
             _client.DefaultRequestHeaders.Accept.Clear();
             _client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -50,12 +72,54 @@ namespace DesktopSearch.Core.Extractors.Tika
         {
             var ts = Stopwatch.StartNew();
 
-            var content = await SendToTikaAsync(filePath);
-            var doc = await ConvertToDocumentAsync(filePath, content);
+            var tikaResult = await SendToTikaAsync(filePath);
 
-            doc.ExtractionDuration = ts.Elapsed;
+            //TODO: switch to DocumentExtensions ??? 
+            DocDescriptor doc;
+            if (tikaResult.Error == ErrorState.UnsupportedFileType)
+            {
+                doc = DocDescriptor.UnsupportedFileType(filePath.FullName);
+            }
+            else
+            {
+                doc = await ConvertToDocumentAsync(filePath, tikaResult);
+                try
+                {
+                    string language = await DetectLanguageAsync(TextUtil.ExtractText(doc.Content));
+                    doc.LanguageID = language;
+                }
+                catch (Exception e)
+                {
+                    string msg = $"Failed to extract language from file: {filePath}";
+                    _logger.Value.LogWarning(new EventId(LoggedIds.ErrorDetectingLanguage), e, msg);
+                }
+                doc.ExtractionDuration = ts.Elapsed;
+            }
 
             return doc;
+        }
+
+        
+
+        public async Task<string> DetectLanguageAsync(string text)
+        {
+            var httpRequestMessage = new HttpRequestMessage();
+
+            httpRequestMessage.Method = HttpMethod.Put;
+            httpRequestMessage.RequestUri = new Uri(_config.Get().Uri + "language/string");
+            httpRequestMessage.Headers.Accept.Clear();
+            httpRequestMessage.Headers.Accept.Add(MediaTypeWithQualityHeaderValue.Parse("text/plain"));
+                
+            HttpContent httpContent = new StringContent(text, Encoding.UTF8, "text/plain");
+            httpRequestMessage.Content = httpContent;
+
+            var response = await _client.SendAsync(httpRequestMessage);
+
+            if (!response.IsSuccessStatusCode)
+            {
+                return null;
+            }
+            return await response.Content.ReadAsStringAsync();
         }
 
         /// <summary>
@@ -68,18 +132,27 @@ namespace DesktopSearch.Core.Extractors.Tika
             try
             {
                 var msg = await this.SendFileAsync(filePath);
+
+                if (msg.StatusCode == HttpStatusCode.UnsupportedMediaType)
+                {
+                    return TikaRawResult.FromError(ErrorState.UnsupportedFileType);
+                }
+                if (msg.StatusCode != HttpStatusCode.OK)
+                {
+                    throw new IndexExtractionException("No valid response from Tika Service!", filePath.FullName, ExtractionFailureType.TikaReturnedNoResults);
+                }
+
                 var content = await msg.Content.ReadAsStringAsync();
 
                 if (string.IsNullOrEmpty(content))
                 {
                     throw new IndexExtractionException("No valid response from Tika Service!", filePath.FullName, ExtractionFailureType.TikaReturnedNoResults);
                 }
-                return new TikaRawResult(content);
+                return TikaRawResult.FromContent(content);
             }
             catch(Exception ex)
             {
-                Console.WriteLine(ex);
-                throw;
+                throw new IndexExtractionException($"Sending file '{filePath}' to Tika failed!", ex);
             }
         }
 

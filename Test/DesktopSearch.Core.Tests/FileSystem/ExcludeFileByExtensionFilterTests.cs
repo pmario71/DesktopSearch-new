@@ -16,7 +16,7 @@ namespace DesktopSearch.Core.Tests.FileSystem
         [TestCase(new[] { "c:\\temp\\Test.txt" }, new[] { "c:\\temp\\Test.txt", "c:\\test.xaml" })]
         public void FilterByExtension_over_enumeration(string[] expectedResult, string[] file)
         {
-            var sut = new ExcludeFileByExtensionFilter("cs", "xaml");
+            var sut = new ExcludeFileByExtensionFilter(".cs", ".xaml");
             var result = sut.FilterByExtension(file);
             
             Assert.True(expectedResult.SequenceEqual(result));
@@ -30,8 +30,14 @@ namespace DesktopSearch.Core.Tests.FileSystem
         [TestCase("c:\\temp\\Test.xaml", false)]
         public void FilterByExtension_over_single_value(string file, bool expectedResult)
         {
-            var sut = new ExcludeFileByExtensionFilter("cs", "xaml");
+            var sut = new ExcludeFileByExtensionFilter(".cs", ".xaml");
             Assert.AreEqual(expectedResult, sut.FilterByExtension(file));
+        }
+
+        [Test]
+        public void FilterByExtension_throws_when_wrong_extension_specified()
+        {
+            Assert.Throws<ArgumentException>(() => new ExcludeFileByExtensionFilter(".cs", "xaml"));
         }
     }
 }

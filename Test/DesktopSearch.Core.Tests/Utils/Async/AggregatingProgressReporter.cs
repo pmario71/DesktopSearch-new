@@ -1,4 +1,5 @@
 ﻿using DesktopSearch.Core.Utils.Async;
+using Nito.AsyncEx;
 using NUnit.Framework;
 using System;
 using System.Collections.Generic;
@@ -17,12 +18,12 @@ namespace DesktopSearch.Core.Tests.Utils.Async
         {
             int reportedValue = -1;
             var l = new AsyncLock();
-            l.Lock();
+            var release = l.Lock();
 
             Action<int> callback = t =>
             {
                 reportedValue = t;
-                l.ReleaseLock();
+                release.Dispose();
             };
 
             var sut = new AggregatingProgressReporter(callback);
@@ -41,12 +42,12 @@ namespace DesktopSearch.Core.Tests.Utils.Async
         {
             int reportedValue = -1;
             var l = new AsyncLock();
-            l.Lock();
+            var release = l.Lock();
 
             Action<int> callback = t => 
             {
                 reportedValue = t;
-                l.ReleaseLock();
+                release.Dispose();
             };
 
             var sut = new AggregatingProgressReporter(callback);
@@ -67,15 +68,15 @@ namespace DesktopSearch.Core.Tests.Utils.Async
         {
             int reportedValue = -1;
             var l = new AsyncLock();
-            l.Lock();
+            var release = l.Lock();
 
             int timesToCall = 2;
             Action<int> callback = t =>
             {
                 reportedValue = t;
 
-                if ((--timesToCall) <= 0)
-                    l.ReleaseLock();
+                if ((Interlocked.Decrement(ref timesToCall)) <= 0)
+                    release.Dispose();
             };
 
             var sut = new AggregatingProgressReporter(callback);
@@ -97,7 +98,7 @@ namespace DesktopSearch.Core.Tests.Utils.Async
         {
             int reportedValue = -1;
             var l = new AsyncLock();
-            l.Lock();
+            var release = l.Lock();
 
             int timesToCall = 2;
             Action<int> callback = t =>
@@ -105,7 +106,7 @@ namespace DesktopSearch.Core.Tests.Utils.Async
                 reportedValue = t;
 
                 if ((Interlocked.Decrement(ref timesToCall)) <= 0)
-                    l.ReleaseLock();
+                    release.Dispose();
             };
 
             var sut = new AggregatingProgressReporter(callback);

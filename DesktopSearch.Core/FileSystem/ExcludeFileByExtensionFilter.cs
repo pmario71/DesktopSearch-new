@@ -16,7 +16,12 @@ namespace DesktopSearch.Core.FileSystem
         public ExcludeFileByExtensionFilter(params string[] extensions)
         {
             if (extensions == null)
-                throw new ArgumentNullException("extensions");
+                throw new ArgumentNullException(nameof(extensions));
+
+            if (extensions.Any(e => e[0] != '.'))
+            {
+                throw new ArgumentException("Extensions are expected to start with '.' (e.g. '.pdf')!", nameof(extensions));
+            }
 
             _map = new HashSet<string>(extensions, StringComparer.OrdinalIgnoreCase);
         }
@@ -27,7 +32,7 @@ namespace DesktopSearch.Core.FileSystem
             if (ext == null)
                 return true;
 
-            if (_map.Contains(ext.Substring(1)))
+            if (_map.Contains(ext))
             {
                 return false;
             }

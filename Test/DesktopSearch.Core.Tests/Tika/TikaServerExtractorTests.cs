@@ -8,6 +8,9 @@ using NUnit.Framework;
 using DesktopSearch.Core.Tika;
 using System.Diagnostics;
 using DesktopSearch.Core.Tests;
+using DesktopSearch.Core.Configuration;
+using DesktopSearch.Core.Services;
+using DesktopSearch.Core.Tests.Utils;
 
 namespace DesktopSearch.Core.Extractors.Tika
 {
@@ -15,6 +18,21 @@ namespace DesktopSearch.Core.Extractors.Tika
     public class TikaServerExtractorTests
     {
         private TikaServer _server;
+        private static DockerService _dockerService;
+
+        [OneTimeSetUp]
+        public static void SetupFixture()
+        {
+            _dockerService = new DockerService();
+            _dockerService.EnsureTikaStarted().Wait(TimeSpan.FromSeconds(5));
+        }
+
+        [OneTimeTearDown]
+        public static void Teardown()
+        {
+            _dockerService.StopTika().Wait(TimeSpan.FromSeconds(15));
+            _dockerService.CleanupTikaContainers().Wait(5);
+        }
 
         [SetUp]
         public void Setup()
@@ -38,10 +56,10 @@ namespace DesktopSearch.Core.Extractors.Tika
         //[TestCase(@"D:\Dokumente\Bücher\Agile\xx\Wrox.Code.Leader.Using.People.Tools.and.Processes.to.Build.Successful.Software.May.2008.pdf"), Explicit]
         public async Task ParseFileTests(string testFile)
         {
-            string fullTestFilename = $"{TestContext.CurrentContext.WorkDirectory}\\{testFile}";
+            string fullTestFilename = $"{TestContext.CurrentContext.TestDirectory}\\{testFile}";
 
             //var context = new ParserContext();
-            using (var target = new TikaServerExtractor())
+            using (var target = new TikaServerExtractor(CfgMocks.GetTikaConfigMock()))
             {
                 var ctx = new ParserContext();
                 var sw = Stopwatch.StartNew();
@@ -60,7 +78,7 @@ namespace DesktopSearch.Core.Extractors.Tika
             }
         }
 
-        [Test, Explicit(TestDefinitions.Requires_running_Tika_service_instance)]
+        [Test]
         public async Task Parse_Performance_Test()
         {
             const int testcycles = 1;
@@ -79,7 +97,7 @@ namespace DesktopSearch.Core.Extractors.Tika
             Console.WriteLine($"running {testcycles} testcycles (values in [ms])");
             Console.WriteLine("==================================================");
 
-            using (var target = new TikaServerExtractor())
+            using (var target = new TikaServerExtractor(CfgMocks.GetTikaConfigMock()))
             {
                 var durations = new TimeSpan[files.Length];
                 var ctx = new ParserContext();
@@ -101,6 +119,29 @@ namespace DesktopSearch.Core.Extractors.Tika
                     Console.WriteLine();
                 }
                 Console.WriteLine("Testcycle duration [s]: {0,10}", durations.Sum(v => v.TotalSeconds));
+            }
+        }
+
+        [Test]
+        public async Task DetectLanguageTests()
+        {
+            
+            using (var target = new TikaServerExtractor(CfgMocks.GetTikaConfigMock()))
+            {
+                
+                var sw = Stopwatch.StartNew();
+
+                var txt = "\"Dieselgate hätte vermieden werden können, wenn die EU-Kommission und die Mitgliedstaaten einfach nur EU-Recht " +
+                          "eingehalten hätten.\" So fasst der liberale niederländische EU-Parlamentarier Gerben-Jan Gerbrandy das Ergebnis " +
+                          "eines Untersuchungsausschusses zur Abgasaffäre zusammen. Die Mitglieder hatten seit April 2016 untersucht, wie es " +
+                          "zu dem Skandal um manipulierte Dieselmotoren kommen konnte.";
+
+                var language = await target.DetectLanguageAsync(txt);
+
+                sw.Stop();
+                Console.WriteLine($"Extraction took: {sw.ElapsedMilliseconds} [ms]");
+
+                Assert.AreEqual("de", language);
             }
         }
     }

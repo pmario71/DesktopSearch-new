@@ -1,5 +1,10 @@
 # Requirements Specification
 
+## Todo List
+
+* Disposal of services is critical, because they do have a lock on Lucene index
+
+
 ## Document Processing Pipeline
 
 ![Flow of operations](./Images/Flow_of_operations.png)
@@ -83,3 +88,18 @@ See:\
 ## Dependent Services
 
 Use docker-compose to start all services that are required.
+
+### Tika Docker Image
+
+Switching on language detection for Tika required building an own docker image.\
+See dockerfile under: `Docker\TikaServer\dockerfile`
+
+Building the image:\
+`docker build -t docker-tikaserver_mp .\`
+
+Running the image:\
+`docker run -d -p 9998:9998 docker-tikaserver_mp`
+
+**Remarks:**\
+Make sure to work out of the right directory:\
+`C:\Projects\Tools\DesktopSearch\Docker\TikaServer`

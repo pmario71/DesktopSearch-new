@@ -1,13 +1,11 @@
 using DesktopSearch.Core.DataModel;
 using DesktopSearch.Core.ElasticSearch;
-using Nest;
 using Newtonsoft.Json;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-//using System.Diagnostics.Contracts;
 
 namespace DesktopSearch.Core.DataModel.Code
 {
@@ -24,10 +22,27 @@ namespace DesktopSearch.Core.DataModel.Code
         /// <param name="filePath"></param>
         /// <param name="lineNR"></param>
         public TypeDescriptor(ElementType elementType, string name, Visibility visibility,
-            string @namespace, string filePath, int lineNR, string comment = null)
+            string @namespace, string filePath, int lineNR) : this(elementType, name, visibility, @namespace, filePath, lineNR, null)
         {
-            //Contract.Requires<ArgumentException>(!string.IsNullOrEmpty(name));
-            //Contract.Requires<ArgumentOutOfRangeException>(lineNR >= 0);
+        }
+
+        /// <summary>
+        /// Name shall not be null, @namespace can return null.
+        /// </summary>
+        /// <param name="elementType"></param>
+        /// <param name="name"></param>
+        /// <param name="namespace"></param>
+        /// <param name="filePath"></param>
+        /// <param name="lineNR"></param>
+        /// <param name="comment"></param>
+        public TypeDescriptor(ElementType elementType, string name, Visibility visibility,
+            string @namespace, string filePath, int lineNR, string comment)
+        {
+            if (string.IsNullOrEmpty(name))       throw new ArgumentException(nameof(name));
+            if (string.IsNullOrEmpty(@namespace)) throw new ArgumentNullException(nameof(@namespace));
+            if (comment == null)                  throw new ArgumentNullException(nameof(comment));
+            if (lineNR <= 0)                      throw new ArgumentOutOfRangeException(nameof(lineNR));
+
 
             Name = name;
             Namespace = @namespace;
@@ -61,13 +76,11 @@ namespace DesktopSearch.Core.DataModel.Code
         /// </summary>
         public int LineNr { get; set; }
 
-        public string Comment { get; private set; }
+        public string Comment { get; set; }
 
         public API APIDefinition { get; set; }
 
-        //[JsonProperty(TypeNameHandling = TypeNameHandling.Arrays)]
         [JsonConverter(typeof(CustomIDescriptorConverter))]
-        //[ElasticProperty(Index = FieldIndexOption.NotAnalyzed, Store = true, IncludeInAll = false)]
         public IList<IDescriptor> Members
         {
             get 
@@ -79,42 +92,5 @@ namespace DesktopSearch.Core.DataModel.Code
                 return this._members; 
             }
         }
-
-        //IList<MethodDescriptor> _methods;
-        //public IList<MethodDescriptor> Methods
-        //{
-        //    get
-        //    {
-        //        if (_methods == null)
-        //        {
-        //            if (_members.IsValueCreated)
-        //            {
-
-        //                _methods = _members.Value.Where(t => t.Type == MemberType.Method).Cast<MethodDescriptor>().ToList();
-        //                return _methods;
-        //            }
-        //        }
-        //        return null;
-        //    }
-        //    //set
-        //    //{
-        //    //    //if (_members.IsValueCreated)
-        //    //    //{
-        //    //    //    _members.Value.Where(t => t.Type != MemberType.Method)
-        //    //    //}
-        //    //    _methods = value;
-        //    //    foreach (var item in value)
-        //    //    {
-        //    //        _members.Value.Add(item);
-        //    //    }
-        //    //}
-        //}
-    }
-
-    public enum Visibility
-    {
-        Public,
-        Internal,
-        Private,
     }
 }

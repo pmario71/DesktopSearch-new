@@ -7,21 +7,21 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DesktopSearch.Core.Contracts;
 
 namespace DesktopSearch.Core.Services
 {
-    public class IndexingService : IIndexingService
+    internal class IndexingService : IIndexingService
     {
-        private Dictionary<IndexingStrategy, IFolderProcessor> _map;
-        private IDocumentCollectionRepository _documentCollectionRepository;
-
-        Task EnsureInitialized = null;
+        private readonly Dictionary<IndexingStrategy, IFolderProcessor> _map;
+        private readonly IDocumentCollectionRepository                  _documentCollectionRepository;
+        private readonly IDocker                                        _docker;
 
         public IndexingService(
             IDocumentCollectionRepository documentCollectionRepository,
-            ManagementService mgtSvc,
             DocumentFolderProcessor docFolderProcessor,
-            CodeFolderProcessor codeFolderProcessor)
+            CodeFolderProcessor codeFolderProcessor,
+            IDocker docker)
         {
             _map = new Dictionary<IndexingStrategy, IFolderProcessor>()
             {
@@ -30,13 +30,12 @@ namespace DesktopSearch.Core.Services
             };
 
             _documentCollectionRepository = documentCollectionRepository;
-
-            EnsureInitialized = mgtSvc.EnsureIndicesCreated();
+            _docker = docker;
         }
 
         public async Task IndexRepositoryAsync(IDocumentCollection documentCollection, IProgress<int> progress = null)
         {
-            await EnsureInitialized;
+            await _docker.EnsureTikaStarted();
 
             var processor = _map[documentCollection.IndexingStrategy];
 
@@ -51,7 +50,7 @@ namespace DesktopSearch.Core.Services
 
         public async Task IndexRepositoryAsync(IFolder folder, IProgress<int> progress = null)
         {
-            await EnsureInitialized;
+            await _docker.EnsureTikaStarted();
 
             var processor = _map[folder.DocumentCollection.IndexingStrategy];
             await processor.ProcessAsync(folder, progress);
@@ -59,7 +58,7 @@ namespace DesktopSearch.Core.Services
 
         public async Task IndexDocumentAsync(string documentPath)
         {
-            await EnsureInitialized;
+            await _docker.EnsureTikaStarted();
 
             IFolder folder;
             if (!_documentCollectionRepository.TryGetFolderForPath(new FileInfo(documentPath), out folder))
@@ -72,16 +71,23 @@ namespace DesktopSearch.Core.Services
             await processor.ProcessAsync(documentPath, folder.DocumentCollection.Name);
         }
 
-        public Task IndexDocumentAsync(DocDescriptor document)
+        public async Task IndexDocumentAsync(DocDescriptor documentDescriptor)
         {
+            await _docker.EnsureTikaStarted();
+
             IFolder folder;
-            if (!_documentCollectionRepository.TryGetFolderForPath(new FileInfo(document.Path), out folder))
+            if (!_documentCollectionRepository.TryGetFolderForPath(new FileInfo(documentDescriptor.Path), out folder))
             {
-                throw new ArgumentException($"Location of document '{document.Path}' is not part of any DocumentCollection!", nameof(document));
+                throw new ArgumentException($"Location of document '{documentDescriptor.Path}' is not part of any DocumentCollection!", nameof(documentDescriptor));
             }
 
-            var processor = _map[folder.DocumentCollection.IndexingStrategy] as DocumentFolderProcessor;
-            return processor.ProcessAsync(document, folder.DocumentCollection.Name);
+            if (folder.DocumentCollection.IndexingStrategy != IndexingStrategy.Documents)
+            {
+                throw new ArgumentException($"documentDescriptor is referencing code and not documents!");
+            }
+
+            var processor = _map[IndexingStrategy.Documents] as DocumentFolderProcessor;
+            await processor.ProcessAsync(documentDescriptor, folder.DocumentCollection.Name);
         }
     }
 }

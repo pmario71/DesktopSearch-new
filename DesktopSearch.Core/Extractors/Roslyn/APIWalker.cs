@@ -61,7 +61,7 @@ namespace DesktopSearch.Core.Extractors.Roslyn
                     return;
                 }
 
-                string comment = ExtractComment(classDeclaration);
+                string comment = ExtractComment(classDeclaration) ?? String.Empty;
 
                 _typeDescriptor = new TypeDescriptor(ElementType.Class, @class, visibility,
                     _namespace, _filePath, ExtractLineNR(node),comment);
@@ -176,7 +176,7 @@ namespace DesktopSearch.Core.Extractors.Roslyn
 
                 //if (enumDeclaration.Modifiers.Any(SyntaxKind.PublicKeyword))
                 {
-                    string comment = ExtractComment(enumDeclaration);
+                    string comment = ExtractComment(enumDeclaration) ?? string.Empty;
                     _typeDescriptor = new TypeDescriptor(ElementType.Enum,
                         name, 
                         visibility,
@@ -206,13 +206,14 @@ namespace DesktopSearch.Core.Extractors.Roslyn
 
                 //if (structDeclaration.Modifiers.Any(SyntaxKind.PublicKeyword))
                 {
-                    string comment = ExtractComment(structDeclaration);
+                    string comment = ExtractComment(structDeclaration) ?? string.Empty;
                     _typeDescriptor = new TypeDescriptor(ElementType.Struct,
                         name,
                         visibility,
                         _namespace,
                         this._filePath,
-                        ExtractLineNR(node));
+                        ExtractLineNR(node),
+                        comment);
 
                     _typeDescriptor.APIDefinition = APIDefinitionExtractor.Parse(comment);
 
@@ -262,7 +263,7 @@ namespace DesktopSearch.Core.Extractors.Roslyn
                     }
                 }
             }
-            return null;
+            return string.Empty;
         }
 
         private static int ExtractLineNR(SyntaxNode node)

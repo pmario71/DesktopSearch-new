@@ -1,9 +1,9 @@
-﻿using DesktopSearch.Core;
+﻿using DesktopSearch.PS.Composition;
+using DesktopSearch.Core;
 using DesktopSearch.Core.Configuration;
 using DesktopSearch.Core.DataModel.Documents;
 using DesktopSearch.Core.Services;
 using DesktopSearch.PS.Utils;
-using PowershellExtensions;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -20,7 +20,6 @@ namespace DesktopSearch.PS
         [Parameter(Mandatory = false, HelpMessage = "Name of the DocumentCollection(s) for which the index shall be synced, otherwise all configured repositories are used.")]
         public string DocumentCollectionName { get; set; }
 
-
         #region Dependencies
 
         [Import]
@@ -33,6 +32,7 @@ namespace DesktopSearch.PS
 
         protected override void BeginProcessing()
         {
+            AppConfig.EnableLocalAssemblyResolution();
             this.Compose();
         }
 

@@ -30,6 +30,10 @@ namespace DesktopSearch.Core.Tests.Services
             return Task.FromResult<IEnumerable<IDocumentCollection>>(this.DocumentCollections);
         }
 
+        public void Remove(IEnumerable<string> enumerable)
+        {
+        }
+
         public Task StoreOrUpdateAsync(IDocumentCollection collection)
         {
             return Task.CompletedTask;

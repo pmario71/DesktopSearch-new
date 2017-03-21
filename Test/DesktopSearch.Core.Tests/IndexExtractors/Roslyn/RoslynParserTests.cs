@@ -30,18 +30,18 @@ namespace CodeSearchTests.Indexing.Roslyn
         [Test, Ignore("Requires reflection")]
         public void GetNamespaceMembers()
         {
-            const string csharp = @"   using System; using System.Collections.Generic; 
-                                       using System.Text; 
-                                       namespace HelloWorld 
-                                       { 
-                                           class Program 
-                                           { 
-                                               static void Main(string[] args) 
-                                               { 
-                                                   Console.WriteLine(""Hello, World!""); 
-                                               } 
-                                           } 
-                                       }";
+            //const string csharp = @"   using System; using System.Collections.Generic; 
+            //                           using System.Text; 
+            //                           namespace HelloWorld 
+            //                           { 
+            //                               class Program 
+            //                               { 
+            //                                   static void Main(string[] args) 
+            //                                   { 
+            //                                       Console.WriteLine(""Hello, World!""); 
+            //                                   } 
+            //                               } 
+            //                           }";
             //RoslynParser.GetNamespaceMembers(csharp);
         }
 
@@ -250,13 +250,16 @@ namespace CodeSearchTests.Indexing.Roslyn
         [Test]
         public void Interface_comments_are_extracted()
         {
-            const string csharp = @"   /// <apiflag>No</apiflag>
-                                       /// <summary> API:NO
-                                       /// Interface for accessing the IsPatientMixUp property of Requests
-                                       /// </summary>
-                                       internal interface IRequestWithPatientMixup
-                                       {
-                                           bool IsPatientMixUp { get; set; }
+            const string csharp = @"   namespace HelloWorld 
+                                       { 
+                                           /// <apiflag>No</apiflag>
+                                           /// <summary> API:NO
+                                           /// Interface for accessing the IsPatientMixUp property of Requests
+                                           /// </summary>
+                                           internal interface IRequestWithPatientMixup
+                                           {
+                                               bool IsPatientMixUp { get; set; }
+                                           }
                                        }";
 
             var parser = new RoslynParser();
@@ -268,19 +271,46 @@ namespace CodeSearchTests.Indexing.Roslyn
         [Test]
         public void Enum_comments_are_extracted()
         {
-            const string csharp = @"   /// <apiflag>No</apiflag>
-                                       /// <summary> API:NO
-                                       /// Interface for accessing the IsPatientMixUp property of Requests
-                                       /// </summary>
-                                       public enum IRequestWithPatientMixup
-                                       {
-                                           Test,
-                                       }";
+            const string csharp = @"   namespace HelloWorld 
+                                       { 
+                                           /// <apiflag>No</apiflag>
+                                           /// <summary> API:NO
+                                           /// Interface for accessing the IsPatientMixUp property of Requests
+                                           /// </summary>
+                                           public enum IRequestWithPatientMixup
+                                           {
+                                               Test,
+                                           }
+                                        }";
 
             var parser = new RoslynParser();
             var extractedTypes = parser.ExtractTypes(csharp);
 
             Assert.IsNotEmpty(extractedTypes.First().Comment);
+        }
+
+        [Test]
+        public void Generics_supported()
+        {
+            const string csharp = @"   using System; using System.Collections.Generic; 
+                                       using System.Text; 
+                                       namespace HelloWorld 
+                                       { 
+                                           public class Program 
+                                           { 
+                                           }
+                                           
+                                           public class Program<T>
+                                           { 
+                                           }
+                                       }";
+
+            var parser = new RoslynParser();
+            var extractedTypes = parser.ExtractTypes(csharp);
+
+            Assert.AreEqual(2, extractedTypes.Count());
+
+            var fieldDescriptor = extractedTypes.ElementAt(1).Name == "Program<T>";
         }
 
         //[Test(Skip="Access to drives not supported by .net core")]
@@ -293,7 +323,7 @@ namespace CodeSearchTests.Indexing.Roslyn
         //    }
 
         //    IEnumerable<string> files = Directory.GetFiles(folderToParse, "*", SearchOption.AllDirectories).FilterByExtension();
-            
+
         //    var parser = new RoslynParser();
 
         //    var sw = Stopwatch.StartNew();
@@ -311,13 +341,13 @@ namespace CodeSearchTests.Indexing.Roslyn
         //    {
         //        Console.WriteLine("found: {0} - {1} - {2}", Enum.GetName(typeof(ElementType), typeDescriptor.ElementType), typeDescriptor.Name, typeDescriptor.FilePath);    
         //    }
-            
+
         //    Console.WriteLine("finding took: {0} [ms]", sw.ElapsedMilliseconds);
 
 
         //    Console.WriteLine("\r\nStoring types to Lucene");
         //    var luceneHost = new LuceneHost(new RAMDirectory());
-            
+
         //    sw.Start();
         //    luceneHost.IndexTypes(extractedTypes);
         //    sw.Stop();
@@ -333,7 +363,7 @@ namespace CodeSearchTests.Indexing.Roslyn
         //    {
         //        doc.Dump();
         //    }
-            
+
         //    luceneHost.Dispose();
         //}
     }

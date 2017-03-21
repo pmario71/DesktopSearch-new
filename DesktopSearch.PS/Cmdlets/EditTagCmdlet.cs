@@ -1,8 +1,8 @@
-﻿using DesktopSearch.Core.Configuration;
+﻿using DesktopSearch.PS.Composition;
+using DesktopSearch.Core.Configuration;
 using DesktopSearch.Core.Extractors.Tika;
 using DesktopSearch.PS.Utils;
 using System;
-using PowershellExtensions;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;

@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26020.0
+VisualStudioVersion = 15.0.26206.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopSearch.Core", "DesktopSearch.Core\DesktopSearch.Core.csproj", "{35A50B24-BCD2-48CB-8472-F27EBA1073C3}"
 EndProject
@@ -9,11 +9,13 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopSearch.Core.Tests", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documents", "Documents", "{E7ADD651-7D8B-4661-9767-9E37AA8AB610}"
 	ProjectSection(SolutionItems) = preProject
+		.gitignore = .gitignore
 		Documents\AddImage.ps1 = Documents\AddImage.ps1
 		Documents\docker-compose.yml = Documents\docker-compose.yml
 		Documents\Drawings.vsdx = Documents\Drawings.vsdx
 		Documents\Extractors.dgml = Documents\Extractors.dgml
 		Documents\Operations.md = Documents\Operations.md
+		readme.md = readme.md
 		Documents\References.md = Documents\References.md
 		Documents\RequirementsSpec.md = Documents\RequirementsSpec.md
 		Documents\StartServices.ps1 = Documents\StartServices.ps1
@@ -31,6 +33,19 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopSearch.PS", "DesktopSearch.PS\DesktopSearch.PS.csproj", "{17E0AF0F-EA0F-459C-8F91-A50622EC380A}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DesktopSearch.PS.Tests", "Test\DesktopSearch.PS.Tests\DesktopSearch.PS.Tests.csproj", "{01C76CE1-EAE2-4F96-A985-EB8CDE989E4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ServiceFabric", "ServiceFabric\ServiceFabric.csproj", "{3C322863-943D-4CD6-A8C4-FF7DE627F85F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tooling", "Tooling", "{B5C0538B-8FFA-48A5-A13F-0E8FB5A3F1D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RegisterPerformanceCounters", "RegisterPerformanceCounters\RegisterPerformanceCounters.csproj", "{96F1C808-1098-4E1F-B9C8-AF928A0366D7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Docker", "Docker", "{2CEA2B63-4E8C-4BB3-832B-456556449B0A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TikaServer", "TikaServer", "{ECF42BC5-957E-4937-B132-61E4D01B2654}"
+	ProjectSection(SolutionItems) = preProject
+		Docker\TikaServer\dockerfile = Docker\TikaServer\dockerfile
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -54,11 +69,22 @@ Global
 		{01C76CE1-EAE2-4F96-A985-EB8CDE989E4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{01C76CE1-EAE2-4F96-A985-EB8CDE989E4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{01C76CE1-EAE2-4F96-A985-EB8CDE989E4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C322863-943D-4CD6-A8C4-FF7DE627F85F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C322863-943D-4CD6-A8C4-FF7DE627F85F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C322863-943D-4CD6-A8C4-FF7DE627F85F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C322863-943D-4CD6-A8C4-FF7DE627F85F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96F1C808-1098-4E1F-B9C8-AF928A0366D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96F1C808-1098-4E1F-B9C8-AF928A0366D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96F1C808-1098-4E1F-B9C8-AF928A0366D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96F1C808-1098-4E1F-B9C8-AF928A0366D7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B71F3397-F878-456D-876F-B5EF4119E3BF} = {E7ADD651-7D8B-4661-9767-9E37AA8AB610}
+		{3C322863-943D-4CD6-A8C4-FF7DE627F85F} = {B5C0538B-8FFA-48A5-A13F-0E8FB5A3F1D0}
+		{96F1C808-1098-4E1F-B9C8-AF928A0366D7} = {B5C0538B-8FFA-48A5-A13F-0E8FB5A3F1D0}
+		{ECF42BC5-957E-4937-B132-61E4D01B2654} = {2CEA2B63-4E8C-4BB3-832B-456556449B0A}
 	EndGlobalSection
 EndGlobal

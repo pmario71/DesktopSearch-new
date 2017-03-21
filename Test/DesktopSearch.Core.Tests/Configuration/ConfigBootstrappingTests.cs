@@ -35,9 +35,6 @@ namespace DesktopSearch.Core.Tests.Configuration
         [Test]
         public void Values_can_be_bound()
         {
-            const string key = "Test";
-            const string value = "Overridden";
-
             var sut = ConfigBootstrapping.GetDefault();
             var initial = new Dictionary<string, string>
             {

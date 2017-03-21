@@ -59,21 +59,6 @@ namespace DesktopSearch.PS.Tests.Composition
             }
         }
 
-        [Test]
-        public void Check_if_all_serivces_setup_in_Host_are_composable()
-        {
-            using(CurrentDirectoryContext.SetToWorkfinDirectory())
-            {
-                var sut = new Host();
-
-                var tester = new HostTest();
-                tester.TryCreate(sut.Container);
-
-                var searchService = sut.Container.GetExportedValue<Core.Services.ISearchService>();
-                var suggestion = sut.Container.GetExportedValue<Services.IKeywordSuggestions>();
-            }
-        }
-
         class CurrentDirectoryContext : IDisposable
         {
             readonly string _previousDirectory;

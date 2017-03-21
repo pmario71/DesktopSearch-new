@@ -1,8 +1,8 @@
-﻿using DesktopSearch.Core.Configuration;
+﻿using DesktopSearch.PS.Composition;
+using DesktopSearch.Core.Configuration;
 using DesktopSearch.Core.Extractors.Tika;
 using DesktopSearch.PS.Utils;
 using System;
-using PowershellExtensions;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
 using System.Linq;
@@ -15,12 +15,13 @@ namespace DesktopSearch.PS.Cmdlets
     [Cmdlet(VerbsCommon.Get, "TikaExtract")]
     public class GetTikaExtractCmdlet : PSCmdlet
     {
-        private TikaServerExtractor _extractor;
-
         [Parameter(Mandatory = true, HelpMessage = "Files to extract index for.")]
         public string[] File { get; set; }
 
         #region Dependencies
+
+        [Import]
+        public ITikaServerExtractor Extractor { get; set; }
         #endregion
 
         protected override void BeginProcessing()
@@ -28,8 +29,6 @@ namespace DesktopSearch.PS.Cmdlets
             AppConfig.EnableLocalAssemblyResolution();
 
             this.Compose();
-
-            _extractor = new TikaServerExtractor();
         }
 
         protected override void ProcessRecord()
@@ -44,7 +43,7 @@ namespace DesktopSearch.PS.Cmdlets
                 foreach (var file in this.File)
                 {
                     var pc = new Core.Extractors.ParserContext();
-                    var result = await _extractor.ExtractAsync(pc, new System.IO.FileInfo(file));
+                    var result = await Extractor.ExtractAsync(pc, new System.IO.FileInfo(file));
                     WriteObject(result);
 
                     progress.PercentComplete = (int)Math.Round((++filesProcessed) * filesTotalIncrement);
@@ -55,11 +54,6 @@ namespace DesktopSearch.PS.Cmdlets
 
         protected override void EndProcessing()
         {
-            if (_extractor != null)
-            {
-                _extractor.Dispose();
-                _extractor = null;
-            }
         }
     }
 }

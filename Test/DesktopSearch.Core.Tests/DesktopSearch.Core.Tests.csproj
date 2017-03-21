@@ -11,6 +11,8 @@
     <AssemblyName>DesktopSearch.Core.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -34,8 +36,26 @@
       <HintPath>..\..\packages\Castle.Core.3.3.3\lib\net45\Castle.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Elasticsearch.Net, Version=5.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\Elasticsearch.Net.5.0.0\lib\net46\Elasticsearch.Net.dll</HintPath>
+    <Reference Include="ICU4NET, Version=1.0.5593.31013, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\..\packages\ICU4NET-ICU4C55.1-bin32.1.0.0\lib\net45\ICU4NET.dll</HintPath>
+    </Reference>
+    <Reference Include="ICU4NETExtension, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <HintPath>..\..\packages\ICU4NET-ICU4C55.1-bin32.1.0.0\lib\net45\ICU4NETExtension.dll</HintPath>
+    </Reference>
+    <Reference Include="KellermanSoftware.Compare-NET-Objects, Version=3.6.0.0, Culture=neutral, PublicKeyToken=d970ace04cc85217, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CompareNETObjects.3.06.0.0\lib\net46\KellermanSoftware.Compare-NET-Objects.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net, Version=4.8.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Lucene.Net.4.8.0.770-beta\lib\net451\Lucene.Net.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net.Analysis.Common, Version=4.8.0.770, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Lucene.Net.Analysis.Common.4.8.0.770-beta\lib\net451\Lucene.Net.Analysis.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net.Misc, Version=4.8.0.770, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Lucene.Net.Misc.4.8.0.770-beta\lib\net451\Lucene.Net.Misc.dll</HintPath>
+    </Reference>
+    <Reference Include="Lucene.Net.QueryParser, Version=4.8.0.770, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Lucene.Net.QueryParser.4.8.0.770-beta\lib\net451\Lucene.Net.QueryParser.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.CodeAnalysis, Version=1.3.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.CodeAnalysis.Common.1.3.2\lib\net45\Microsoft.CodeAnalysis.dll</HintPath>
@@ -66,8 +86,20 @@
       <HintPath>..\..\packages\Microsoft.Extensions.Logging.Abstractions.1.1.0\lib\netstandard1.1\Microsoft.Extensions.Logging.Abstractions.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.Extensions.Options, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Extensions.Options.1.1.0\lib\netstandard1.0\Microsoft.Extensions.Options.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Extensions.Primitives, Version=1.1.0.0, Culture=neutral, PublicKeyToken=adb9793829ddae60, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Extensions.Primitives.1.1.0\lib\netstandard1.0\Microsoft.Extensions.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions, Version=1.0.12.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Threading.Tasks.Extensions.Desktop, Version=1.0.168.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Microsoft.Bcl.Async.1.0.168\lib\net40\Microsoft.Threading.Tasks.Extensions.Desktop.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Win32.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Microsoft.Win32.Primitives.4.3.0\lib\net46\Microsoft.Win32.Primitives.dll</HintPath>
@@ -76,16 +108,25 @@
     <Reference Include="Moq, Version=4.6.38.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Moq.4.6.38-alpha\lib\net45\Moq.dll</HintPath>
     </Reference>
-    <Reference Include="Nest, Version=5.0.0.0, Culture=neutral, PublicKeyToken=96c599bbe3e70f5d, processorArchitecture=MSIL">
-      <HintPath>..\..\packages\NEST.5.0.0\lib\net46\Nest.dll</HintPath>
-    </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Nito.AsyncEx, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Nito.AsyncEx.4.0.1\lib\net45\Nito.AsyncEx.dll</HintPath>
+    </Reference>
+    <Reference Include="Nito.AsyncEx.Concurrent, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Nito.AsyncEx.4.0.1\lib\net45\Nito.AsyncEx.Concurrent.dll</HintPath>
+    </Reference>
+    <Reference Include="Nito.AsyncEx.Enlightenment, Version=4.0.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\Nito.AsyncEx.4.0.1\lib\net45\Nito.AsyncEx.Enlightenment.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=3.5.0.0, Culture=neutral, PublicKeyToken=2638cd05610744eb, processorArchitecture=MSIL">
       <HintPath>..\..\packages\NUnit.3.5.0\lib\net45\nunit.framework.dll</HintPath>
       <Private>True</Private>
+    </Reference>
+    <Reference Include="SimpleInjector, Version=3.3.2.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\SimpleInjector.3.3.2\lib\net45\SimpleInjector.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.AppContext, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -141,6 +182,7 @@
       <HintPath>..\..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.Net" />
     <Reference Include="System.Net.Http, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Net.Http.4.3.0\lib\net46\System.Net.Http.dll</HintPath>
       <Private>True</Private>
@@ -177,6 +219,7 @@
       <HintPath>..\..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.Text.Encoding.CodePages, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\..\packages\System.Text.Encoding.CodePages.4.3.0\lib\net46\System.Text.Encoding.CodePages.dll</HintPath>
       <Private>True</Private>
@@ -211,22 +254,42 @@
     <Compile Include="Configuration\ConfigAccessTests.cs" />
     <Compile Include="Configuration\ConfigBootstrappingTests.cs" />
     <Compile Include="DataModel\Documents\DocumentCollectionTests.cs" />
-    <Compile Include="ElasticSearch\ManagementServiceTests.cs" />
-    <Compile Include="ElasticSearch\Parser\KeywordParserTests.cs" />
+    <Compile Include="DependencyInjection\SimpleInjector_using_PropertyInjection.cs" />
+    <Compile Include="DependencyInjection\Using_SimpleInjector_to_inject_Logger.cs" />
+    <Compile Include="Services\DockerCommandsTests.cs" />
+    <Compile Include="Tika\KeywordParserTests.cs" />
     <Compile Include="FileSystem\ExcludeFileByExtensionFilterTests.cs" />
     <Compile Include="FileSystem\IncludeFileByExtensionFilterTests.cs" />
     <Compile Include="Helper\DockerControlClient.cs" />
     <Compile Include="IndexExtractors\CommentCleanerTests.cs" />
     <Compile Include="IndexExtractors\FileIOPerformanceTests.cs" />
-    <Compile Include="IndexExtractors\RoslynPrototyping.cs" />
+    <Compile Include="IndexExtractors\RoslynPrototypingTests.cs" />
     <Compile Include="IndexExtractors\Roslyn\APIDefinitionExtractorTests.cs" />
     <Compile Include="IndexExtractors\Roslyn\APIWalkerTests.cs" />
     <Compile Include="IndexExtractors\Roslyn\RoslynParserTests.cs" />
     <Compile Include="IndexExtractors\Roslyn\RoslynParser_APIFlag_extracted_from_methods_and_properties.cs" />
     <Compile Include="IndexExtractors\Roslyn\RoslynParser_DefinedTypes_Tests.cs" />
+    <Compile Include="Lucene\CamelCaseTokenizingTests.cs" />
+    <None Include="Lucene\ConsecutiveCharTokenizer.cs" />
+    <Compile Include="Lucene\CodeFolderProcessorTests.cs" />
+    <Compile Include="Lucene\CodeIndexTests.cs" />
+    <Compile Include="Lucene\DocumentExtensions_DocDescriptor_Tests.cs" />
+    <Compile Include="Lucene\DocumentExtensions_TypeDescriptor_Tests.cs" />
+    <Compile Include="Lucene\DocumentIndexTests.cs" />
+    <Compile Include="Lucene\LucenePrototypingTests.cs" />
     <Compile Include="Processors\DocumentFolderProcessorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Services\DocumentCollectionConfigStoreTests.cs" />
+    <Compile Include="Utils\CfgMocks.cs" />
+    <Compile Include="Utils\TextUtilTests.cs" />
+    <Compile Include="Utils\EnumExtTests.cs" />
+    <Compile Include="Utils\CollectionExtensionsTests.cs" />
+    <Compile Include="Utils\LoggingInterceptor.cs" />
+    <Compile Include="Utils\LoggingInterceptorTests.cs" />
+    <Compile Include="Utils\TestDirectoryProvider.cs" />
     <None Include="app.config" />
+    <None Include="AppReadme\Compare-NET-Objects-Help.chm" />
+    <None Include="Lucene\Lucene Prototyping.md" />
     <None Include="packages.config" />
     <None Include="TestData\IndexExtractors\Roslyn\AllMembersIgnoredClass.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
@@ -234,12 +297,13 @@
     <None Include="TestData\IndexExtractors\Roslyn\APIClass.cs">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <Compile Include="Services\DocumentCollectionElasticStoreTests.cs" />
+    <Compile Include="Services\CodeIndexing_IntegrationTests.cs" />
     <Compile Include="Services\DocumentCollectionRepository_AddDocumentCollection_Tests.cs" />
     <Compile Include="Services\DocumentCollectionRepository_AddFolderToDocumentCollection_Tests.cs" />
     <Compile Include="Services\DocumentCollectionRepository_Persistence_Tests.cs" />
     <Compile Include="Services\DocumentCollectionRepository_Tests.cs" />
     <Compile Include="Services\MockStore.cs" />
+    <Compile Include="Utils\OptionsProvider.cs" />
     <Compile Include="Tagging\TagDescriptorTests.cs" />
     <Compile Include="TestDefinitions.cs" />
     <Compile Include="Tika\TikaServerExtractorTests.cs" />
@@ -272,7 +336,56 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\packages\ICU4NET-ICU4C55.1-bin32.1.0.0\ref\icudt55.dll">
+      <Link>icudt55.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\packages\ICU4NET-ICU4C55.1-bin32.1.0.0\ref\icuin55.dll">
+      <Link>icuin55.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\packages\ICU4NET-ICU4C55.1-bin32.1.0.0\ref\icuio55.dll">
+      <Link>icuio55.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\packages\ICU4NET-ICU4C55.1-bin32.1.0.0\ref\icule55.dll">
+      <Link>icule55.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\packages\ICU4NET-ICU4C55.1-bin32.1.0.0\ref\iculx55.dll">
+      <Link>iculx55.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\packages\ICU4NET-ICU4C55.1-bin32.1.0.0\ref\icutu55.dll">
+      <Link>icutu55.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\packages\ICU4NET-ICU4C55.1-bin32.1.0.0\ref\icuuc55.dll">
+      <Link>icuuc55.dll</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets" Condition="Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\packages\Microsoft.Bcl.Build.1.0.21\build\Microsoft.Bcl.Build.targets'))" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

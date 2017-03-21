@@ -61,6 +61,38 @@ Settings settings = ConfigAccess.Get();
 
 ### Adding Configuration
 
+## Logging
+
+`Logger` is available through an *AmbientContext* `DesktopSearch.Core.Utils.Logging`.
+
+For unit testing purposes classes using logging allow overriding currently used logger by implementing:
+
+```csharp
+public ILogger<DocumentFolderProcessor> OverrideLogger
+{
+    get { return _logger; }
+    set
+    {
+        if (value == null)
+            throw new ArgumentNullException(nameof(value));
+
+        _logger = value;
+    }
+}
+```
+
+For testing use `DesktopSearch.Core.Tests.Utils.LoggingInterceptor` to capture all logged events.
+```csharp
+var sut = new CodeFolderProcessor(...);
+
+var logger = new LoggingInterceptor<CodeFolderProcessor>(ignoreInfoLevel:true);
+sut.OverrideLogger = logger;
+
+...
+
+Assert.IsFalse(logger.LoggedEvents.Any());
+```
+
 ## Usage of Tika
 
 * service is run as docker container using the official image
@@ -69,6 +101,13 @@ Settings settings = ConfigAccess.Get();
 * TikaServerExtractor implements the interfacing with Tika and DocDescriptor mapping
 
 ## Performance
+
+### File IO
+
+* reading file using File.ReadAllText() outperforms async IO by far
+* parallelizing file IO works great (10 seems to be optimal)
+
+### Tika
 
 Measuring over standalone Tika container and version running together with ElasticSearch shows that memory is critical
 
@@ -84,3 +123,11 @@ Measuring over standalone Tika container and version running together with Elast
 | 7 | 624   | 572 | 627   | 627   |
 | 8 | 597   | 600 | 655   | 668   |
 | 9 | 670   | 783 | 662   | 809   |
+
+## ElasticSearch
+
+Modifiacations to when running ElasticSearch:
+
+* `.\config\elasticsearch.yml`\
+  `path.data: C:/Users/ESIndexData`
+

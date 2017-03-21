@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DesktopSearch.Core.Extractors.Roslyn;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -17,7 +18,8 @@ namespace CodeSearchTests.Indexing.Roslyn
         [Test]
         public void RoslynAPI_prototyping_get_type_of_field()
         {
-
+            //var fname = @"c:\Projects\Tools\DesktopSearch\DesktopSearch.Core\Extractors\ParserContext.cs";
+            //var sut = new APIWalker(fname, true);
         }
 
     }

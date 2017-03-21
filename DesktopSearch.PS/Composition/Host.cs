@@ -1,5 +1,4 @@
-﻿using PowershellExtensions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,72 +15,33 @@ using Microsoft.Extensions.Configuration;
 
 namespace DesktopSearch.PS.Composition
 {
-    internal class Host : HostBase
+    internal class Host : IHost
     {
-        private IConfigurationRoot _config;
+        private IContainer _container;
 
-        public IConfigurationRoot Configuration { get => _config; }
-
-        protected override CompositionContainer CreateAndInitializeContainer()
+        public Host()
         {
-            // .net core configuration
-            var builder = ConfigBootstrapping.GetDefault();
-            builder.SetBasePath(Directory.GetCurrentDirectory())
-                   .AddJsonFile("appsettings.json");
+            var bootstrapper = new CustomizedBootstrapper();
+            bootstrapper.AddTestOverrides = c =>
+            {
+                c.Register<Services.IKeywordSuggestions, Services.KeywordSuggestionService>();
+            };
 
-            _config = builder.Build();
-
-            var conventions = new RegistrationBuilder();
-
-            conventions.ForType<ClientFactory>()
-                .SetCreationPolicy(CreationPolicy.Shared)
-                .ExportProperties(p => p.Name.Contains("SearchClient"));
-
-            conventions.ForType<Nest.ElasticClient>().Export<Nest.IElasticClient>();
-            conventions.ForType<Core.ElasticSearch.ManagementService>().Export<Core.ElasticSearch.ManagementService>();
-            
-            conventions.ForType<Core.Services.DocumentCollectionElasticStore>().Export<Core.Services.IDocumentCollectionPersistence>();
-            conventions.ForType<Core.Services.DocumentCollectionRepository>().Export<Core.Services.IDocumentCollectionRepository>();
-            
-            conventions.ForType<Core.Services.SearchService>().Export<Core.Services.ISearchService>();
-            conventions.ForType<Core.Services.IndexingService>().Export<Core.Services.IIndexingService>();
-
-            conventions.ForType<Core.Processors.CodeFolderProcessor>().Export<Core.Processors.CodeFolderProcessor>();
-            conventions.ForType<Core.Processors.DocumentFolderProcessor>().Export<Core.Processors.DocumentFolderProcessor>();
-
-            conventions.ForType<Core.Configuration.FileStreamFactory>().Export<Core.Configuration.IStreamFactory>();
-            conventions.ForType<Core.Configuration.ConfigAccess>().Export<Core.Configuration.ConfigAccess>();
-
-            var cat0 = new AssemblyCatalog(typeof(Host).Assembly);
-            var cat1 = new AssemblyCatalog(typeof(Core.Configuration.FileStreamFactory).Assembly, conventions);
-            var container = new CompositionContainer(new AggregateCatalog(cat0, cat1));
-
-            var ca = new ContainerAccess(container);
-            container.ComposeExportedValue<IContainer>(ca);
-
-            // add configuration
-            var elasticSearchConfig = new Core.Configuration.ElasticSearchConfig();
-            _config.Bind(elasticSearchConfig);
-            container.ComposeExportedValue(elasticSearchConfig);
-
-            return container;
+            _container = bootstrapper.Initialize();
         }
 
+        public IContainer Container => _container;
 
-    }
-
-    internal class HostTest
-    {
-        public void TryCreate(CompositionContainer container)
+        public void Dispose()
         {
-            //object obj = container.GetExportedValue<Core.FolderProcessorFactory>();
-            object  obj = container.GetExportedValue<Core.Processors.CodeFolderProcessor>();
-            obj = container.GetExportedValue<Core.Processors.DocumentFolderProcessor>();
-
-            obj = container.GetExportedValue<Core.ElasticSearch.ManagementService>();
+            if (_container != null)
+            {
+                ((IDisposable)_container).Dispose();
+            }
         }
     }
 
+    
     [Export(typeof(IContainer))]
     internal class ContainerAccess : IContainer
     {
@@ -104,13 +64,20 @@ namespace DesktopSearch.PS.Composition
         }
 
         public TInstance GetService<TInstance>()
+            where TInstance : class
         {
             return _container.GetExportedValue<TInstance>();
         }
 
         public IFace GetService<IFace, TInstance>()
+            where IFace : class
         {
             return _container.GetExportedValue<IFace>();
+        }
+
+        public void Inject(object instance)
+        {
+            _container.SatisfyImportsOnce(instance);
         }
     }
 

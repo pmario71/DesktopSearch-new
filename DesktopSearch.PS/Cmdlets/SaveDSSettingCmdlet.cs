@@ -1,5 +1,5 @@
-﻿using DesktopSearch.Core.Configuration;
-using PowershellExtensions;
+﻿using DesktopSearch.PS.Composition;
+using DesktopSearch.Core.Configuration;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.Composition;
@@ -17,7 +17,7 @@ namespace DesktopSearch.PS
     public class SaveDSSettingCmdlet : PSCmdlet
     {
         [Parameter(Mandatory = true)]
-        public Settings Setting { get; set; }
+        public LuceneConfig Setting { get; set; }
 
         #region Dependencies
         [Import]

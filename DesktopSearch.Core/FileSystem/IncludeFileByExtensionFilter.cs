@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 
 namespace DesktopSearch.Core.FileSystem
 {
@@ -19,16 +20,19 @@ namespace DesktopSearch.Core.FileSystem
             if (extensions == null)
                 throw new ArgumentNullException("extensions");
 
+            if (extensions.Any(e => (e[0] != '.')))
+                throw new ArgumentException("All extensions need to start with period (e.g. '.cs)'", nameof(extensions));
+
             _map = new HashSet<string>(extensions, StringComparer.OrdinalIgnoreCase);
         }
 
         public bool FilterByExtension(string arg)
         {
             var ext = Path.GetExtension(arg);
-            if (ext == null)
+            if (string.IsNullOrEmpty(ext))
                 return false;
 
-            if (_map.Contains(ext.Substring(1)))
+            if (_map.Contains(ext))
             {
                 return true;
             }

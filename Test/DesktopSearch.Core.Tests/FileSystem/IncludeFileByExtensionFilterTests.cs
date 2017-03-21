@@ -21,7 +21,7 @@ namespace DesktopSearch.Core.FileSystem
         {
             var files = new[] {file};
 
-            var sut = new IncludeFileByExtensionFilter("cs");
+            var sut = new IncludeFileByExtensionFilter(".cs");
             var result = sut.FilterByExtension(files);
             
             //CollectionAssert.Equal(files, result, StringComparer.OrdinalIgnoreCase);
@@ -35,8 +35,14 @@ namespace DesktopSearch.Core.FileSystem
         [TestCase("Test.fds", false)]
         public void FilterByExtension_over_single_value(string file, bool expectedResult)
         {
-            var sut = new IncludeFileByExtensionFilter("cs");
+            var sut = new IncludeFileByExtensionFilter(".cs");
             Assert.AreEqual(expectedResult, sut.FilterByExtension(file));
+        }
+
+        [Test]
+        public void FilterByExtension_throws_if_extension_wrongly_specified()
+        {
+            Assert.Throws<ArgumentException>(() => new IncludeFileByExtensionFilter("cs"));
         }
     }
 }

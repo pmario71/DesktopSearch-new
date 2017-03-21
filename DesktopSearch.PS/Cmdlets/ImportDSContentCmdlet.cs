@@ -1,6 +1,6 @@
-﻿using DesktopSearch.Core.DataModel.Documents;
+﻿using DesktopSearch.PS.Composition;
+using DesktopSearch.Core.DataModel.Documents;
 using DesktopSearch.PS.Utils;
-using PowershellExtensions;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;

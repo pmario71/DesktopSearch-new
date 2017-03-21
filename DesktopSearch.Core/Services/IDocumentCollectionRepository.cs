@@ -30,6 +30,17 @@ namespace DesktopSearch.Core.Services
         bool TryGetFolderForPath(FileInfo file, out IFolder folder);
 
         /// <summary>
+        /// Removes all <see cref="IDocumentCollection"/>s from Repository.
+        /// </summary>
+        void RemoveAll();
+
+        /// <summary>
+        /// Removes the <see cref="IDocumentCollection"/> with documentCollectionName from Repository.
+        /// </summary>
+        /// <param name="documentCollectionName"></param>
+        void Remove(string documentCollectionName);
+
+        /// <summary>
         /// Tries to find if a local <see cref="IFolder"/> is defined for the provided <see cref="IDocumentCollection"/> instance.
         /// </summary>
         /// <param name="documentCollection"></param>
