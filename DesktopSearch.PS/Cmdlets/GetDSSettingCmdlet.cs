@@ -7,6 +7,7 @@ using System.Linq;
 using System.Management.Automation;
 using System.Text;
 using System.Threading.Tasks;
+using DesktopSearch.PS.Utils;
 
 namespace DesktopSearch.PS
 {
@@ -23,6 +24,7 @@ namespace DesktopSearch.PS
 
         protected override void ProcessRecord()
         {
+            AppConfig.EnableLocalAssemblyResolution();
             this.Compose();
 
             WriteObject(this.ConfigAccess);

@@ -85,14 +85,7 @@ namespace DesktopSearch.Core.Services
                 foreach (var result in topDocs.ScoreDocs)
                 {
                     var doc = searcher.Doc(result.Doc);
-                    l.Add(new TypeDescriptor(
-                        (ElementType)doc.GetField("elementtype").NumericValue,
-                        doc.GetField("name")?.StringValue,
-                        (Visibility)doc.GetField("visibility").NumericValue,
-                        doc.GetField("namespace").StringValue,
-                        doc.GetField("filepath").StringValue,
-                        (int)doc.GetField("linenr").NumericValue,
-                        doc.GetField("comment")?.StringValue));
+                    l.Add(doc.ToTypeDescriptor());
                 }
             }, exception => { throw exception; });
 
