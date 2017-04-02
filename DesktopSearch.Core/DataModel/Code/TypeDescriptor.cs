@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using DesktopSearch.Core.DataModel.Documents;
 
 namespace DesktopSearch.Core.DataModel.Code
 {
@@ -18,11 +19,13 @@ namespace DesktopSearch.Core.DataModel.Code
         /// </summary>
         /// <param name="elementType"></param>
         /// <param name="name"></param>
+        /// <param name="visibility"></param>
         /// <param name="namespace"></param>
         /// <param name="filePath"></param>
-        /// <param name="lineNR"></param>
+        /// <param name="lineNr"></param>
         public TypeDescriptor(ElementType elementType, string name, Visibility visibility,
-            string @namespace, string filePath, int lineNR) : this(elementType, name, visibility, @namespace, filePath, lineNR, null)
+            string @namespace, string filePath, int lineNr) 
+            : this(elementType, name, visibility, @namespace, filePath, lineNr, null)
         {
         }
 
@@ -31,6 +34,7 @@ namespace DesktopSearch.Core.DataModel.Code
         /// </summary>
         /// <param name="elementType"></param>
         /// <param name="name"></param>
+        /// <param name="visibility"></param>
         /// <param name="namespace"></param>
         /// <param name="filePath"></param>
         /// <param name="lineNR"></param>
@@ -40,9 +44,8 @@ namespace DesktopSearch.Core.DataModel.Code
         {
             if (string.IsNullOrEmpty(name))       throw new ArgumentException(nameof(name));
             if (string.IsNullOrEmpty(@namespace)) throw new ArgumentNullException(nameof(@namespace));
-            if (comment == null)                  throw new ArgumentNullException(nameof(comment));
+            //if (comment == null)                  throw new ArgumentNullException(nameof(comment));
             if (lineNR <= 0)                      throw new ArgumentOutOfRangeException(nameof(lineNR));
-
 
             Name = name;
             Namespace = @namespace;
@@ -80,6 +83,8 @@ namespace DesktopSearch.Core.DataModel.Code
 
         public API APIDefinition { get; set; }
 
+        public MEF MEFDefinition { get; set; }
+
         [JsonConverter(typeof(CustomIDescriptorConverter))]
         public IList<IDescriptor> Members
         {
@@ -92,5 +97,7 @@ namespace DesktopSearch.Core.DataModel.Code
                 return this._members; 
             }
         }
+
+        public string WCFContract { get; set; }
     }
 }

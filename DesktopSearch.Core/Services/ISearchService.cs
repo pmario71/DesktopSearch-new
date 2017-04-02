@@ -13,6 +13,6 @@ namespace DesktopSearch.Core.Services
 
         Task<IEnumerable<DocDescriptor>> SearchDocumentAsync(string querystring);
 
-        Task<IEnumerable<TypeDescriptor>> SearchCodeAsync(string querystring, ElementType? elementType = null);
+        Task<IEnumerable<TypeDescriptor>> SearchCodeAsync(IDocumentCollection collection, string querystring, ElementType? elementType = null);
     }
 }

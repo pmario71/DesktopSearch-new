@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -12,6 +13,9 @@ using DesktopSearch.Core.DataModel.Code;
 
 namespace DesktopSearch.Core.Extractors.Roslyn
 {
+    /// <summary>
+    /// Public parser for c# files.
+    /// </summary>
     public class RoslynParser
     {
         private bool _ignoreTesterNamespaces = true;
@@ -21,28 +25,6 @@ namespace DesktopSearch.Core.Extractors.Roslyn
             get { return this._ignoreTesterNamespaces; }
             set { _ignoreTesterNamespaces = value; }
         }
-
-        //public static void GetNamespaceMembers(string csharp)
-        //{
-        //    SyntaxTree tree = CSharpSyntaxTree.ParseText(csharp);
-
-        //    var root = (CompilationUnitSyntax)tree.GetRoot();
-        //    var compilation = CSharpCompilation.Create("HelloWorld")
-        //                            .AddReferences(new MetadataReference[] { MetadataReference.CreateFromFile(typeof(object).Assembly.Location) })
-        //                            .AddSyntaxTrees(tree);
-
-        //    var model = compilation.GetSemanticModel(tree, true);
-        //    var nameInfo = model.GetSymbolInfo(root.Usings[0].Name);
-        //    var systemSymbol = (INamespaceSymbol)nameInfo.Symbol;
-
-        //    foreach (var ns in systemSymbol.GetNamespaceMembers())
-        //    {
-        //        Console.WriteLine(ns.Name);
-        //    }
-
-        //    var helloWorldString = root.DescendantNodes().OfType<LiteralExpressionSyntax>().First();
-        //    Console.WriteLine(helloWorldString);
-        //}
 
         public IEnumerable<TypeDescriptor> ExtractTypes(IEnumerable<string> filePaths)
         {
@@ -78,6 +60,29 @@ namespace DesktopSearch.Core.Extractors.Roslyn
             walker.Visit(root);
 
             return walker.ParsedTypes;
+        }
+
+        public string ExtractAPI(string csharp, string filename)
+        {
+            SyntaxTree tree = CSharpSyntaxTree.ParseText(csharp);
+
+            var root = (CompilationUnitSyntax) tree.GetRoot();
+
+            var extractor = new StructureExtractor(filename);
+            var modified = extractor.Visit(root);
+
+            var syntaxNodes = modified.DescendantNodes().Where(n => (n is TypeDeclarationSyntax));
+            //var sb = new StringBuilder();
+
+            //using (StreamWriter tw = new StreamWriter(new MemoryStream()))
+            //{
+            //    foreach (var node in syntaxNodes)
+            //    {
+            //        sb.AppendLine(node.ToString());
+            //    }
+            //}
+
+            return extractor.StructureText;
         }
     }
 }

@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DesktopSearch.Core.DataModel.Code;
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
@@ -55,6 +56,28 @@ class C
             var extractComment = APIWalker.ExtractComment(classDecl);
 
             Assert.AreEqual(string.Empty, extractComment);
+        }
+
+        
+
+        [Test]
+        public void Class_attributes_extracted()
+        {
+            var sut = new APIWalker("",
+                false);
+
+            var path = TestContext.CurrentContext.TestDirectory + "\\TestData\\IndexExtractors\\Roslyn\\WCFServiceContract.cs";
+            string sourcecode = File.ReadAllText(path);
+
+            var tree = CSharpSyntaxTree.ParseText(sourcecode);
+
+            var root = (CompilationUnitSyntax)tree.GetRoot();
+            sut.Visit(root);
+
+            var typeDescriptor = sut.ParsedTypes.Single(td => td.Name == "IWCFServiceInterface");
+
+            Assert.AreEqual("Name = \"IWCFServiceInterface\", Namespace = \"Tests.SomeNameSpace\",\r\n                     SessionMode = SessionMode.Required,\r\n                     CallbackContract = typeof(IWCFServiceInterfaceEvents)", typeDescriptor.WCFContract);
+            Assert.AreEqual(MEF.Export, typeDescriptor.MEFDefinition);
         }
 
         class Walker : SyntaxWalker

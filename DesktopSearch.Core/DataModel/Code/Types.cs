@@ -14,6 +14,13 @@ namespace DesktopSearch.Core.DataModel.Code
         Yes,
     }
 
+    public enum MEF
+    {
+        None,
+        Export,
+        Import
+    }
+
     //public class CodeItem
     //{
     //    public string Name { get; set; }

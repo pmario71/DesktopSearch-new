@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DesktopSearch.Core.DataModel.Documents;
 
 namespace DesktopSearch.Core.Tests.Lucene
 {
@@ -20,6 +21,8 @@ namespace DesktopSearch.Core.Tests.Lucene
         [Test]
         public async Task Index_Type_Descriptor()
         {
+            const string collectionName = "docCollectionName";
+
             var indexProviderMock = new Mock<IIndexProvider>();
 
             indexProviderMock.Setup(m => m.GetIndexDirectory(IndexType.Code))
@@ -32,10 +35,11 @@ namespace DesktopSearch.Core.Tests.Lucene
 
             // index
             var td = new TypeDescriptor(ElementType.Class, "TestClass", Visibility.Public, "syngo.Common.Test", "c:\\temp\\filename.cs", 123, "Some commend");
-            await sut.IndexAsync(new[] { td});
+            
+            await sut.IndexAsync(collectionName, new[] { td});
 
             // search
-            var results = await sut2.SearchCodeAsync("name:test*");
+            var results = await sut2.SearchCodeAsync(DocumentCollection.Create(collectionName, IndexingStrategy.Code ), "name:test*");
 
             Console.WriteLine("Results");
             Console.WriteLine("-------");

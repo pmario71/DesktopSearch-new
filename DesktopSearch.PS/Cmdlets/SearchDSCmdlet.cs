@@ -4,6 +4,7 @@ using DesktopSearch.Core.Services;
 using DesktopSearch.PS.Utils;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel.Composition;
 using System.Linq;
 using System.Management.Automation;
@@ -18,7 +19,7 @@ namespace DesktopSearch.PS.Cmdlets
     /// Persists configuration settings back to disk.
     /// </summary>
     [Cmdlet(VerbsCommon.Search, "DS")]
-    public class SearchDSCmdlet : PSCmdlet
+    public class SearchDSCmdlet : PSCmdlet, IDynamicParameters
     {
         [Parameter(Mandatory = true, 
             ValueFromPipeline = true, Position = 0, ParameterSetName = "Code")]
@@ -37,11 +38,23 @@ namespace DesktopSearch.PS.Cmdlets
         #region Dependencies
         [Import]
         internal ISearchService SearchService { get; set; }
+
+        [Import]
+        public IDocumentCollectionRepository Repository { get; set; }
         #endregion
+
+
+        // ================================================================================================
+        // Add DocumentCollection as parameter for Indexing and Search   !!!!!!!!
+        // ================================================================================================
+
+        public SearchDSCmdlet()
+        {
+            AppConfig.EnableLocalAssemblyResolution();
+        }
 
         protected override void BeginProcessing()
         {
-            AppConfig.EnableLocalAssemblyResolution();
             this.Compose();
         }
 
@@ -52,9 +65,14 @@ namespace DesktopSearch.PS.Cmdlets
             {
                 IEnumerable<object> results;
 
+                IDocumentCollection collection;
+                if (!Repository.TryGetDocumentCollectionByName((string)_docCollectionParameter.Value, out collection))
+                {
+                    throw new SystemException("Should not happen!");
+                }
                 if (base.ParameterSetName == "Code")
                 {
-                    results = await this.SearchService.SearchCodeAsync(this.SearchCode, this.ElementType);
+                    results = await this.SearchService.SearchCodeAsync(collection, this.SearchCode, this.ElementType);
                 }
                 else
                 {
@@ -102,6 +120,60 @@ namespace DesktopSearch.PS.Cmdlets
         protected override void EndProcessing()
         {
             
+        }
+
+
+        private RuntimeDefinedParameter _docCollectionParameter;
+
+        public object GetDynamicParameters()
+        {
+            // do not compose multiple times
+            if (this.Repository == null)
+            {
+                this.Compose();
+            }
+            
+            var parameters = new RuntimeDefinedParameterDictionary();
+
+            _docCollectionParameter = CreateDocumentCollectionParameter();
+            parameters.Add(_docCollectionParameter.Name, _docCollectionParameter);
+
+            return parameters;
+        }
+        private RuntimeDefinedParameter CreateDocumentCollectionParameter()
+        {
+            string[] collectionNames;
+
+            if (ParameterSetName == "Code")
+            {
+                collectionNames = Repository.GetIndexedCollections()
+                    .Where(n => n.IndexingStrategy == IndexingStrategy.Code)
+                    .Select(n => n.Name)
+                    .ToArray();
+            }
+            else
+            {
+                collectionNames = Repository.GetIndexedCollections()
+                    .Where(n => n.IndexingStrategy == IndexingStrategy.Documents)
+                    .Select(n => n.Name)
+                    .ToArray();
+            }
+            
+
+            var p = new RuntimeDefinedParameter(
+                "DocumentCollection",
+                typeof(string),
+                new Collection<Attribute>
+                {
+                        new ParameterAttribute {
+                            Position = 1,
+                            Mandatory = true,
+                            HelpMessage = "Categorization criteria for documents."
+                        },
+                        new ValidateSetAttribute(collectionNames),
+                        new ValidateNotNullOrEmptyAttribute()
+                });
+            return p;
         }
     }
 }

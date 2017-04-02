@@ -274,6 +274,7 @@
     <Compile Include="DependencyInjection\ImplicitPropertyInjectionBehavior.cs" />
     <Compile Include="DependencyInjection\ImportPropertySelectionBehavior.cs" />
     <Compile Include="DataModel\Code\CustomIDescriptorConverter.cs" />
+    <Compile Include="Extractors\Roslyn\StructureExtractor.cs" />
     <Compile Include="IFolderProcessor.cs" />
     <Compile Include="DependencyInjection\OptionsConfigurationExt.cs" />
     <Compile Include="Lucene\Analyzers\CamelCaseAnalyzer.cs" />

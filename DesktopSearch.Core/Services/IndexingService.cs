@@ -35,22 +35,26 @@ namespace DesktopSearch.Core.Services
 
         public async Task IndexRepositoryAsync(IDocumentCollection documentCollection, IProgress<int> progress = null)
         {
-            await _docker.EnsureTikaStarted();
-
-            var processor = _map[documentCollection.IndexingStrategy];
-
             IFolder folder;
             if (!_documentCollectionRepository.TryGetConfiguredLocalFolder(documentCollection, out folder))
             {
                 throw new ArgumentException($"The provided IndexedCollection '{documentCollection.Name}' is not hosted locally. Updating the index not possible!");
             }
+            if (documentCollection.IndexingStrategy == IndexingStrategy.Documents)
+            {
+                await _docker.EnsureTikaStarted();
+            }
 
+            var processor = _map[documentCollection.IndexingStrategy];
             await processor.ProcessAsync(folder, progress);
         }
 
         public async Task IndexRepositoryAsync(IFolder folder, IProgress<int> progress = null)
         {
-            await _docker.EnsureTikaStarted();
+            if (folder.DocumentCollection.IndexingStrategy == IndexingStrategy.Documents)
+            {
+                await _docker.EnsureTikaStarted();
+            }
 
             var processor = _map[folder.DocumentCollection.IndexingStrategy];
             await processor.ProcessAsync(folder, progress);
@@ -58,23 +62,17 @@ namespace DesktopSearch.Core.Services
 
         public async Task IndexDocumentAsync(string documentPath)
         {
-            await _docker.EnsureTikaStarted();
-
             IFolder folder;
             if (!_documentCollectionRepository.TryGetFolderForPath(new FileInfo(documentPath), out folder))
             {
                 throw new ArgumentException($"File '{documentPath}' is not part of any DocumentCollection!");
             }
 
-            var processor = _map[folder.DocumentCollection.IndexingStrategy];
-
-            await processor.ProcessAsync(documentPath, folder.DocumentCollection.Name);
+            await IndexRepositoryAsync(folder);
         }
 
         public async Task IndexDocumentAsync(DocDescriptor documentDescriptor)
         {
-            await _docker.EnsureTikaStarted();
-
             IFolder folder;
             if (!_documentCollectionRepository.TryGetFolderForPath(new FileInfo(documentDescriptor.Path), out folder))
             {
@@ -85,6 +83,7 @@ namespace DesktopSearch.Core.Services
             {
                 throw new ArgumentException($"documentDescriptor is referencing code and not documents!");
             }
+            await IndexRepositoryAsync(folder);
 
             var processor = _map[IndexingStrategy.Documents] as DocumentFolderProcessor;
             await processor.ProcessAsync(documentDescriptor, folder.DocumentCollection.Name);

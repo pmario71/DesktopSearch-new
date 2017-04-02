@@ -21,7 +21,7 @@ namespace DesktopSearch.Core.Lucene
 {
     public interface ICodeIndexer
     {
-        Task IndexAsync(IEnumerable<TypeDescriptor> extractedTypes);
+        Task IndexAsync(string documentCollectionName, IEnumerable<TypeDescriptor> extractedTypes);
 
         Task DeleteAllEntries();
 
@@ -82,7 +82,7 @@ namespace DesktopSearch.Core.Lucene
 
         #endregion
 
-        public Task IndexAsync(IEnumerable<TypeDescriptor> extractedTypes)
+        public Task IndexAsync(string documentCollectionName, IEnumerable<TypeDescriptor> extractedTypes)
         {
             return Task.Run(() =>
             {
@@ -90,7 +90,7 @@ namespace DesktopSearch.Core.Lucene
 
                 foreach (var item in extractedTypes)
                 {
-                    var doc = item.FromTypeDescriptor();
+                    var doc = item.FromTypeDescriptor(documentCollectionName);
                     _indexWriter.UpdateDocument(new Term("id", item.GetTypeID()), doc);
                 }
 

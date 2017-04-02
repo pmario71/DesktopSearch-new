@@ -24,7 +24,6 @@ namespace DesktopSearch.Core.Tests.Lucene
 
             // Assert
             var comparisonConfig = new ComparisonConfig();
-            //comparisonConfig.MembersToIgnore.Add("Content");
 
             var cl = new CompareLogic(comparisonConfig);
             var compareResult = cl.Compare(typeDescriptor, descriptor);

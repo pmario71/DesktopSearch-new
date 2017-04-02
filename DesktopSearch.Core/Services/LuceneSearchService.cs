@@ -53,25 +53,28 @@ namespace DesktopSearch.Core.Services
             });
         }
 
-        public Task<IEnumerable<TypeDescriptor>> SearchCodeAsync(string querystring, ElementType? elementType=null)
+        public Task<IEnumerable<TypeDescriptor>> SearchCodeAsync(IDocumentCollection col, string querystring, ElementType? elementType=null)
         {
-            return Task.Run(() => Search(querystring, elementType));
+            return Task.Run(() => Search(col, querystring, elementType));
         }
 
-        private IEnumerable<TypeDescriptor> Search(string queryString, ElementType? elementType = null)
+        private IEnumerable<TypeDescriptor> Search(IDocumentCollection col, string queryString, ElementType? elementType = null)
         {
-            //Console.WriteLine($"Number of docs stored: {_indexWriter.NumDocs()}");
+            var bq = new BooleanQuery();
+
+            var term = new Term("doccollection", col.Name);
+            bq.Add(new BooleanClause(new TermQuery(term), BooleanClause.Occur.MUST));
 
             var query = _codeSearch.Parser.Parse(queryString);
+            bq.Add(new BooleanClause(query, BooleanClause.Occur.MUST));
+
             if (elementType != null)
             {
-                var bq = new BooleanQuery();
-                bq.Add(new BooleanClause(query, BooleanClause.Occur.MUST));
-                var term = TermHelper.FromInt((int)elementType.Value);
+                
+                term = TermHelper.FromInt((int)elementType.Value);
                 bq.Add(new BooleanClause(new TermQuery(term), BooleanClause.Occur.MUST));
                 query = bq;
             }
-            //var query = new TermQuery(new Term(queryString));
 
             var totalHits = 0;
             var l = new List<TypeDescriptor>();

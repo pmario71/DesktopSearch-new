@@ -28,11 +28,13 @@ namespace DesktopSearch.Core.Lucene
                 (int)doc.GetField("linenr").NumericValue,
                 doc.GetField("comment")?.StringValue)
             {
-                APIDefinition = (API)doc.GetField("apidefinition").NumericValue
+                APIDefinition = (API)doc.GetField("apidefinition").NumericValue,
+                MEFDefinition = (MEF)(doc.GetField("mef")?.NumericValue ?? MEF.None),
+                WCFContract = doc.GetField("wcfcontract")?.StringValue
             };
         }
 
-        public static Document FromTypeDescriptor(this TypeDescriptor descriptor)
+        public static Document FromTypeDescriptor(this TypeDescriptor descriptor, string documentCollectionName=null)
         {
             if (descriptor == null)
                 throw new ArgumentNullException(nameof(descriptor));
@@ -47,7 +49,14 @@ namespace DesktopSearch.Core.Lucene
                         new IntField("linenr", descriptor.LineNr, Field.Store.YES),
                         new TextField("comment", descriptor.Comment ?? string.Empty, Field.Store.YES),
                         new IntField("apidefinition", (int)descriptor.APIDefinition, Field.Store.YES),
+                        new IntField("mef", (int)descriptor.MEFDefinition, Field.Store.YES),
+                        new TextField("wcfcontract", descriptor.WCFContract ?? string.Empty, Field.Store.YES),
                     };
+
+            if (!string.IsNullOrWhiteSpace(documentCollectionName))
+            {
+                doc.Fields.Add(new TextField("doccollection", documentCollectionName, Field.Store.NO));
+            }
 
             return doc;
         }

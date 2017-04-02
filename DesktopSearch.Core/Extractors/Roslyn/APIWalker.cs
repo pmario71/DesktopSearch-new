@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using DesktopSearch.Core.DataModel;
 using DesktopSearch.Core.DataModel.Code;
+using Lucene.Net.Support;
 
 namespace DesktopSearch.Core.Extractors.Roslyn
 {
@@ -43,9 +44,36 @@ namespace DesktopSearch.Core.Extractors.Roslyn
                     return;
                 }
             }
+            else if (syntaxKind == SyntaxKind.Attribute)
+            {
+                var attributeSyntax = ((Microsoft.CodeAnalysis.CSharp.Syntax.AttributeSyntax) node);
+                //Console.WriteLine($"Name: {attributeSyntax.Name} / {attributeSyntax.ArgumentList}");
+
+                var name = attributeSyntax.Name.ToString();
+
+                switch (name)
+                {
+                    case "ServiceContract":
+                    {
+                        _typeDescriptor.WCFContract = attributeSyntax.ArgumentList?.Arguments.ToString();
+                        return;
+                    }
+                    case "Export":
+                    {
+                        _typeDescriptor.MEFDefinition = MEF.Export;
+                        return;
+                    }
+                    case "Import":
+                    {
+                        _typeDescriptor.MEFDefinition = MEF.Import;
+                        return;
+                    }
+                }
+                return;
+            }
             else if (syntaxKind == SyntaxKind.ClassDeclaration)
             {
-                var classDeclaration = ((ClassDeclarationSyntax)node);
+                var classDeclaration = ((ClassDeclarationSyntax) node);
 
                 var visibility = GetVisibility(classDeclaration.Modifiers);
                 if (visibility == Visibility.Private)
@@ -64,7 +92,7 @@ namespace DesktopSearch.Core.Extractors.Roslyn
                 string comment = ExtractComment(classDeclaration) ?? String.Empty;
 
                 _typeDescriptor = new TypeDescriptor(ElementType.Class, @class, visibility,
-                    _namespace, _filePath, ExtractLineNR(node),comment);
+                    _namespace, _filePath, ExtractLineNR(node), comment);
 
                 _typeDescriptor.APIDefinition = APIDefinitionExtractor.Parse(comment);
 
@@ -72,7 +100,7 @@ namespace DesktopSearch.Core.Extractors.Roslyn
             }
             else if (syntaxKind == SyntaxKind.MethodDeclaration)
             {
-                var methodDeclaration = ((MethodDeclarationSyntax)node);
+                var methodDeclaration = ((MethodDeclarationSyntax) node);
 
                 if (methodDeclaration.Modifiers.Any(SyntaxKind.PublicKeyword))
                 {
@@ -92,7 +120,7 @@ namespace DesktopSearch.Core.Extractors.Roslyn
             }
             else if (syntaxKind == SyntaxKind.PropertyDeclaration)
             {
-                var propertyDeclaration = ((PropertyDeclarationSyntax)node);
+                var propertyDeclaration = ((PropertyDeclarationSyntax) node);
 
                 if (propertyDeclaration.Modifiers.Any(SyntaxKind.PublicKeyword))
                 {
@@ -101,9 +129,9 @@ namespace DesktopSearch.Core.Extractors.Roslyn
                     var memberDescriptor = new FieldDescriptor(propertyDeclaration.Identifier.ValueText,
                         propertyDeclaration.Type.ToString());
 
-                        //returnType,
-                        //_filePath,
-                        //ExtractLineNR(node));
+                    //returnType,
+                    //_filePath,
+                    //ExtractLineNR(node));
 
                     ExtractAPIDefinition(memberDescriptor, propertyDeclaration);
 
@@ -113,7 +141,7 @@ namespace DesktopSearch.Core.Extractors.Roslyn
             }
             else if (syntaxKind == SyntaxKind.FieldDeclaration)
             {
-                var fieldDeclaration = ((FieldDeclarationSyntax)node);
+                var fieldDeclaration = ((FieldDeclarationSyntax) node);
 
                 if (fieldDeclaration.Modifiers.Any(SyntaxKind.PublicKeyword))
                 {
@@ -121,10 +149,10 @@ namespace DesktopSearch.Core.Extractors.Roslyn
                     var x = fieldDeclaration.Declaration.Variables.First().Identifier;
 
                     var memberDescriptor = new FieldDescriptor(x.ValueText, fieldDeclaration.Declaration.Type.ToString());
-                        //fieldDeclaration.Declaration.Type.GetText().ToString().Trim());
-                        //"",
-                        //_filePath,
-                        //ExtractLineNR(node));
+                    //fieldDeclaration.Declaration.Type.GetText().ToString().Trim());
+                    //"",
+                    //_filePath,
+                    //ExtractLineNR(node));
 
                     ExtractAPIDefinition(memberDescriptor, fieldDeclaration);
 
@@ -134,7 +162,7 @@ namespace DesktopSearch.Core.Extractors.Roslyn
             }
             else if (syntaxKind == SyntaxKind.InterfaceDeclaration)
             {
-                var interfaceDeclaration = ((InterfaceDeclarationSyntax)node);
+                var interfaceDeclaration = ((InterfaceDeclarationSyntax) node);
 
                 var visibility = GetVisibility(interfaceDeclaration.Modifiers);
                 if (visibility == Visibility.Private)
@@ -147,9 +175,9 @@ namespace DesktopSearch.Core.Extractors.Roslyn
                 }
 
                 string comment = ExtractComment(interfaceDeclaration);
-                
-                _typeDescriptor = new TypeDescriptor(ElementType.Interface, 
-                    name, 
+
+                _typeDescriptor = new TypeDescriptor(ElementType.Interface,
+                    name,
                     visibility,
                     _namespace,
                     _filePath,
@@ -162,7 +190,7 @@ namespace DesktopSearch.Core.Extractors.Roslyn
             }
             else if (syntaxKind == SyntaxKind.EnumDeclaration)
             {
-                var enumDeclaration = ((EnumDeclarationSyntax)node);
+                var enumDeclaration = ((EnumDeclarationSyntax) node);
 
                 var visibility = GetVisibility(enumDeclaration.Modifiers);
                 if (visibility == Visibility.Private)
@@ -178,7 +206,7 @@ namespace DesktopSearch.Core.Extractors.Roslyn
                 {
                     string comment = ExtractComment(enumDeclaration) ?? string.Empty;
                     _typeDescriptor = new TypeDescriptor(ElementType.Enum,
-                        name, 
+                        name,
                         visibility,
                         _namespace,
                         this._filePath,

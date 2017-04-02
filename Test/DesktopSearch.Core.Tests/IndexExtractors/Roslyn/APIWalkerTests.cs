@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using DesktopSearch.Core.DataModel.Code;
 using DesktopSearch.Core.Extractors.Roslyn;
-using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 using NUnit.Framework;
@@ -14,6 +14,52 @@ namespace CodeSearchTests.Indexing.Roslyn
     [TestFixture]
     public class APIWalkerTests
     {
+        [TestCase("Export", MEF.Export)]
+        [TestCase("Import", MEF.Import)]
+        public void Class_exported_with_MEF_attribute(string inc, MEF mef)
+        {
+            var sut = new APIWalker("",
+                false);
+
+            string sourcecode = $@"  namespace Something
+{{
+   /// <summary>This is an xml doc comment.
+   /// the second line.</summary>
+   [{inc}(typeof(ISomething))]   
+   public class IWCFServiceInterface
+   {{
+   }}
+}}";
+
+            sut.VisitSourceCode(sourcecode);
+
+            var typeDescriptor = sut.ParsedTypes.Single(td => td.Name == "IWCFServiceInterface");
+
+            Assert.AreEqual(mef, typeDescriptor.MEFDefinition);
+        }
+
+        [Test]
+        public void Class_flagged_as_ServiceContract()
+        {
+            var sut = new APIWalker("",
+                false);
+
+            string sourcecode = $@"  namespace Something
+{{
+   /// <summary>This is an xml doc comment.
+   /// the second line.</summary>
+   [ServiceContract(Name = ""IWCFServiceInterface"", Namespace = ""Tests.SomeNameSpace"")]   
+   public class IWCFServiceInterface
+   {{
+   }}
+}}";
+
+            sut.VisitSourceCode(sourcecode);
+
+            var typeDescriptor = sut.ParsedTypes.Single(td => td.Name == "IWCFServiceInterface");
+
+            Assert.AreEqual("Name = \"IWCFServiceInterface\", Namespace = \"Tests.SomeNameSpace\"", typeDescriptor.WCFContract);
+        }
 
         [Test]
         public void RoslynAPI_prototyping_get_type_of_field()
@@ -21,57 +67,15 @@ namespace CodeSearchTests.Indexing.Roslyn
             //var fname = @"c:\Projects\Tools\DesktopSearch\DesktopSearch.Core\Extractors\ParserContext.cs";
             //var sut = new APIWalker(fname, true);
         }
-
     }
 
-    public class RoslynAPI_Prototyping
+    static class APIWalkerExtension
     {
-        //if (!classDeclaration.Modifiers.Any(SyntaxKind.PublicKeyword))
-
-        [Test]
-        public void Get_visibility_of_class()
+        public static void VisitSourceCode(this APIWalker walker, string sourcecode)
         {
-            var classDoc = @"public class SomeClass
-            {
-                private SomeOtherClass someOtherClass;
-            }";
-
-            SyntaxTree classTree = SyntaxFactory.ParseSyntaxTree(classDoc);
-            var classDecl = (ClassDeclarationSyntax)classTree.GetRoot().DescendantNodes().First(d => d is ClassDeclarationSyntax);
-
-            Assert.True(classDecl.Modifiers.Any(t => t.IsKind(SyntaxKind.PublicKeyword) || t.IsKind(SyntaxKind.InternalKeyword)));
-        }
-
-        [Test]
-        public void Get_type_of_field()
-        {
-            var classDoc = @"public class SomeClass
-            {
-                private SomeOtherClass someOtherClass;
-            }";
-
-            SyntaxTree classTree = SyntaxFactory.ParseSyntaxTree(classDoc);
-            var classDecl = (ClassDeclarationSyntax)classTree.GetRoot().DescendantNodes().First(d => d is ClassDeclarationSyntax);
-            var field = classDecl.Members.OfType<FieldDeclarationSyntax>().First();
-            var fieldType = field.Declaration.Type;
-
-            Assert.AreEqual("SomeOtherClass", fieldType.ToString());
-        }
-
-        [Test]
-        public void Get_type_of_property()
-        {
-            var classDoc = @"public class SomeClass
-            {
-                public SomeOtherClass someOtherClass { get; };
-            }";
-
-            SyntaxTree classTree = SyntaxFactory.ParseSyntaxTree(classDoc);
-            var classDecl = (ClassDeclarationSyntax)classTree.GetRoot().DescendantNodes().First(d => d is ClassDeclarationSyntax);
-            var field = classDecl.Members.OfType<PropertyDeclarationSyntax>().First();
-            var fieldType = field.Type;
-
-            Assert.AreEqual("SomeOtherClass", fieldType.ToString());
+            var tree = CSharpSyntaxTree.ParseText(sourcecode);
+            var root = (CompilationUnitSyntax)tree.GetRoot();
+            walker.Visit(root);
         }
     }
 }

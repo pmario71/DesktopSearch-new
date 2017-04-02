@@ -37,6 +37,7 @@ namespace DesktopSearch.PS.Composition
     public static class CmdletEx
     {
         const string CachedHost = "CachedHost";
+        private static IHost _Host;
 
         /// <summary>
         /// Factory needs to be set before call to <see cref="Compose"/>.
@@ -61,10 +62,11 @@ namespace DesktopSearch.PS.Composition
                 Factory = factory.Create();
             }
 
-            var host = cmdlet.GetVariableValue(CachedHost) as IHost;
+            var host = _Host ?? cmdlet.GetVariableValue(CachedHost) as IHost;
             if (host == null)
             {
                 host = Factory();
+                _Host = host;
                 var psVariable = new PSVariable(CachedHost, host);
 
                 cmdlet.SessionState.PSVariable.Set(psVariable);

@@ -287,6 +287,7 @@
   <ItemGroup>
     <Compile Include="Cmdlets\AddDSDocumentCollectionCmdlet.cs" />
     <Compile Include="Cmdlets\AddDSFolderToDocumentCollectionCmdlet.cs" />
+    <Compile Include="Cmdlets\GetDSCodeStructureCmdlet.cs" />
     <Compile Include="Services\DockerCommands.cs" />
     <Compile Include="Cmdlets\OpenDSCodeCmdlet.cs" />
     <Compile Include="Cmdlets\ClearDSIndexCmdlet.cs" />

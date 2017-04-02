@@ -59,14 +59,15 @@ namespace DesktopSearch.Core.Processors
             var filesToProcess = Directory.GetFiles(folder.Path, "*", SearchOption.AllDirectories)
                                           .Where(f => extensionFilter.FilterByExtension(f));
 
-            return ExtractFilesAsync(filesToProcess, progress);
+            return ExtractFilesAsync(folder, filesToProcess, progress);
         }
 
-        private async Task ExtractFilesAsync(IEnumerable<string> filesToParse, IProgress<int> progress)
+        private async Task ExtractFilesAsync(IFolder folder, IEnumerable<string> filesToParse, IProgress<int> progress)
         {
+            var documentCollectionName = folder.DocumentCollection.Name;
             var parser = new RoslynParser();
             var stopWatch = Stopwatch.StartNew();
-            var sourceFiles = new BlockingCollection<SourceFile>(10);
+            var sourceFiles = new BlockingCollection<SourceFile>(1000);
 
             int current = 0;
             long typesExtracted = 0;
@@ -106,7 +107,7 @@ namespace DesktopSearch.Core.Processors
                     extractedTypes = parser.ExtractTypes(sourceFile.Content, sourceFile.Path);
                     filesParsedCounter.Increment();
 
-                    await _codeIndexer.IndexAsync(extractedTypes);
+                    await _codeIndexer.IndexAsync(documentCollectionName, extractedTypes);
                     filesIndexedCounter.Increment();
 
                     typesExtracted += extractedTypes.Count();
