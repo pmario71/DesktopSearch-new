@@ -26,14 +26,14 @@ namespace CodeSearchTests.Indexing.Roslyn
    /// <summary>This is an xml doc comment.
    /// the second line.</summary>
    [{inc}(typeof(ISomething))]   
-   public class IWCFServiceInterface
+   public class WCFServiceInterface
    {{
    }}
 }}";
 
             sut.VisitSourceCode(sourcecode);
 
-            var typeDescriptor = sut.ParsedTypes.Single(td => td.Name == "IWCFServiceInterface");
+            var typeDescriptor = sut.ParsedTypes.Single(td => td.Name == "WCFServiceInterface");
 
             Assert.AreEqual(mef, typeDescriptor.MEFDefinition);
         }
@@ -61,6 +61,113 @@ namespace CodeSearchTests.Indexing.Roslyn
             Assert.AreEqual("Name = \"IWCFServiceInterface\", Namespace = \"Tests.SomeNameSpace\"", typeDescriptor.WCFContract);
         }
 
+        [Test]
+        public void Interface_methods_are_extracted()
+        {
+            var sut = new APIWalker("",
+                false);
+
+            string sourcecode = $@"  namespace Something
+{{
+   /// <summary>This is an xml doc comment.
+   /// the second line.</summary>
+   public interface IWCFServiceInterface
+   {{
+        string GetResult(int i);
+   }}
+}}";
+
+            sut.VisitSourceCode(sourcecode);
+
+            var typeDescriptor = sut.ParsedTypes.Single(td => td.Name == "IWCFServiceInterface");
+
+            Assert.AreEqual(1, typeDescriptor.Members.Count);
+        }
+
+        [Test]
+        public void Enums_are_extracted()
+        {
+            var sut = new APIWalker("",
+                false);
+
+            string sourcecode = $@"  namespace Something
+{{
+   /// <summary>This is an xml doc comment.
+   /// the second line.</summary>
+   public enum ServiceState
+   {{
+        Started,
+        Stopped,
+   }}
+}}";
+
+            sut.VisitSourceCode(sourcecode);
+
+            var typeDescriptor = sut.ParsedTypes.Single(td => td.Name == "ServiceState");
+
+            Assert.IsTrue(typeDescriptor.Comment.Contains("xml doc comment"));
+
+            // members are currently not extracted
+            //Assert.AreEqual(2, typeDescriptor.Members.Count);
+        }
+
+        [Test]
+        public void Properties_are_extracted()
+        {
+            var sut = new APIWalker("",
+                false);
+
+            string sourcecode = $@"  namespace Something
+{{
+   /// <summary>This is an xml doc comment.
+   /// the second line.</summary>
+   public class ServiceState
+   {{
+        public string MyProperty {{ get; set; }}
+        string MyPropertyPrivate {{ get; set; }}
+   }}
+}}";
+
+            sut.VisitSourceCode(sourcecode);
+
+            var typeDescriptor = sut.ParsedTypes.Single(td => td.Name == "ServiceState");
+
+            Assert.IsTrue(typeDescriptor.Comment.Contains("xml doc comment"));
+            Assert.AreEqual(1, typeDescriptor.Members.Count(e => e.Type == MemberType.Property), "Only a single public event is defined");
+            // members are currently not extracted
+            //Assert.AreEqual(2, typeDescriptor.Members.Count);
+        }
+
+
+        [Test]
+        public void Events_are_extracted()
+        {
+            var sut = new APIWalker("",
+                false);
+
+            string sourcecode = $@"  namespace Something
+{{
+   /// <summary>This is an xml doc comment.
+   /// the second line.</summary>
+   public class ServiceState
+   {{
+        public event SampleEventHandler SampleEvent;
+        event SampleEventHandler SampleEvent2;
+
+   }}
+}}";
+
+            sut.VisitSourceCode(sourcecode);
+
+            var typeDescriptor = sut.ParsedTypes.Single(td => td.Name == "ServiceState");
+
+            Assert.IsTrue(typeDescriptor.Comment.Contains("xml doc comment"));
+            Assert.AreEqual(1, typeDescriptor.Members.Count(e => e.Type == MemberType.Event), "Only a single public event is defined");
+            // members are currently not extracted
+            //Assert.AreEqual(2, typeDescriptor.Members.Count);
+        }
+
+        public event EventHandler<string> EventName;
         [Test]
         public void RoslynAPI_prototyping_get_type_of_field()
         {

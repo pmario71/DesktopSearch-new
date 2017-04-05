@@ -68,10 +68,43 @@ namespace DesktopSearch.Core.Extractors.Roslyn
 
             var root = (CompilationUnitSyntax) tree.GetRoot();
 
-            var extractor = new StructureExtractor(filename);
-            var modified = extractor.Visit(root);
+            //var extractor = new StructureExtractor(filename);
+            var extractor = new APIWalker(filename, false);
+            extractor.Visit(root);
 
-            var syntaxNodes = modified.DescendantNodes().Where(n => (n is TypeDeclarationSyntax));
+            var sb = new StringBuilder();
+            foreach (var type in extractor.ParsedTypes)
+            {
+                string rootName = string.Empty;
+                //if (type.ElementType == ElementType.Class ||
+                //    type.ElementType == ElementType.Interface ||
+                //    type.ElementType == ElementType.Struct ||
+                //    type.ElementType == ElementType.Enum)
+                {
+                    rootName = type.Name;
+                    sb.AppendLine($"{type.FilePath}({type.LineNr}): {type.ElementType} - {type.Name}");
+
+                    foreach (var member in type.Members)
+                    {
+                        var method = member as MethodDescriptor;
+                        if (method != null)
+                        {
+                            sb.AppendLine($"{type.FilePath}({type.LineNr}):                   - {rootName}.{method.MethodName}({method.Parameters}) : {method.ReturnType}");
+                        }
+                        var field = member as FieldDescriptor;
+                        if (field != null)
+                        {
+                            sb.AppendLine($"{type.FilePath}({type.LineNr}):                   - {rootName}.{field.Name} : {field.Type}");
+                        }
+                    }
+                }
+            }
+            return sb.ToString();
+
+            //var syntaxNodes = modified.DescendantNodes().Where(n => (n is TypeDeclarationSyntax));
+            //return extractor.StructureText;
+
+
             //var sb = new StringBuilder();
 
             //using (StreamWriter tw = new StreamWriter(new MemoryStream()))
@@ -82,7 +115,7 @@ namespace DesktopSearch.Core.Extractors.Roslyn
             //    }
             //}
 
-            return extractor.StructureText;
+
         }
     }
 }
