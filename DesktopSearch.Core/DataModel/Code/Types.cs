@@ -46,5 +46,6 @@ namespace DesktopSearch.Core.DataModel.Code
         Field,
         Property,
         Method,
+        Event
     }
 }

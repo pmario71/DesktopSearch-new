@@ -43,7 +43,7 @@ namespace DesktopSearch.Core.DataModel.Code
             string @namespace, string filePath, int lineNR, string comment)
         {
             if (string.IsNullOrEmpty(name))       throw new ArgumentException(nameof(name));
-            if (string.IsNullOrEmpty(@namespace)) throw new ArgumentNullException(nameof(@namespace));
+            //if (string.IsNullOrEmpty(@namespace)) throw new ArgumentNullException(nameof(@namespace));
             //if (comment == null)                  throw new ArgumentNullException(nameof(comment));
             if (lineNR <= 0)                      throw new ArgumentOutOfRangeException(nameof(lineNR));
 
