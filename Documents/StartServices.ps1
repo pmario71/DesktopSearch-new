@@ -1,8 +1,10 @@
 param
 (
-    [ValidateSet('all','tika','elastic')]
+    [ValidateSet('all','tika', 'tika_local','elastic')]
     [string]$serviceToStart='tika'
 )
+
+$path = "D:\Tools\Allgemein\tika-server-1.16.jar"
 
 switch ($serviceToStart)
 {
@@ -13,6 +15,15 @@ switch ($serviceToStart)
     'tika'
     {
         docker run -d -p 9998:9998 docker-tikaserver_mp #logicalspark/docker-tikaserver
+    }
+	'tika_local'
+    {
+        $res = Invoke-WebRequest -Uri "http://localhost:9998"
+        if ($res.StatusCode -ne 200)
+        {
+            java -jar $path -s
+        }
+        #docker run -d -p 9998:9998 docker-tikaserver_mp #logicalspark/docker-tikaserver
     }
     'elastic'
     {

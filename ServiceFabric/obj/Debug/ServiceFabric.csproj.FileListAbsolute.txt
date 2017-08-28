@@ -3,3 +3,4 @@ C:\Projects\Tools\DesktopSearch\ServiceFabric\bin\Debug\ServiceFabric.dll
 C:\Projects\Tools\DesktopSearch\ServiceFabric\bin\Debug\ServiceFabric.pdb
 C:\Projects\Tools\DesktopSearch\ServiceFabric\obj\Debug\ServiceFabric.dll
 C:\Projects\Tools\DesktopSearch\ServiceFabric\obj\Debug\ServiceFabric.pdb
+C:\Projects\Tools\DesktopSearch\ServiceFabric\obj\Debug\ServiceFabric.csproj.CoreCompileInputs.cache

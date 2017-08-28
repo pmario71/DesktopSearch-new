@@ -15,13 +15,13 @@ namespace DesktopSearch.Core.Services
     {
         private readonly Dictionary<IndexingStrategy, IFolderProcessor> _map;
         private readonly IDocumentCollectionRepository                  _documentCollectionRepository;
-        private readonly IDocker                                        _docker;
+        private readonly IServiceManager                                _serviceManager;
 
         public IndexingService(
             IDocumentCollectionRepository documentCollectionRepository,
             DocumentFolderProcessor docFolderProcessor,
             CodeFolderProcessor codeFolderProcessor,
-            IDocker docker)
+            IServiceManager serviceManager)
         {
             _map = new Dictionary<IndexingStrategy, IFolderProcessor>()
             {
@@ -30,7 +30,7 @@ namespace DesktopSearch.Core.Services
             };
 
             _documentCollectionRepository = documentCollectionRepository;
-            _docker = docker;
+            _serviceManager = serviceManager;
         }
 
         public async Task IndexRepositoryAsync(IDocumentCollection documentCollection, IProgress<int> progress = null)
@@ -42,7 +42,7 @@ namespace DesktopSearch.Core.Services
             }
             if (documentCollection.IndexingStrategy == IndexingStrategy.Documents)
             {
-                await _docker.EnsureTikaStarted();
+                await _serviceManager.EnsureTikaStarted();
             }
 
             var processor = _map[documentCollection.IndexingStrategy];
@@ -53,7 +53,7 @@ namespace DesktopSearch.Core.Services
         {
             if (folder.DocumentCollection.IndexingStrategy == IndexingStrategy.Documents)
             {
-                await _docker.EnsureTikaStarted();
+                await _serviceManager.EnsureTikaStarted();
             }
 
             var processor = _map[folder.DocumentCollection.IndexingStrategy];

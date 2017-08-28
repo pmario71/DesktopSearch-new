@@ -102,7 +102,7 @@ namespace DesktopSearch.Core.DependencyInjection
 
     public class GreediestConstructorBehavior : IConstructorResolutionBehavior
     {
-        public ConstructorInfo GetConstructor(Type serviceType, Type implementationType)
+        public ConstructorInfo GetConstructor(Type implementationType)
         {
             return (
                 from ctor in implementationType.GetConstructors()

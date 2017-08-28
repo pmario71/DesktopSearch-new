@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DesktopSearch.Core.Tests.Utils
 {
-    class CfgMocks
+    public class CfgMocks
     {
         public static IConfigAccess<TikaConfig> GetTikaConfigMock()
         {

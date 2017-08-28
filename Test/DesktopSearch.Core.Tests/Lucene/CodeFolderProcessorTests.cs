@@ -77,7 +77,10 @@ namespace DesktopSearch.Core.Tests.Lucene
             var logger = new LoggingInterceptor<CodeFolderProcessor>(ignoreInfoLevel:true);
             sut.OverrideLogger = logger;
 
-            IFolder folder = new FolderMock() { Path = fname };
+            IFolder folder = new FolderMock()
+            {
+                Path = fname
+            };
             await sut.ProcessAsync(folder);
 
             Assert.IsFalse(logger.LoggedEvents.Any());
@@ -105,6 +108,10 @@ namespace DesktopSearch.Core.Tests.Lucene
 
         class FolderMock : IFolder
         {
+            public FolderMock()
+            {
+                this.DocumentCollection = new DocumentCollection();
+            }
             public string Path { get; set; }
             public IDocumentCollection DocumentCollection { get; }
         }

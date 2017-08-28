@@ -14,29 +14,26 @@ namespace DesktopSearch.Core.Extractors.Tika
         private static readonly object _lock = new object();
         private bool _stopping;
 
-        public TikaServer(bool start = false)
+        public TikaServer()
         {
-            var info = new DirectoryInfo(".\\TikaServer");
-            var fileInfos = info.GetFiles("tika-server*.jar");
+            _tikaServerJar = @"D:\Tools\Allgemein\tika-server-1.16.jar";
+            //var info = new DirectoryInfo(".\\TikaServer");
+            //var fileInfos = info.GetFiles("tika-server*.jar");
 
-            if (fileInfos.Length != 1)
-            {
-                const string msg = "Failed to identify tika-server-x.x.jar! Installation error!";
-                //_log.Error(msg);
-                throw new Exception(msg);
-            }
-            _tikaServerJar = fileInfos.First().FullName;
+            //if (fileInfos.Length != 1)
+            //{
+            //    const string msg = "Failed to identify tika-server-x.x.jar! Installation error!";
+            //    //_log.Error(msg);
+            //    throw new Exception(msg);
+            //}
+            //_tikaServerJar = fileInfos.First().FullName;
 
-            if (start)
-            {
-                this.Start();
-            }
+            //if (start)
+            //{
+            //    this.Start();
+            //}
         }
-
-        public TikaServer() : this(true)
-        {
-        }
-
+        
         public void Start()
         {
             if (IsRunning)

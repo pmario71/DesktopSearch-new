@@ -62,7 +62,12 @@ namespace DesktopSearch.Core
 
             // removed
             //container.Register<Core.ElasticSearch.ManagementService>(Lifestyle.Singleton);
-            container.Register<Services.IDocker, Services.DockerService>(Lifestyle.Singleton);
+
+            // switched away from docker-hosted to natively started Tika service
+            //container.Register<Services.IServiceManager, Services.DockerServiceManager>(Lifestyle.Singleton);
+            container.Register<Services.IServiceManager, Services.NativeServiceManager>(Lifestyle.Singleton);
+
+            container.Register<Extractors.Tika.ITikaServer, Extractors.Tika.TikaServer>(Lifestyle.Singleton);
             container.Register<Extractors.Tika.ITikaServerExtractor,Extractors.Tika.TikaServerExtractor>(Lifestyle.Singleton);
 
 

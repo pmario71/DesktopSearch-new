@@ -9,7 +9,8 @@ Test/DesktopSearch.PS.Tests/Bin
 Test/DesktopSearch.PS.Tests/Obj
 RegisterPerformanceCounters/bin
 RegisterPerformanceCounters/obj
-ServiceFabric
+ServiceFabric/bin
+ServiceFabric/obj
 
 elasticsearch-*
 packages
@@ -65,3 +66,8 @@ Temporary Items
 *.~vsdx
 *.user
 ServiceFabric/bin/Debug/nunit_random_seed.tmp
+/.vs
+/Report170401.vsp
+/powershell.psess
+/Performance.psess
+/Concurrency.vsp

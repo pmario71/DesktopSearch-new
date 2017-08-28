@@ -8,4 +8,9 @@
   <PropertyGroup>
     <ProjectView>ProjectFiles</ProjectView>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <StartProgram>C:\WINDOWS\syswow64\WindowsPowerShell\v1.0\powershell.exe</StartProgram>
+    <StartArguments>-NoExit -NoProfile -Command "&amp;{ Import-Module %27.\DesktopSearch.PS.dll%27 }"</StartArguments>
+    <StartAction>Program</StartAction>
+  </PropertyGroup>
 </Project>

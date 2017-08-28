@@ -1,0 +1,87 @@
+// ***** BenchmarkRunner: Start   *****
+// Found benchmarks:
+//   FileIOPerformanceTests.ReadFile_multiple_times_with_caching_enabled: DefaultJob
+//   FileIOPerformanceTests.ReadFile_multiple_times_without_caching_enabled: DefaultJob
+
+// Validating benchmarks:
+Assembly PerformanceTests which defines benchmarks references non-optimized DesktopSearch.Core
+Assembly PerformanceTests which defines benchmarks references non-optimized DesktopSearch.Core.Tests
+Assembly PerformanceTests which defines benchmarks is non-optimized
+// **************************
+// Benchmark: FileIOPerformanceTests.ReadFile_multiple_times_with_caching_enabled: DefaultJob
+// *** Generate *** 
+// Result = Success
+// BinariesDirectoryPath = C:\Projects\Tools\DesktopSearch\Test\PerformanceTests\bin\x86\Debug
+
+// *** Build ***
+BuildScript: C:\Projects\Tools\DesktopSearch\Test\PerformanceTests\bin\x86\Debug\44ddfd24-1333-4a98-b221-20504e362c9b.bat
+// Result = Success
+
+// *** Execute ***
+// Launch: 1 / 1
+// Execute: C:\Projects\Tools\DesktopSearch\Test\PerformanceTests\bin\x86\Debug\44ddfd24-1333-4a98-b221-20504e362c9b.exe 
+
+// Benchmark Process Environment Information:
+// Runtime=.NET Framework 4.7 (CLR 4.0.30319.42000), 32bit LegacyJIT-v4.7.2102.0
+// GC=Concurrent Workstation
+// Job: DefaultJob
+
+Pilot  1: 16 op, 2501297846.43 ns, 156.3311 ms/op
+
+IdleWarmup  1: 16 op, 3079.11 ns, 192.4446 ns/op
+IdleWarmup  2: 16 op, 342.12 ns, 21.3827 ns/op
+IdleWarmup  3: 16 op, 342.12 ns, 21.3827 ns/op
+IdleWarmup  4: 16 op, 684.25 ns, 42.7655 ns/op
+IdleWarmup  5: 16 op, 342.12 ns, 21.3827 ns/op
+IdleWarmup  6: 16 op, 342.12 ns, 21.3827 ns/op
+
+IdleTarget  1: 16 op, 684.25 ns, 42.7655 ns/op
+IdleTarget  2: 16 op, 342.12 ns, 21.3827 ns/op
+IdleTarget  3: 16 op, 342.12 ns, 21.3827 ns/op
+IdleTarget  4: 16 op, 684.25 ns, 42.7655 ns/op
+IdleTarget  5: 16 op, 342.12 ns, 21.3827 ns/op
+IdleTarget  6: 16 op, 342.12 ns, 21.3827 ns/op
+IdleTarget  7: 16 op, 342.12 ns, 21.3827 ns/op
+IdleTarget  8: 16 op, 342.12 ns, 21.3827 ns/op
+IdleTarget  9: 16 op, 684.25 ns, 42.7655 ns/op
+IdleTarget 10: 16 op, 342.12 ns, 21.3827 ns/op
+IdleTarget 11: 16 op, 342.12 ns, 21.3827 ns/op
+IdleTarget 12: 16 op, 342.12 ns, 21.3827 ns/op
+IdleTarget 13: 16 op, 684.25 ns, 42.7655 ns/op
+IdleTarget 14: 16 op, 342.12 ns, 21.3827 ns/op
+IdleTarget 15: 16 op, 342.12 ns, 21.3827 ns/op
+IdleTarget 16: 16 op, 342.12 ns, 21.3827 ns/op
+IdleTarget 17: 16 op, 342.12 ns, 21.3827 ns/op
+
+MainWarmup  1: 16 op, 2557760238.99 ns, 159.8600 ms/op
+MainWarmup  2: 16 op, 2535509194.75 ns, 158.4693 ms/op
+MainWarmup  3: 16 op, 2525606080.77 ns, 157.8504 ms/op
+MainWarmup  4: 16 op, 2533766758.50 ns, 158.3604 ms/op
+MainWarmup  5: 16 op, 2506368804.61 ns, 156.6481 ms/op
+MainWarmup  6: 16 op, 2516952744.84 ns, 157.3095 ms/op
+MainWarmup  7: 16 op, 2513228385.73 ns, 157.0768 ms/op
+
+MainTarget  1: 16 op, 2493900104.66 ns, 155.8688 ms/op
+MainTarget  2: 16 op, 2514166146.92 ns, 157.1354 ms/op
+MainTarget  3: 16 op, 2494177909.14 ns, 155.8861 ms/op
+MainTarget  4: 16 op, 2508942601.56 ns, 156.8089 ms/op
+MainTarget  5: 16 op, 2496103381.59 ns, 156.0065 ms/op
+MainTarget  6: 16 op, 2505761192.83 ns, 156.6101 ms/op
+MainTarget  7: 16 op, 2496037351.70 ns, 156.0023 ms/op
+MainTarget  8: 16 op, 2506702375.26 ns, 156.6689 ms/op
+MainTarget  9: 16 op, 2505578156.63 ns, 156.5986 ms/op
+MainTarget 10: 16 op, 2502855535.85 ns, 156.4285 ms/op
+MainTarget 11: 16 op, 2502537018.64 ns, 156.4086 ms/op
+MainTarget 12: 16 op, 2505029732.26 ns, 156.5644 ms/op
+MainTarget 13: 16 op, 2494482741.40 ns, 155.9052 ms/op
+MainTarget 14: 16 op, 2500622836.28 ns, 156.2889 ms/op
+MainTarget 15: 16 op, 2509198852.24 ns, 156.8249 ms/op
+
+Result  1: 16 op, 2493899682.03 ns, 155.8687 ms/op
+Result  2: 16 op, 2514165724.30 ns, 157.1354 ms/op
+Result  3: 16 op, 2494177486.51 ns, 155.8861 ms/op
+Result  4: 16 op, 2508942178.93 ns, 156.8089 ms/op
+Result  5: 16 op, 2496102958.96 ns, 156.0064 ms/op
+Result  6: 16 op, 2505760770.21 ns, 156.6100 ms/op
+Result  7: 16 op, 2496036929.08 ns, 156.0023 ms/op
+Result  8: 16 op, 250670

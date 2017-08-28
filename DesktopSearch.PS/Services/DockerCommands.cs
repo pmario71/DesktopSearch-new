@@ -95,13 +95,10 @@ namespace DesktopSearch.PS.Services
             CreateContainerParameters createParameters = new CreateContainerParameters
             {
                 // Image, Name, Entrypoint, ...
-                ExposedPorts = new Dictionary<string, object>
+                ExposedPorts = new Dictionary<string, EmptyStruct>
                 {
                     {
-                        containerPort, new
-                        {
-                            HostPort = hostPort
-                        }
+                        containerPort, new EmptyStruct()
                     }
                 },
                 HostConfig = new HostConfig

@@ -12,7 +12,7 @@ namespace DesktopSearch.Core.Tests.Services
         [Test, Explicit("Exercises starting and stopping Tika")]
         public async Task EnsureTikaStarted()
         {
-            var sut = new DockerService();
+            var sut = new DockerServiceManager();
             Console.WriteLine("Cleaning up");
             await sut.CleanupTikaContainers();
 

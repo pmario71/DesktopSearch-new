@@ -10,7 +10,7 @@ using NUnit.Framework.Internal;
 
 namespace DesktopSearch.PS.Tests.Services
 {
-    [TestFixture()]
+    [TestFixture(), Ignore("Tika not started using Docker containers anymore!")]
     public class DockerCommandsTests
     {
 

@@ -20,9 +20,9 @@ namespace DesktopSearch.Core
                 typeof(Microsoft.Extensions.Options.IOptionsMonitor<>),
                 typeof(Microsoft.Extensions.Options.OptionsMonitor<>), Lifestyle.Singleton);
 
-            container.Register(
-                typeof(Microsoft.Extensions.Options.IOptionsSnapshot<>),
-                typeof(Microsoft.Extensions.Options.OptionsSnapshot<>), Lifestyle.Scoped);
+            //container.Register(
+            //    typeof(Microsoft.Extensions.Options.IOptionsSnapshot<>),
+            //    typeof(Microsoft.Extensions.Options.OptionsSnapshot<>), Lifestyle.Scoped);
         }
 
         /// <summary>
