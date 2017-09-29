@@ -126,7 +126,7 @@ Measuring over standalone Tika container and version running together with Elast
 
 ## ElasticSearch
 
-Modifiacations to when running ElasticSearch:
+Modifications to when running ElasticSearch:
 
 * `.\config\elasticsearch.yml`\
   `path.data: C:/Users/ESIndexData`

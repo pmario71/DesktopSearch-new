@@ -12,6 +12,7 @@ using System.Threading.Tasks;
 using System.IO;
 using DesktopSearch.Core.Tagging;
 using DesktopSearch.PS.UI;
+using Shell32;
 
 namespace DesktopSearch.PS.Cmdlets
 {
@@ -39,6 +40,8 @@ namespace DesktopSearch.PS.Cmdlets
         protected override void ProcessRecord()
         {
             string ext = Path.GetExtension(this.File);
+
+            DecodeIfShellLink(ext);
             if (StringComparer.OrdinalIgnoreCase.Compare(ext, ".pdf") != 0)
             {
                 throw new Exception("Only pdf is supported!");
@@ -69,6 +72,23 @@ namespace DesktopSearch.PS.Cmdlets
 
                 await tagger.WriteAsync(outputFile, tagDesc);
             });
+        }
+
+        private void DecodeIfShellLink(string ext)
+        {
+            if (StringComparer.OrdinalIgnoreCase.Compare(ext, ".lnk") == 0)
+            {
+                var shell = new Shell();
+                var folder = shell.NameSpace(Path.GetDirectoryName(this.File));
+                var file = folder.Items().Item(Path.GetFileName(this.File));
+
+                var linkObject = file.GetLink as ShellLinkObject;
+                if (linkObject != null)
+                {
+                    linkObject.Resolve(5);
+                    this.File = linkObject.Target.Path;
+                }
+            }
         }
 
         protected override void EndProcessing()
