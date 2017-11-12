@@ -31,6 +31,34 @@
 
 1. move file to storage location
 
+## Powershell Cmdlets
+
+* Edit-Tag
+* Search-DS
+* Get-TikaExtract
+---------------
+* Open-DSCode
+* Open-DSLuke
+---------------
+* Add-DSDocumentCollection
+* Add-DSFolderToDocumentCollection
+* Clear-DSIndex
+* Get-DSCodeStructure
+* Get-DSDocumentCollection
+* Get-DSSetting
+* Get-DSStatistics
+* Get-TikaExtractRaw
+* Import-DSContent
+* Remove-DSDocumentCollection
+* Save-DSSetting
+* Sync-DSIndex
+
+### Todo
+
+* [ ] configuration story needs to be thought through.\
+      Maybe replace by dialog instead of fine granular PS commands.
+* [ ] 
+
 ## Index Attributes
 
 ### Documents
